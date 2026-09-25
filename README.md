@@ -26,15 +26,21 @@
 
 ## 导出成 MP4 视频
 
-`record.js` 会逐帧渲染动画，直接生成 1920×1080、30fps、约 77 秒的 MP4（带片头标题和每一幕的字幕卡，无声音）。逐帧渲染不受电脑卡顿影响，画面不会掉帧。
+`record.js` 会逐帧渲染动画，直接生成 30fps、约 77 秒的 MP4（带片头标题和每一幕的字幕卡，无声音）。支持两种比例：
+
+- **16:9 横版**（1920×1080）：适合 B 站、YouTube、课件投影
+- **3:4 竖版**（1080×1440）：适合小红书、视频号、手机观看。顶部是幕标题，下方是大字号旁白卡和数据条
+
+逐帧渲染不受电脑卡顿影响，画面不会掉帧。
 
 需要先装好 [Node.js](https://nodejs.org) 和 [ffmpeg](https://ffmpeg.org/download.html)，然后在项目目录里运行：
 
 ```bash
 npm install
 npx playwright install chromium
-npm run record              # 输出 diabetes-vessels.mp4
-node record.js 我的视频.mp4  # 或者自己指定文件名
+npm run record                   # 16:9，输出 diabetes-vessels.mp4
+npm run record -- --ratio 3:4    # 3:4，输出 diabetes-vessels-3x4.mp4
+node record.js 我的视频.mp4 --ratio 3:4   # 自己指定文件名
 ```
 
 如果 ffmpeg 不在 PATH 里，用 `FFMPEG=/path/to/ffmpeg npm run record` 指定。

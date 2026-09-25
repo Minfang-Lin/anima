@@ -150,7 +150,7 @@
     { title: "照顾好血糖，血管会感谢你", glucose: 6.4, ages: 0.55, damage: 0.35, plaque: 0.75, micro: 0, heal: 1,
       text: "已经造成的损伤很难完全消失，但把血糖、血压、血脂控制在目标范围，再加上不吸烟、多运动，就能明显放慢新的损伤，让斑块更稳定。红细胞们又能笑着出发啦。",
       fact: "常见目标：HbA1c < 7%，血压 < 130/80 mmHg，定期查眼底和尿微量白蛋白",
-      labels: ["glu", "hud", "heal"] },
+      labels: ["hud", "heal"] },
   ];
   const DUR = 11; // 每幕秒数
 
@@ -168,11 +168,18 @@
   const ctx = cv.getContext("2d");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let W = 0, H = 0, dpr = 1;
-  // 录制模式（record.js 注入 window.__RECORD）：固定 1920×1080 画布，逐帧手动推进
+  // 录制模式（record.js 注入 window.__RECORD 和 window.__RATIO）：固定尺寸画布，逐帧手动推进
   const REC = window.__RECORD === true;
-  const VW = 1920, VH = 1080, SX = 240, SY = 36;
+  const LAYOUTS = {
+    // VW×VH 视频尺寸；舞台左上角 (SX, SY)、大小 SW×SH；K 为舞台缩放；UI 为标注字号倍数
+    "16:9": { VW: 1920, VH: 1080, SX: 240, SY: 36, SW: 1440, SH: 810, K: 1, UI: 1 },
+    "3:4": { VW: 1080, VH: 1440, SX: 40, SY: 150, SW: 1000, SH: 820, K: 1.3, UI: 1.7 },
+  };
+  const LY = LAYOUTS[window.__RATIO] || LAYOUTS["16:9"];
+  const { VW, VH, SX, SY } = LY;
+  const UI = REC ? LY.UI : 1;
   function resize() {
-    if (REC) { W = 1440; H = 810; cv.width = VW; cv.height = VH; return; }
+    if (REC) { W = LY.SW / LY.K; H = LY.SH / LY.K; cv.width = VW; cv.height = VH; return; }
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = cv.clientWidth; H = W * 9 / 16;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
@@ -534,7 +541,7 @@
     if (a < 0.02) return;
     ctx.save();
     ctx.globalAlpha *= a;
-    const fs = Math.max(12, W / 56);
+    const fs = Math.max(12, W / 56) * UI;
     ctx.font = `${fs}px ${ROUND}`;
     const w = ctx.measureText(text).width + 22, bh = fs + 14;
     const bx = clamp(lx - w / 2, 6, W - w - 6), by = clamp(ly < ty ? ly - bh : ly, 6, H - bh - 6);
@@ -551,7 +558,7 @@
   }
 
   function pill(x, y, label, value, color, alignRight) {
-    const fs = Math.max(12, W / 60);
+    const fs = Math.max(12, W / 60) * UI;
     ctx.font = `${fs}px ${ROUND}`;
     const t1 = ctx.measureText(label).width;
     ctx.font = `${fs * 1.4}px ${ROUND}`;
@@ -591,7 +598,7 @@
       const ax = W * 0.35;
       callout("age", on("age"), ax, botE(g, ax) - 12, ax - W * 0.06, g.cy + g.R + g.wallT * 0.35, "AGEs 黏在内皮上");
       const wx = W * 0.8;
-      callout("wall", on("wall"), wx, g.cy - g.R - g.wallT * 0.42, wx - W * 0.04, g.cy - g.R - g.wallT * 0.95, "纤维被绑住，管壁变硬");
+      callout("wall", on("wall"), wx, g.cy - g.R - g.wallT * 0.42, wx - W * 0.06, g.cy - g.R * 0.45, "纤维被绑住，管壁变硬");
       const sx = W * 0.18;
       callout("ros", on("ros"), sx, topE(g, sx) + 20, sx + W * 0.06, g.cy - g.R - g.wallT * 0.4, "活性氧小闪电");
       const gx2 = W * 0.4;
@@ -649,44 +656,73 @@
   function wrapText(text, maxW) {
     const lines = []; let line = "";
     for (const ch of text) {
-      if (ctx.measureText(line + ch).width > maxW && line) { lines.push(line); line = ch; } else line += ch;
+      // 标点不放在行首
+      if (ctx.measureText(line + ch).width > maxW && line && !"，。、；：！？）》”".includes(ch)) { lines.push(line); line = ch; } else line += ch;
     }
     if (line) lines.push(line);
     return lines;
   }
   function renderVideo() {
+    const SW = LY.SW, SH = LY.SH, portrait = VH > VW, c = CH[cur];
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = "#fff1ee"; ctx.fillRect(0, 0, VW, VH);
     ctx.fillStyle = "#ffdcd6";
     for (let y = 11; y < VH; y += 22) for (let x = 11; x < VW; x += 22) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill(); }
     // 舞台
-    ctx.fillStyle = C.ink; rrect(SX + 8, SY + 8, W, H, 36); ctx.fill();
-    ctx.save(); ctx.translate(SX, SY); rrect(0, 0, W, H, 36); ctx.clip();
+    ctx.fillStyle = C.ink; rrect(SX + 8, SY + 8, SW, SH, 36); ctx.fill();
+    ctx.save(); ctx.translate(SX, SY); rrect(0, 0, SW, SH, 36); ctx.clip(); ctx.scale(LY.K, LY.K);
     draw();
     // 片头标题
     const ta = time < 2.5 ? 1 : clamp(1 - (time - 2.5), 0, 1);
     if (ta > 0) {
       ctx.globalAlpha = ta;
-      ctx.fillStyle = "rgba(255,241,238,0.9)"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "rgba(255,241,238,0.92)"; ctx.fillRect(0, 0, W, H);
       ctx.fillStyle = C.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.font = `72px ${ROUND}`; ctx.fillText("多余的糖，如何一步步伤害血管", W / 2, H / 2 - 30);
-      ctx.font = `34px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText("血管小剧场 · 7 幕", W / 2, H / 2 + 50);
+      const lines = portrait ? ["多余的糖，", "如何一步步伤害血管"] : ["多余的糖，如何一步步伤害血管"];
+      const fs = portrait ? 62 : 72;
+      ctx.font = `${fs}px ${ROUND}`;
+      lines.forEach((ln, i) => ctx.fillText(ln, W / 2, H / 2 - 30 - (lines.length - 1 - i) * fs * 1.25));
+      ctx.font = `${fs * 0.47}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText("血管小剧场 · 7 幕", W / 2, H / 2 + 50);
       ctx.textAlign = "left"; ctx.globalAlpha = 1;
     }
     ctx.restore();
-    outline(4); rrect(SX, SY, W, H, 36); ctx.stroke();
-    // 字幕卡
-    const cy0 = SY + H + 26, ch = VH - cy0 - 22, c = CH[cur];
-    ctx.fillStyle = C.ink; rrect(SX + 6, cy0 + 6, W, ch, 28); ctx.fill();
-    ctx.fillStyle = C.paper; rrect(SX, cy0, W, ch, 28); ctx.fill(); outline(4); ctx.stroke();
+    outline(4); rrect(SX, SY, SW, SH, 36); ctx.stroke();
+
     ctx.textBaseline = "middle";
-    ctx.font = `28px ${ROUND}`;
-    const badge = `第 ${cur + 1} 幕`, bw = ctx.measureText(badge).width + 30;
-    rrect(SX + 26, cy0 + 20, bw, 44, 22); ctx.fillStyle = C.rbc; ctx.fill(); outline(3); ctx.stroke();
-    ctx.fillStyle = C.paper; ctx.fillText(badge, SX + 41, cy0 + 43);
-    ctx.fillStyle = C.ink; ctx.font = `36px ${ROUND}`; ctx.fillText(c.title, SX + 46 + bw, cy0 + 43);
-    ctx.font = `24px "Noto Sans SC", "PingFang SC", sans-serif`;
-    wrapText(c.text, W - 56).slice(0, 3).forEach((ln, i) => ctx.fillText(ln, SX + 28, cy0 + 90 + i * 34));
+    const badgeAt = (x, y, fs) => {
+      ctx.font = `${fs}px ${ROUND}`;
+      const badge = `第 ${cur + 1} 幕`, bw = ctx.measureText(badge).width + fs * 1.1, bh = fs * 1.6;
+      rrect(x, y - bh / 2, bw, bh, bh / 2); ctx.fillStyle = C.rbc; ctx.fill(); outline(3); ctx.stroke();
+      ctx.fillStyle = C.paper; ctx.fillText(badge, x + fs * 0.55, y + 1);
+      return bw;
+    };
+    if (!portrait) {
+      // 横版：舞台下方一张字幕卡
+      const cy0 = SY + SH + 26, ch = VH - cy0 - 22;
+      ctx.fillStyle = C.ink; rrect(SX + 6, cy0 + 6, SW, ch, 28); ctx.fill();
+      ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 28); ctx.fill(); outline(4); ctx.stroke();
+      const bw = badgeAt(SX + 26, cy0 + 43, 28);
+      ctx.fillStyle = C.ink; ctx.font = `36px ${ROUND}`; ctx.fillText(c.title, SX + 46 + bw, cy0 + 43);
+      ctx.font = `24px "Noto Sans SC", "PingFang SC", sans-serif`;
+      wrapText(c.text, SW - 56).slice(0, 3).forEach((ln, i) => ctx.fillText(ln, SX + 28, cy0 + 90 + i * 34));
+      return;
+    }
+    // 竖版：顶部幕标题，舞台下方是旁白卡 + 数据条
+    const bw = badgeAt(SX, 78, 34);
+    ctx.fillStyle = C.ink; ctx.font = `50px ${ROUND}`;
+    ctx.fillText(c.title, SX + bw + 20, 80);
+    const cy0 = SY + SH + 34, ch = VH - cy0 - 40;
+    ctx.fillStyle = C.ink; rrect(SX + 8, cy0 + 8, SW, ch, 32); ctx.fill();
+    ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 32); ctx.fill(); outline(4); ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.font = `35px "Noto Sans SC", "PingFang SC", sans-serif`;
+    const lines = wrapText(c.text, SW - 70).slice(0, 5);
+    lines.forEach((ln, i) => ctx.fillText(ln, SX + 35, cy0 + 52 + i * 52));
+    // 数据条
+    ctx.font = `26px "Noto Sans SC", "PingFang SC", sans-serif`;
+    const fy = cy0 + ch - 58;
+    rrect(SX + 28, fy - 26, SW - 56, 52, 18); ctx.fillStyle = "#fff6da"; ctx.fill();
+    ctx.strokeStyle = C.sugar; ctx.lineWidth = 2.5; ctx.setLineDash([8, 6]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C.ink; ctx.fillText(wrapText(c.fact, SW - 90)[0], SX + 45, fy + 1);
   }
 
   const prog = document.getElementById("prog");
