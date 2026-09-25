@@ -24,9 +24,21 @@
 - **画面强度**：每一幕的 `glucose`、`ages`、`damage`、`plaque`、`micro` 是 0–1（血糖为 mmol/L）的目标值，动画会平滑过渡到这些值。
 - **节奏**：`DUR` 是每一幕的秒数。
 
-## 导出成视频
+## 导出成 MP4 视频
 
-- 最简单：全屏打开页面，用 OBS、QuickTime 或 Windows 的 Xbox Game Bar 录屏，再在剪映 / Premiere 里配旁白和音乐。
-- 想要更精细的医学动画，可以把这里的分镜交给 After Effects、Blender 或 BioRender 制作，结构和数据可以直接沿用。
+`record.js` 会逐帧渲染动画，直接生成 1920×1080、30fps、约 77 秒的 MP4（带片头标题和每一幕的字幕卡，无声音）。逐帧渲染不受电脑卡顿影响，画面不会掉帧。
+
+需要先装好 [Node.js](https://nodejs.org) 和 [ffmpeg](https://ffmpeg.org/download.html)，然后在项目目录里运行：
+
+```bash
+npm install
+npx playwright install chromium
+npm run record              # 输出 diabetes-vessels.mp4
+node record.js 我的视频.mp4  # 或者自己指定文件名
+```
+
+如果 ffmpeg 不在 PATH 里，用 `FFMPEG=/path/to/ffmpeg npm run record` 指定。
+
+生成后可以在剪映 / Premiere 里配旁白和背景音乐。不想装任何东西的话，也可以全屏打开页面，用 OBS 或系统录屏（Mac：Cmd+Shift+5；Windows：Win+Alt+R）录下来。
 
 画面比例经过夸张处理，仅用于科普，不能替代医生的诊断和建议。

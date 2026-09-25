@@ -1,0 +1,10 @@
+{
+  "name": "diabetes-vessels-animation",
+  "private": true,
+  "scripts": {
+    "record": "node record.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.47.0"
+  }
+}
