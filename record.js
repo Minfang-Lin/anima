@@ -3,6 +3,7 @@
 //   npm run record                  横版 16:9，1920×1080
 //   npm run record -- --ratio 3:4   竖版 3:4，1080×1440
 //   node record.js 我的视频.mp4 --ratio 3:4
+//   加 --audio：带配音和背景音乐（先运行 python3 make_audio.py 生成 build/ 下的音轨）
 // 需要 ffmpeg：系统里装好的 ffmpeg，或者用环境变量 FFMPEG 指定路径。
 const { chromium } = require("playwright");
 const { spawn } = require("child_process");
@@ -15,13 +16,26 @@ const ri = args.indexOf("--ratio");
 const RATIO = ri >= 0 ? args.splice(ri, 2)[1] : "16:9";
 if (!SIZES[RATIO]) { console.error(`不支持的比例 ${RATIO}，可选：${Object.keys(SIZES).join("、")}`); process.exit(1); }
 const [VW, VH] = SIZES[RATIO];
-const OUT = args[0] || (RATIO === "16:9" ? "diabetes-vessels.mp4" : `diabetes-vessels-${RATIO.replace(":", "x")}.mp4`);
+const ai = args.indexOf("--audio");
+const AUDIO = ai >= 0 && args.splice(ai, 1).length > 0;
+const fs = require("fs");
+const TL_PATH = path.join(__dirname, "build", "timeline.json");
+const WAV = path.join(__dirname, "build", "soundtrack.wav");
+if (AUDIO && !(fs.existsSync(TL_PATH) && fs.existsSync(WAV))) {
+  console.error("没有找到 build/timeline.json 和 build/soundtrack.wav，请先运行 python3 make_audio.py");
+  process.exit(1);
+}
+const TIMELINE = AUDIO ? JSON.parse(fs.readFileSync(TL_PATH, "utf8")) : null;
+const OUT = args[0] || `diabetes-vessels${RATIO === "16:9" ? "" : "-" + RATIO.replace(":", "x")}${AUDIO ? "-voice" : ""}.mp4`;
 const FFMPEG = process.env.FFMPEG || "ffmpeg";
 
 (async () => {
   const browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
   const page = await browser.newPage({ viewport: { width: VW, height: VH } });
-  await page.addInitScript((ratio) => { window.__RECORD = true; window.__RATIO = ratio; }, RATIO);
+  await page.addInitScript(([ratio, tl]) => {
+    window.__RECORD = true; window.__RATIO = ratio;
+    if (tl) window.__TIMELINE = tl;
+  }, [RATIO, TIMELINE]);
   await page.goto("file://" + path.resolve(__dirname, "index.html"));
   await page.evaluate(() => document.fonts.ready);
   await page.waitForFunction(() => window.__rec);
@@ -32,6 +46,7 @@ const FFMPEG = process.env.FFMPEG || "ffmpeg";
   const ff = spawn(FFMPEG, [
     "-y", "-loglevel", "error",
     "-f", "image2pipe", "-framerate", String(FPS), "-i", "-",
+    ...(AUDIO ? ["-i", WAV, "-c:a", "aac", "-b:a", "192k", "-shortest"] : []),
     "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-preset", "medium",
     "-movflags", "+faststart", OUT,
   ], { stdio: ["pipe", "inherit", "inherit"] });

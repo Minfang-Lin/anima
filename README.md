@@ -45,6 +45,32 @@ node record.js 我的视频.mp4 --ratio 3:4   # 自己指定文件名
 
 如果 ffmpeg 不在 PATH 里，用 `FFMPEG=/path/to/ffmpeg npm run record` 指定。
 
-生成后可以在剪映 / Premiere 里配旁白和背景音乐。不想装任何东西的话，也可以全屏打开页面，用 OBS 或系统录屏（Mac：Cmd+Shift+5；Windows：Win+Alt+R）录下来。
+### 加上配音和背景音乐
+
+`make_audio.py` 会用离线的 Kokoro 中文语音模型把七幕旁白读出来（开头加一句引子），再用代码合成一段轻柔的八音盒背景音乐（没有版权问题），混成一条音轨。每一幕的时长会跟着配音长度自动调整，完整视频约 2 分 23 秒。
+
+```bash
+pip install sherpa-onnx soundfile numpy
+# 下载语音模型（约 360MB），解压到 models/
+mkdir -p models && cd models
+curl -LO https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_1.tar.bz2
+tar xjf kokoro-multi-lang-v1_1.tar.bz2 && cd ..
+
+python3 make_audio.py                      # 生成 build/soundtrack.wav 和 build/timeline.json
+npm run record -- --audio                  # 16:9 带声音，输出 diabetes-vessels-voice.mp4
+npm run record -- --ratio 3:4 --audio      # 3:4 带声音，输出 diabetes-vessels-3x4-voice.mp4
+```
+
+可以调整的地方：
+
+- **换声音**：`python3 make_audio.py --sid 20`（3–57 是女声，58–102 是男声）
+- **语速**：`--speed 1.0`（默认 0.95，稍慢一点更温柔）
+- **音乐音量**：`--music 0.1`（默认 0.16；有人说话时音乐会自动压低）
+- **读法**：`make_audio.py` 顶部的 `SPOKEN` 表可以改某些词的读法，比如把 "AGEs" 读成 "A G E S"
+- **伤感段落**：第 3–6 幕的背景音乐换成小调、琶音更稀疏，第 7 幕回到明亮的大调
+
+也可以只导出无声视频，在剪映 / Premiere 里自己配旁白和音乐。剪映的"文本朗读"能把字幕直接转成配音。
+
+不想装任何东西的话，也可以全屏打开页面，用 OBS 或系统录屏（Mac：Cmd+Shift+5；Windows：Win+Alt+R）录下来。
 
 画面比例经过夸张处理，仅用于科普，不能替代医生的诊断和建议。

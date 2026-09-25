@@ -673,7 +673,8 @@
     ctx.save(); ctx.translate(SX, SY); rrect(0, 0, SW, SH, 36); ctx.clip(); ctx.scale(LY.K, LY.K);
     draw();
     // 片头标题
-    const ta = time < 2.5 ? 1 : clamp(1 - (time - 2.5), 0, 1);
+    const titleT = window.__TIMELINE ? window.__TIMELINE.intro : 2.5;
+    const ta = time < titleT ? 1 : clamp(1 - (time - titleT), 0, 1);
     if (ta > 0) {
       ctx.globalAlpha = ta;
       ctx.fillStyle = "rgba(255,241,238,0.92)"; ctx.fillRect(0, 0, W, H);
@@ -728,11 +729,14 @@
   const prog = document.getElementById("prog");
   if (REC) {
     // 由 record.js 调用：每次推进一帧并画出来
+    // 有配音时，record.js 注入 window.__TIMELINE（每幕时长跟着配音走）
+    const TL = window.__TIMELINE;
+    const durs = TL ? TL.durs : CH.map(() => DUR);
     window.__rec = {
-      total: CH.length * DUR,
+      total: durs.reduce((a, b) => a + b, 0),
       tick(dt) {
         time += dt; chT += dt;
-        if (chT > DUR && cur < CH.length - 1) go(cur + 1);
+        if (chT > durs[cur] && cur < CH.length - 1) { const over = chT - durs[cur]; go(cur + 1); chT = over; }
         update(dt); renderVideo();
       },
     };
