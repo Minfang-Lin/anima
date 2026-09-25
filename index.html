@@ -6,89 +6,100 @@
 <title>糖与血管</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 <style>
+  /* 绘本风：只有一套浅色配色，所有颜色都显式指定 */
   :root {
-    color-scheme: dark;
-    --ground: #140c0f;
-    --panel: #1f1418;
-    --line: #3a262c;
-    --ink: #f3e9e4;
-    --muted: #a8948f;
-    --blood: #d23a45;
-    --sugar: #f2c14e;
-    --age: #9a6433;
-    --ros: #8fdcf0;
-    --serif: "Noto Serif SC", "Songti SC", "SimSun", serif;
+    color-scheme: light;
+    --ground: #fff1ee;
+    --paper: #ffffff;
+    --ink: #5b3a4a;
+    --soft: #9a7885;
+    --coral: #ff7b7b;
+    --sugar: #ffc94d;
+    --mint: #6cc9ae;
+    --blush: #ffd3d0;
+    --round: "ZCOOL KuaiLe", "Yuanti SC", "YouYuan", "PingFang SC", sans-serif;
     --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body {
     background: var(--ground);
+    background-image: radial-gradient(#ffdcd6 1.6px, transparent 1.6px);
+    background-size: 22px 22px;
     color: var(--ink);
-    font: 15px/1.7 var(--sans);
+    font: 15px/1.8 var(--sans);
     padding-inline: 16px;
     padding-block: 28px 48px;
   }
-  .wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 20px; }
-  header { display: grid; gap: 6px; }
-  .eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--sugar); }
-  h1 { font: 900 clamp(30px, 5vw, 46px)/1.15 var(--serif); margin: 0; text-wrap: balance; }
-  h1 em { font-style: normal; color: var(--blood); }
-  .lede { margin: 0; color: var(--muted); max-width: 62ch; }
+  .wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 22px; }
+  header { display: grid; gap: 8px; }
+  .tag {
+    justify-self: start; font: 16px/1 var(--round); color: var(--paper); background: var(--mint);
+    padding: 6px 14px; border-radius: 999px; border: 2.5px solid var(--ink);
+  }
+  h1 { font: 400 clamp(30px, 5.4vw, 50px)/1.2 var(--round); margin: 0; text-wrap: balance; letter-spacing: .02em; }
+  h1 em { font-style: normal; color: var(--coral); }
+  .lede { margin: 0; color: var(--soft); max-width: 62ch; }
 
   .stage {
-    position: relative;
-    border-radius: 14px;
-    overflow: hidden;
-    background: #0e080a;
-    border: 1px solid var(--line);
+    position: relative; border-radius: 26px; overflow: hidden;
+    background: #ffe7e3; border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink);
   }
   canvas { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; max-width: 100%; }
-  .bar { height: 3px; background: var(--line); }
-  .bar i { display: block; height: 100%; width: 0; background: var(--sugar); }
+  .bar { height: 8px; background: #ffd9d3; border-top: 3px solid var(--ink); }
+  .bar i { display: block; height: 100%; width: 0; background: var(--mint); }
 
-  .below { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 20px; align-items: start; }
+  .below { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 22px; align-items: start; }
   @media (max-width: 760px) { .below { grid-template-columns: 1fr; } }
 
-  ol.chapters { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; counter-reset: ch; }
+  ol.chapters { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
   ol.chapters button {
-    width: 100%; text-align: left; display: grid; grid-template-columns: 2.2em 1fr; align-items: baseline;
-    background: transparent; color: var(--muted); border: 0; border-radius: 8px;
-    padding: 8px 10px; font: 500 15px/1.4 var(--sans); cursor: pointer;
+    width: 100%; text-align: left; display: flex; gap: 10px; align-items: center;
+    background: transparent; color: var(--soft); border: 2.5px solid transparent; border-radius: 16px;
+    padding: 6px 10px; font: 17px/1.3 var(--round); cursor: pointer;
   }
-  ol.chapters button span { font: 500 12px var(--mono); color: var(--muted); }
-  ol.chapters button:hover { background: var(--panel); color: var(--ink); }
-  ol.chapters button[aria-current="step"] { background: var(--panel); color: var(--ink); }
-  ol.chapters button[aria-current="step"] span { color: var(--sugar); }
-  button:focus-visible { outline: 2px solid var(--sugar); outline-offset: 2px; }
+  ol.chapters button span {
+    flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--blush); color: var(--ink); font: 15px/1 var(--round);
+  }
+  ol.chapters button:hover { color: var(--ink); background: var(--paper); }
+  ol.chapters button[aria-current="step"] { background: var(--paper); color: var(--ink); border-color: var(--ink); }
+  ol.chapters button[aria-current="step"] span { background: var(--coral); color: var(--paper); }
+  button:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
 
-  .narr { display: grid; gap: 12px; background: var(--panel); border-radius: 12px; padding: 18px 20px; }
-  .narr h2 { margin: 0; font: 600 22px/1.3 var(--serif); }
-  .narr p { margin: 0; max-width: 62ch; }
-  .fact { font: 500 13px/1.6 var(--mono); color: var(--sugar); border-top: 1px solid var(--line); padding-top: 10px; }
-  .controls { display: flex; gap: 8px; flex-wrap: wrap; }
-  .controls button {
-    background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 999px;
-    padding: 6px 14px; font: 500 14px var(--sans); cursor: pointer;
+  .narr {
+    display: grid; gap: 12px; background: var(--paper); border-radius: 22px;
+    border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 18px 22px;
   }
-  .controls button:hover { border-color: var(--muted); }
-  .controls button.primary { background: var(--ink); color: var(--ground); border-color: var(--ink); }
-  footer { color: var(--muted); font-size: 13px; }
+  .narr h2 { margin: 0; font: 400 26px/1.3 var(--round); }
+  .narr p { margin: 0; max-width: 62ch; }
+  .fact {
+    font-size: 14px; line-height: 1.6; background: #fff6da; border-radius: 14px;
+    padding: 8px 12px; border: 2px dashed var(--sugar);
+  }
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+  .controls button {
+    background: var(--paper); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 999px;
+    padding: 5px 16px; font: 17px var(--round); cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
+  }
+  .controls button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .controls button.primary { background: var(--coral); color: var(--paper); }
+  footer { color: var(--soft); font-size: 13px; }
+  @media (prefers-reduced-motion: reduce) { .controls button:active { transform: none; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Diabetic Vasculopathy · 7 幕动画</div>
+    <span class="tag">血管小剧场 · 7 幕</span>
     <h1>多余的<em>糖</em>，如何一步步伤害血管</h1>
-    <p class="lede">一段血管的纵切面。跟着七个场景看：血糖升高、糖化、内皮损伤、斑块形成，再到全身的微血管。点击左侧章节可以跳转。</p>
+    <p class="lede">跟着血管里的红细胞小伙伴走一趟：看看血糖升高后，血管里发生了什么，以及我们可以怎样帮它们。</p>
   </header>
 
   <div class="stage">
-    <canvas id="cv" aria-label="血管纵切面动画"></canvas>
+    <canvas id="cv" aria-label="卡通血管纵切面动画"></canvas>
     <div class="bar"><i id="prog"></i></div>
   </div>
 
@@ -106,42 +117,52 @@
     </section>
   </div>
 
-  <footer>科普示意动画，比例经过夸张处理，不能替代医生的诊断和建议。</footer>
+  <footer>科普示意动画，比例和形象都经过卡通化处理，不能替代医生的诊断和建议。</footer>
 </div>
 
 <script>
 (() => {
   const CH = [
-    { title: "健康的血管", glucose: 5.2, ages: 0, damage: 0, plaque: 0, micro: 0,
-      text: "血管内壁铺着一层薄薄的内皮细胞，表面光滑。红细胞顺畅流过，血液里的葡萄糖（黄色小六边形）数量适中，被细胞按需吸收利用。",
+    { title: "健康的血管", glucose: 5.2, ages: 0, damage: 0, plaque: 0, micro: 0, heal: 0,
+      text: "血管内壁铺着一层整整齐齐的内皮细胞，光滑又有弹性。红细胞开开心心地流过，血液里的葡萄糖（小方糖）不多不少，刚好够身体使用。",
       fact: "正常空腹血糖 3.9–6.1 mmol/L",
       labels: ["endo", "rbc", "glu"] },
-    { title: "血糖长期偏高", glucose: 13, ages: 0.05, damage: 0, plaque: 0, micro: 0,
-      text: "胰岛素不足或身体对它不敏感时，葡萄糖进不了细胞，只能留在血液里。血管壁每天都泡在这样的高糖血液中。",
+    { title: "血糖长期偏高", glucose: 13, ages: 0.05, damage: 0, plaque: 0, micro: 0, heal: 0,
+      text: "胰岛素不够用，或者身体对它不敏感时，葡萄糖进不了细胞，只好留在血液里。小方糖越来越多，血管每天都泡在甜甜的血液里。",
       fact: "糖尿病诊断：空腹 ≥ 7.0 mmol/L，或随机血糖 ≥ 11.1 mmol/L",
       labels: ["glu", "hud"] },
-    { title: "糖化：AGEs 堆积", glucose: 13, ages: 1, damage: 0.15, plaque: 0, micro: 0,
-      text: "多余的葡萄糖会自发粘到蛋白质上，最后变成晚期糖基化终产物（AGEs，图中褐色团块）。它们把管壁里的胶原纤维交联在一起，血管变硬，搏动时的舒张幅度变小。",
-      fact: "糖化血红蛋白 HbA1c 就是同一类反应的产物，反映近 2–3 个月的平均血糖",
+    { title: "糖化：黏黏的 AGEs", glucose: 13, ages: 1, damage: 0.15, plaque: 0, micro: 0, heal: 0,
+      text: "多余的糖会悄悄粘到蛋白质上，慢慢变成晚期糖基化终产物（AGEs，图里皱着眉的棕色小团子）。它们把管壁里的胶原纤维绑在一起，血管变硬，跳动时也撑不开了。",
+      fact: "糖化血红蛋白 HbA1c 也是这类反应的产物，反映近 2–3 个月的平均血糖",
       labels: ["age", "wall"] },
-    { title: "内皮受损与炎症", glucose: 13, ages: 1, damage: 1, plaque: 0.18, micro: 0,
-      text: "AGEs 与受体结合，加上高糖代谢，产生大量活性氧（蓝色闪光）。内皮细胞受损、之间出现缝隙，一氧化氮减少，血管不再能正常舒张。白细胞开始黏附到受伤处并钻进管壁。",
-      fact: "氧化应激 + 慢性炎症 = 动脉粥样硬化的起点",
+    { title: "内皮受伤，发炎了", glucose: 13, ages: 1, damage: 1, plaque: 0.18, micro: 0, heal: 0,
+      text: "AGEs 和高糖代谢会产生很多活性氧（小闪电）。内皮细胞被电得晕头转向，彼此之间出现缝隙，血管不再能好好放松。白细胞赶来帮忙，却黏在伤口上，钻进了管壁。",
+      fact: "氧化应激 + 慢性炎症，是动脉粥样硬化的起点",
       labels: ["ros", "gap", "mono"] },
-    { title: "斑块形成，管腔变窄", glucose: 13, ages: 1, damage: 1, plaque: 1, micro: 0,
-      text: "钻进管壁的白细胞吞下被氧化的低密度脂蛋白，变成泡沫细胞，逐渐堆成脂质核心，外面盖着一层纤维帽。斑块让管腔变窄，血流受阻。斑块破裂会引发血栓，导致心梗或中风。",
+    { title: "斑块长大，路变窄了", glucose: 13, ages: 1, damage: 1, plaque: 1, micro: 0, heal: 0,
+      text: "钻进管壁的白细胞吞下被氧化的坏胆固醇，变成胖胖的泡沫细胞，越堆越多，形成像奶油一样的脂质核心，外面盖着一层纤维帽。通道变窄，红细胞只能挤着过去。斑块一旦破裂，会形成血栓，引起心梗或中风。",
       fact: "糖尿病患者发生心血管疾病的风险约为非糖尿病人群的 2–4 倍",
       labels: ["core", "cap", "hud2"] },
-    { title: "微血管也在受伤", glucose: 13, ages: 1, damage: 1, plaque: 1, micro: 1,
-      text: "最细的毛细血管只容得下红细胞排队通过。高血糖让它的基底膜变厚、管壁渗漏。这种损伤发生在视网膜、肾小球和神经周围，分别导致视网膜病变、糖尿病肾病和周围神经病变。",
+    { title: "小血管也在受伤", glucose: 13, ages: 1, damage: 1, plaque: 1, micro: 1, heal: 0,
+      text: "最细的毛细血管只容得下红细胞排队通过。高血糖让它的基底膜变厚，管壁开始渗漏。眼睛、肾脏和神经都靠这些小血管供养，所以会出现视网膜病变、糖尿病肾病和手脚麻木。",
       fact: "三大微血管并发症：眼（视网膜）· 肾（肾小球）· 神经（手脚麻木）",
       labels: ["bm", "leak", "single"] },
-    { title: "控制血糖，放慢进程", glucose: 6.4, ages: 0.55, damage: 0.35, plaque: 0.75, micro: 0,
-      text: "已经形成的损伤很难完全逆转，但把血糖、血压、血脂控制在目标范围，并戒烟、规律运动，可以明显放慢新损伤的产生，也让斑块更稳定。",
+    { title: "照顾好血糖，血管会感谢你", glucose: 6.4, ages: 0.55, damage: 0.35, plaque: 0.75, micro: 0, heal: 1,
+      text: "已经造成的损伤很难完全消失，但把血糖、血压、血脂控制在目标范围，再加上不吸烟、多运动，就能明显放慢新的损伤，让斑块更稳定。红细胞们又能笑着出发啦。",
       fact: "常见目标：HbA1c < 7%，血压 < 130/80 mmHg，定期查眼底和尿微量白蛋白",
-      labels: ["glu", "hud"] },
+      labels: ["glu", "hud", "heal"] },
   ];
   const DUR = 11; // 每幕秒数
+
+  // 配色
+  const C = {
+    ink: "#5b3a4a", tissue: "#ffe7e3", dot: "#ffd6cf", wall: "#ffb3b3", adv: "#ffcdc4",
+    lumen: "#fff4ec", lumenSweet: "#fff0c2", endo: "#ffe0e6", endoHurt: "#d9c8cf",
+    rbc: "#ff7b7b", rbcTired: "#e0897a", blush: "#ff9fb0", sugar: "#ffc94d", age: "#b07a4f",
+    ros: "#8b7cf6", mono: "#ffffff", plaque: "#ffe29a", core: "#ffd166", bm: "#c9b6f2",
+    mint: "#6cc9ae", paper: "#ffffff", soft: "#9a7885",
+  };
+  const ROUND = '"ZCOOL KuaiLe", "Yuanti SC", "YouYuan", "PingFang SC", sans-serif';
 
   const cv = document.getElementById("cv");
   const ctx = cv.getContext("2d");
@@ -155,21 +176,24 @@
   }
   addEventListener("resize", resize); resize();
 
-  // 伪随机，保证每次画出的内皮细胞 / AGE 位置一致
   const rnd = (i) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
   const lerp = (a, b, t) => a + (b - a) * t;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const mix = (h1, h2, t) => {
+    const a = parseInt(h1.slice(1), 16), b = parseInt(h2.slice(1), 16);
+    const c = (s) => Math.round(lerp((a >> s) & 255, (b >> s) & 255, clamp(t, 0, 1)));
+    return `rgb(${c(16)},${c(8)},${c(0)})`;
+  };
 
-  // 场景状态（平滑逼近目标值）
-  const S = { glucose: 5.2, ages: 0, damage: 0, plaque: 0, micro: 0 };
+  const S = { glucose: 5.2, ages: 0, damage: 0, plaque: 0, micro: 0, heal: 0 };
   let cur = 0, chT = 0, playing = !reduce, time = 0;
   const labelAlpha = {};
 
   // ---------- 几何 ----------
   const G = () => {
-    const cy = H * 0.5, pulse = Math.sin(time * Math.PI * 2 * 1.1);
+    const cy = H * 0.52, pulse = Math.sin(time * Math.PI * 2 * 1.0);
     const R = H * 0.25 * (1 + 0.035 * pulse * (1 - 0.85 * S.ages));
-    const wallT = H * 0.16, px = W * 0.6, sig = W * 0.12;
+    const wallT = H * 0.15, px = W * 0.6, sig = W * 0.12;
     return { cy, R, wallT, px, sig, pulse };
   };
   const bump = (g, x) => Math.exp(-(((x - g.px) / g.sig) ** 2));
@@ -179,26 +203,26 @@
   const mid = (g, x) => (botE(g, x) + topE(g, x)) / 2;
 
   // ---------- 粒子 ----------
-  const rbcs = Array.from({ length: 46 }, (_, i) => ({ x: rnd(i) * 1.2, yn: rnd(i + 50) * 1.7 - 0.85, ph: rnd(i + 90) * 6 }));
-  const glus = Array.from({ length: 170 }, (_, i) => ({ x: rnd(i + 200), yn: rnd(i + 400) * 1.8 - 0.9, ph: rnd(i + 600) * 6, rot: rnd(i + 700) * 6 }));
-  const monos = Array.from({ length: 5 }, (_, i) => ({ x: rnd(i + 900) * 0.4, st: 0, d: 0, k: i }));
+  const rbcs = Array.from({ length: 24 }, (_, i) => ({ x: rnd(i) * 1.2, yn: rnd(i + 50) * 1.5 - 0.75, ph: rnd(i + 90) * 6 }));
+  const glus = Array.from({ length: 110 }, (_, i) => ({ x: rnd(i + 200), yn: rnd(i + 400) * 1.8 - 0.9, ph: rnd(i + 600) * 6, rot: rnd(i + 700) * 6 }));
+  const monos = Array.from({ length: 4 }, (_, i) => ({ x: rnd(i + 900) * 0.4, st: 0, d: 0, k: i }));
   const sparks = [];
-  const capR = Array.from({ length: 12 }, (_, i) => ({ x: i / 12 }));
+  const capR = Array.from({ length: 8 }, (_, i) => ({ x: i / 8 }));
   const leaks = [];
+  const hearts = Array.from({ length: 9 }, (_, i) => ({ x: rnd(i + 8000), y: rnd(i + 8100), ph: rnd(i + 8200) * 6 }));
 
   function update(dt) {
     const tgt = CH[cur];
     const k = 1 - Math.exp(-dt * 1.4);
-    for (const key of ["glucose", "ages", "damage", "plaque", "micro"]) S[key] = lerp(S[key], tgt[key], k);
+    for (const key of Object.keys(S)) S[key] = lerp(S[key], tgt[key], k);
     const g = G();
     const beat = 1 + 0.3 * Math.max(0, g.pulse);
-    const base = 0.11 * beat * (1 - 0.25 * S.ages);
+    const base = 0.09 * beat * (1 - 0.25 * S.ages);
 
     for (const p of rbcs) {
-      const xPix = p.x * W;
-      const h = Math.max(half(g, xPix), 4);
+      const h = Math.max(half(g, p.x * W), 4);
       p.x += base * dt * clamp(g.R / h, 0.6, 2.4) * (0.8 + 0.4 * (1 - Math.abs(p.yn)));
-      if (p.x > 1.1) { p.x -= 1.2; }
+      if (p.x > 1.1) p.x -= 1.2;
     }
     for (const p of glus) {
       const h = Math.max(half(g, p.x * W), 4);
@@ -206,274 +230,341 @@
       p.rot += dt * 0.8;
       if (p.x > 1.05) p.x -= 1.1;
     }
-    // 单核细胞：黏附在斑块位置，钻入管壁
     for (const m of monos) {
       if (m.st === 0) {
         m.x += base * 0.55 * dt;
-        if (S.damage > 0.5 && Math.abs(m.x * W - g.px) < g.sig * 0.5 && rnd(m.k + time) < 0.9) m.st = 1;
+        if (S.damage > 0.5 && Math.abs(m.x * W - g.px) < g.sig * 0.5) m.st = 1;
         if (m.x > 1.1) m.x = -0.1 - rnd(m.k + time) * 0.3;
       } else {
         m.d += dt * 0.35;
         if (m.d > 1.6 || S.damage < 0.3) { m.st = 0; m.d = 0; m.x = -0.1 - rnd(m.k * 3 + time) * 0.4; }
       }
     }
-    // 活性氧闪光
-    if (Math.random() < S.damage * dt * 14 && S.micro < 0.5) {
-      const x = Math.random() * W, top = Math.random() < 0.5;
-      sparks.push({ x, top, life: 0.6, off: Math.random() * 14 });
+    if (Math.random() < S.damage * dt * 7 && S.micro < 0.5) {
+      sparks.push({ x: Math.random() * W, top: Math.random() < 0.5, life: 0.7, off: Math.random() * 14 });
     }
     for (let i = sparks.length - 1; i >= 0; i--) { sparks[i].life -= dt; if (sparks[i].life <= 0) sparks.splice(i, 1); }
-    // 毛细血管
-    for (const c of capR) { c.x += dt * 0.07 * (1 - 0.3 * S.ages); if (c.x > 1.05) c.x -= 1.1; }
-    if (S.micro > 0.5 && Math.random() < dt * 8 * S.ages) {
+    for (const c of capR) { c.x += dt * 0.06 * (1 - 0.3 * S.ages); if (c.x > 1.06) c.x -= 1.12; }
+    if (S.micro > 0.5 && Math.random() < dt * 6 * S.ages) {
       leaks.push({ x: Math.random() * W, dir: Math.random() < 0.5 ? -1 : 1, d: 0, life: 2.4 });
     }
     for (let i = leaks.length - 1; i >= 0; i--) { const l = leaks[i]; l.d += dt * 18; l.life -= dt; if (l.life <= 0) leaks.splice(i, 1); }
   }
 
-  // ---------- 绘制：大血管 ----------
-  function hexagon(x, y, r, a) {
+  // ---------- 小画笔 ----------
+  function outline(w = 2.5) { ctx.strokeStyle = C.ink; ctx.lineWidth = w; ctx.lineJoin = "round"; ctx.lineCap = "round"; }
+  function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+  // mood: 1 开心，0 平静，-1 难过
+  function face(x, y, s, mood, blush = true) {
+    ctx.fillStyle = C.ink;
+    const blink = (Math.sin(time * 1.3 + x * 0.05) > 0.985) ? 0.25 : 1;
+    ctx.beginPath(); ctx.ellipse(x - s * 0.32, y - s * 0.08, s * 0.1, s * 0.13 * blink, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x + s * 0.32, y - s * 0.08, s * 0.1, s * 0.13 * blink, 0, 0, Math.PI * 2); ctx.fill();
+    if (blush) {
+      ctx.fillStyle = "rgba(255,159,176,0.8)";
+      ctx.beginPath(); ctx.ellipse(x - s * 0.55, y + s * 0.18, s * 0.14, s * 0.08, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x + s * 0.55, y + s * 0.18, s * 0.14, s * 0.08, 0, 0, Math.PI * 2); ctx.fill();
+    }
+    outline(Math.max(1.2, s * 0.09));
     ctx.beginPath();
-    for (let i = 0; i < 6; i++) { const t = a + i * Math.PI / 3; ctx[i ? "lineTo" : "moveTo"](x + r * Math.cos(t), y + r * Math.sin(t)); }
-    ctx.closePath();
+    ctx.moveTo(x - s * 0.2, y + s * 0.2);
+    ctx.quadraticCurveTo(x, y + s * 0.2 + s * 0.28 * mood, x + s * 0.2, y + s * 0.2);
+    ctx.stroke();
   }
+  function sugarCube(x, y, s, rot) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(rot) * 0.4);
+    rrect(-s, -s, s * 2, s * 2, s * 0.5);
+    ctx.fillStyle = C.sugar; ctx.fill(); outline(1.6); ctx.stroke();
+    ctx.fillStyle = "rgba(255,255,255,0.8)";
+    ctx.beginPath(); ctx.arc(-s * 0.35, -s * 0.35, s * 0.28, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  function heart(x, y, s, color) {
+    ctx.beginPath();
+    ctx.moveTo(x, y + s * 0.7);
+    ctx.bezierCurveTo(x - s * 1.2, y - s * 0.1, x - s * 0.5, y - s * 0.9, x, y - s * 0.3);
+    ctx.bezierCurveTo(x + s * 0.5, y - s * 0.9, x + s * 1.2, y - s * 0.1, x, y + s * 0.7);
+    ctx.fillStyle = color; ctx.fill(); outline(1.8); ctx.stroke();
+  }
+  function bolt(x, y, s, a) {
+    ctx.save(); ctx.globalAlpha *= a; ctx.translate(x, y);
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.2, -s); ctx.lineTo(s * 0.45, -s * 0.15); ctx.lineTo(0, -s * 0.05);
+    ctx.lineTo(s * 0.25, s); ctx.lineTo(-s * 0.45, s * 0.05); ctx.lineTo(0, -s * 0.02); ctx.closePath();
+    ctx.fillStyle = C.ros; ctx.fill(); outline(1.6); ctx.stroke();
+    ctx.restore();
+  }
+  const rbcMood = () => clamp(1 - 1.5 * S.damage - 0.3 * S.ages + 0.6 * S.heal, -1, 1);
+
+  // ---------- 大血管 ----------
   function drawMacro() {
     const g = G();
     const step = Math.max(4, W / 160);
-    // 组织背景
-    ctx.fillStyle = "#170d10"; ctx.fillRect(0, 0, W, H);
-    // 管壁（中膜）
-    ctx.fillStyle = "#6e2f37";
-    ctx.fillRect(0, g.cy - g.R - g.wallT, W, g.wallT + g.R);
-    ctx.fillRect(0, g.cy, W, g.R + g.wallT);
-    // 外膜
-    ctx.fillStyle = "#4a2229";
-    ctx.fillRect(0, g.cy - g.R - g.wallT, W, g.wallT * 0.35);
-    ctx.fillRect(0, g.cy + g.R + g.wallT * 0.65, W, g.wallT * 0.35);
+    // 组织背景 + 圆点
+    ctx.fillStyle = C.tissue; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = C.dot;
+    for (let i = 0; i < 30; i++) { ctx.beginPath(); ctx.arc(rnd(i + 30) * W, rnd(i + 60) * H, 3 + rnd(i) * 4, 0, Math.PI * 2); ctx.fill(); }
 
-    // 胶原纤维 + AGE 交联
-    ctx.lineWidth = 1.2;
+    // 管壁
+    const wallTop = g.cy - g.R - g.wallT, wallBot = g.cy + g.R + g.wallT;
+    ctx.fillStyle = C.adv;
+    rrect(-10, wallTop, W + 20, wallBot - wallTop, 0); ctx.fill();
+    ctx.fillStyle = C.wall;
+    ctx.fillRect(0, wallTop + g.wallT * 0.3, W, wallBot - wallTop - g.wallT * 0.6);
+    outline(3);
+    ctx.beginPath(); ctx.moveTo(0, wallTop); ctx.lineTo(W, wallTop); ctx.moveTo(0, wallBot); ctx.lineTo(W, wallBot); ctx.stroke();
+
+    // 胶原纤维（白色波浪）+ AGE 交联
     for (const side of [-1, 1]) {
-      for (let f = 0; f < 3; f++) {
-        const y0 = g.cy + side * (g.R + g.wallT * (0.18 + f * 0.16));
-        ctx.strokeStyle = `rgba(230,160,150,${0.28 - f * 0.05})`;
+      for (let f = 0; f < 2; f++) {
+        const y0 = g.cy + side * (g.R + g.wallT * (0.3 + f * 0.25));
+        ctx.strokeStyle = "rgba(255,255,255,0.85)"; ctx.lineWidth = 2.2; ctx.lineCap = "round";
         ctx.beginPath();
         for (let x = 0; x <= W; x += step) {
-          const y = y0 + Math.sin(x * 0.045 + f * 2 + side) * 3 * (1 - 0.6 * S.ages);
+          const y = y0 + Math.sin(x * 0.04 + f * 2 + side + time * 0.6 * (1 - S.ages)) * 3.5 * (1 - 0.7 * S.ages);
           ctx[x ? "lineTo" : "moveTo"](x, y);
         }
         ctx.stroke();
       }
       if (S.ages > 0.05) {
-        ctx.strokeStyle = `rgba(170,110,55,${0.85 * S.ages})`;
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 44; i++) {
+        for (let i = 0; i < 26; i++) {
           if (rnd(i + (side > 0 ? 3000 : 3100)) > S.ages) continue;
-          const x = (i + 0.5) / 44 * W;
-          const y1 = g.cy + side * (g.R + g.wallT * 0.18), y2 = g.cy + side * (g.R + g.wallT * 0.5);
-          ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + 4, y2); ctx.stroke();
+          const x = (i + 0.5) / 26 * W;
+          const y1 = g.cy + side * (g.R + g.wallT * 0.3), y2 = g.cy + side * (g.R + g.wallT * 0.55);
+          ctx.fillStyle = C.age; outline(1.5);
+          ctx.beginPath(); ctx.arc(x, (y1 + y2) / 2, 3.2 * S.ages, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          ctx.strokeStyle = C.age; ctx.lineWidth = 2.5;
+          ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2); ctx.stroke();
         }
-        ctx.lineWidth = 1.2;
       }
     }
 
-    // 管腔（血浆）
-    const plasma = `rgb(${Math.round(lerp(58, 74, (S.glucose - 5) / 8))},${Math.round(lerp(16, 30, (S.glucose - 5) / 8))},${22})`;
-    ctx.fillStyle = plasma;
+    // 管腔
+    ctx.fillStyle = mix(C.lumen, C.lumenSweet, (S.glucose - 5) / 8);
     ctx.beginPath();
-    for (let x = 0; x <= W; x += step) ctx[x ? "lineTo" : "moveTo"](x, topE(g, x));
-    for (let x = W; x >= 0; x -= step) ctx.lineTo(x, botE(g, x));
+    for (let x = -step; x <= W + step; x += step) ctx.lineTo(x, topE(g, x));
+    for (let x = W + step; x >= -step; x -= step) ctx.lineTo(x, botE(g, x));
     ctx.closePath(); ctx.fill();
 
-    // 斑块（下壁）
+    // 斑块
     if (S.plaque > 0.02) {
-      ctx.fillStyle = "#c9a36b";
+      const baseY = g.cy + g.R + 4;
       ctx.beginPath();
       for (let x = g.px - g.sig * 2.2; x <= g.px + g.sig * 2.2; x += step) ctx.lineTo(x, botE(g, x));
-      for (let x = g.px + g.sig * 2.2; x >= g.px - g.sig * 2.2; x -= step) ctx.lineTo(x, g.cy + g.R + g.wallT * 0.1);
-      ctx.closePath(); ctx.fill();
-      // 脂质核心
-      const coreH = S.plaque * g.R * 0.42;
-      ctx.fillStyle = "#f0cf6a";
+      ctx.lineTo(g.px + g.sig * 2.2, baseY); ctx.lineTo(g.px - g.sig * 2.2, baseY); ctx.closePath();
+      ctx.fillStyle = C.plaque; ctx.fill();
+      const coreH = S.plaque * g.R * 0.4;
+      ctx.fillStyle = C.core;
       ctx.beginPath();
-      ctx.ellipse(g.px, g.cy + g.R - coreH * 0.55, g.sig * 0.75 * S.plaque + 2, coreH * 0.6 + 1, 0, 0, Math.PI * 2);
-      ctx.fill();
-      // 泡沫细胞
-      ctx.fillStyle = "rgba(255,240,200,0.55)";
-      for (let i = 0; i < 14; i++) {
-        if (rnd(i + 5000) > S.plaque) continue;
-        const a = rnd(i + 5100) * Math.PI * 2, rr = rnd(i + 5200);
-        ctx.beginPath();
-        ctx.arc(g.px + Math.cos(a) * rr * g.sig * 0.6 * S.plaque, g.cy + g.R - coreH * 0.55 + Math.sin(a) * rr * coreH * 0.45, 2.2, 0, Math.PI * 2);
-        ctx.fill();
+      ctx.ellipse(g.px, g.cy + g.R - coreH * 0.55, g.sig * 0.72 * S.plaque + 2, coreH * 0.55 + 1, 0, 0, Math.PI * 2);
+      ctx.fill(); outline(2); ctx.setLineDash([5, 5]); ctx.stroke(); ctx.setLineDash([]);
+      // 胖胖的泡沫细胞
+      for (let i = 0; i < 5; i++) {
+        if (rnd(i + 5000) * 0.9 > S.plaque) continue;
+        const fx = g.px + (i - 2) * g.sig * 0.26 * S.plaque, fy = g.cy + g.R - coreH * (0.45 + 0.25 * (i % 2));
+        const fs = Math.max(5, H * 0.018) * S.plaque;
+        ctx.fillStyle = "#fff8e1"; ctx.beginPath(); ctx.arc(fx, fy, fs, 0, Math.PI * 2); ctx.fill(); outline(1.5); ctx.stroke();
+        face(fx, fy, fs * 0.9, -0.2, false);
       }
       // 纤维帽
-      ctx.strokeStyle = "#e9ddc6"; ctx.lineWidth = 2.5;
+      outline(3.5);
       ctx.beginPath();
-      for (let x = g.px - g.sig * 1.6; x <= g.px + g.sig * 1.6; x += step) ctx.lineTo(x, botE(g, x) + 2);
+      for (let x = g.px - g.sig * 1.8; x <= g.px + g.sig * 1.8; x += step) ctx.lineTo(x, botE(g, x));
+      ctx.stroke();
+      ctx.strokeStyle = "#fffaf0"; ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let x = g.px - g.sig * 1.5; x <= g.px + g.sig * 1.5; x += step) ctx.lineTo(x, botE(g, x) + 3);
       ctx.stroke();
     }
 
-    // 内皮细胞
-    const cellL = Math.max(14, W / 48);
+    // 内皮细胞：圆滚滚的小砖
+    const cellL = Math.max(22, W / 30);
     for (const side of [-1, 1]) {
       const edge = side < 0 ? topE : botE;
       for (let i = 0, x = cellL / 2; x < W + cellL; i++, x += cellL) {
         const r = rnd(i + (side < 0 ? 100 : 1000));
-        if (r < S.damage * 0.3) continue;
-        const y = edge(g, x) - side * 3;
+        if (r < S.damage * 0.28 * (1 - 0.5 * S.heal)) continue;
+        const y = edge(g, x) - side * 4;
         const ang = Math.atan2(edge(g, x + 1) - edge(g, x - 1), 2);
-        const len = cellL * (0.48 - 0.12 * S.damage);
-        ctx.save(); ctx.translate(x, y); ctx.rotate(ang + (r - 0.5) * 0.5 * S.damage);
-        ctx.fillStyle = `rgb(${Math.round(lerp(240, 180, S.damage))},${Math.round(lerp(168, 118, S.damage))},${Math.round(lerp(160, 110, S.damage))})`;
-        ctx.beginPath(); ctx.ellipse(0, 0, len, 3.4, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "rgba(120,40,60,0.7)";
-        ctx.beginPath(); ctx.ellipse(0, 0, 2.6, 1.8, 0, 0, Math.PI * 2); ctx.fill();
+        const len = cellL * (0.46 - 0.1 * S.damage);
+        ctx.save(); ctx.translate(x, y); ctx.rotate(ang + (r - 0.5) * 0.45 * S.damage);
+        rrect(-len, -4.5, len * 2, 9, 4.5);
+        ctx.fillStyle = mix("#ffe0e6", "#d9c8cf", S.damage * (0.5 + r)); ctx.fill();
+        outline(1.6); ctx.stroke();
+        ctx.fillStyle = "#f59fb3";
+        ctx.beginPath(); ctx.arc(0, 0, 2.2, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
       }
-      // AGEs 附着
+      // AGEs：皱眉的棕色小团子
       if (S.ages > 0.02) {
-        for (let i = 0; i < 30; i++) {
-          const t = rnd(i + (side < 0 ? 2000 : 2100));
-          if (t > S.ages) continue;
-          const x = (i + rnd(i + 2200)) / 30 * W;
-          const y = edge(g, x) + side * -8;
-          const s = 2 + 2.5 * S.ages;
-          ctx.fillStyle = "#9a6433";
-          for (let j = 0; j < 3; j++) {
-            ctx.beginPath(); ctx.arc(x + (j - 1) * s * 0.9, y + (j % 2) * s * 0.6 * -side, s, 0, Math.PI * 2); ctx.fill();
-          }
+        for (let i = 0; i < 12; i++) {
+          if (rnd(i + (side < 0 ? 2000 : 2100)) > S.ages) continue;
+          const x = (i + 0.2 + rnd(i + 2200) * 0.6) / 12 * W;
+          const s = (4 + 4 * S.ages) * Math.max(1, W / 1000);
+          const y = edge(g, x) - side * (s + 6);
+          ctx.fillStyle = C.age;
+          ctx.beginPath();
+          ctx.arc(x - s * 0.6, y, s * 0.8, 0, Math.PI * 2);
+          ctx.arc(x + s * 0.6, y, s * 0.8, 0, Math.PI * 2);
+          ctx.arc(x, y - s * 0.4, s * 0.9, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = C.ink;
+          ctx.beginPath(); ctx.arc(x - s * 0.35, y - s * 0.2, s * 0.14, 0, Math.PI * 2); ctx.arc(x + s * 0.35, y - s * 0.2, s * 0.14, 0, Math.PI * 2); ctx.fill();
+          outline(1.3);
+          ctx.beginPath(); ctx.moveTo(x - s * 0.6, y - s * 0.6); ctx.lineTo(x - s * 0.15, y - s * 0.4);
+          ctx.moveTo(x + s * 0.6, y - s * 0.6); ctx.lineTo(x + s * 0.15, y - s * 0.4); ctx.stroke();
         }
       }
     }
 
-    // 活性氧
+    // 活性氧小闪电
     for (const s of sparks) {
-      const y = (s.top ? topE(g, s.x) + 6 + s.off : botE(g, s.x) - 6 - s.off);
-      const a = s.life / 0.6, r = 6 * (1.2 - a);
-      ctx.strokeStyle = `rgba(143,220,240,${a})`; ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      for (let i = 0; i < 4; i++) { const t = i * Math.PI / 4; ctx.moveTo(s.x - Math.cos(t) * r, y - Math.sin(t) * r); ctx.lineTo(s.x + Math.cos(t) * r, y + Math.sin(t) * r); }
-      ctx.stroke();
+      const y = s.top ? topE(g, s.x) + 14 + s.off : botE(g, s.x) - 14 - s.off;
+      bolt(s.x, y, Math.max(7, H * 0.022), clamp(s.life / 0.3, 0, 1));
     }
 
-    // 葡萄糖
+    // 小方糖
     const nG = Math.round(clamp((S.glucose - 3) / 11, 0, 1) * glus.length);
-    ctx.strokeStyle = "#f2c14e"; ctx.lineWidth = 1.3;
+    const cube = Math.max(3.5, H * 0.011);
     for (let i = 0; i < nG; i++) {
       const p = glus[i], x = p.x * W;
-      const y = mid(g, x) + p.yn * half(g, x) * 0.9 + Math.sin(time * 2 + p.ph) * 2;
-      hexagon(x, y, 3.2, p.rot); ctx.stroke();
+      const y = mid(g, x) + p.yn * half(g, x) * 0.88 + Math.sin(time * 2 + p.ph) * 2;
+      sugarCube(x, y, cube, p.rot);
     }
 
-    // 红细胞
-    const rbcR = Math.max(6, H * 0.022);
+    // 红细胞小伙伴
+    const rbcR = Math.max(10, H * 0.04);
+    const mood = rbcMood();
     for (const p of rbcs) {
       const x = p.x * W;
-      const y = mid(g, x) + p.yn * half(g, x) * 0.78 + Math.sin(time * 1.5 + p.ph) * 1.5;
-      const tint = S.ages * 0.35;
-      ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(time + p.ph) * 0.4);
-      ctx.fillStyle = `rgb(${Math.round(lerp(210, 170, tint))},${Math.round(lerp(55, 70, tint))},${Math.round(lerp(65, 45, tint))})`;
-      ctx.beginPath(); ctx.ellipse(0, 0, rbcR, rbcR * 0.62, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "rgba(110,15,30,0.55)";
-      ctx.beginPath(); ctx.ellipse(0, 0, rbcR * 0.45, rbcR * 0.26, 0, 0, Math.PI * 2); ctx.fill();
+      const narrow = clamp(g.R / Math.max(half(g, x), 1) - 1, 0, 1);
+      const y = mid(g, x) + p.yn * half(g, x) * 0.7 + Math.sin(time * 1.6 + p.ph) * 2;
+      ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(time * 0.8 + p.ph) * 0.12);
+      ctx.scale(1 + 0.15 * narrow, 1 - 0.2 * narrow);
+      ctx.beginPath(); ctx.ellipse(0, 0, rbcR, rbcR * 0.82, 0, 0, Math.PI * 2);
+      ctx.fillStyle = mix(C.rbc, C.rbcTired, S.ages * 0.6 * (1 - S.heal)); ctx.fill();
+      outline(2.2); ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      ctx.beginPath(); ctx.ellipse(-rbcR * 0.45, -rbcR * 0.42, rbcR * 0.22, rbcR * 0.13, -0.5, 0, Math.PI * 2); ctx.fill();
+      face(0, rbcR * 0.05, rbcR * 0.7, mood - 0.6 * narrow);
+      if (mood - narrow < -0.2) { // 汗珠
+        ctx.fillStyle = "#9fd8ff";
+        ctx.beginPath(); ctx.moveTo(rbcR * 0.75, -rbcR * 0.7); ctx.quadraticCurveTo(rbcR * 1.05, -rbcR * 0.25, rbcR * 0.75, -rbcR * 0.2);
+        ctx.quadraticCurveTo(rbcR * 0.5, -rbcR * 0.35, rbcR * 0.75, -rbcR * 0.7); ctx.fill(); outline(1.2); ctx.stroke();
+      }
       ctx.restore();
     }
 
-    // 单核细胞 / 巨噬细胞
+    // 白细胞
     if (S.damage > 0.2) {
+      const ms = Math.max(9, H * 0.03);
       for (const m of monos) {
-        const x = m.st ? g.px + (m.k - 2) * g.sig * 0.18 : m.x * W;
-        let y = botE(g, x) - 10;
-        if (m.st) y += Math.min(m.d, 1) * (g.R * 0.5 * S.plaque + 16);
+        const x = m.st ? g.px + (m.k - 1.5) * g.sig * 0.3 : m.x * W;
+        let y = botE(g, x) - ms - 4;
+        if (m.st) y += Math.min(m.d, 1) * (g.R * 0.45 * S.plaque + ms);
         const a = clamp((S.damage - 0.2) * 2, 0, 1) * (m.st && m.d > 1.2 ? 1 - (m.d - 1.2) / 0.4 : 1);
-        ctx.fillStyle = `rgba(236,232,240,${a * 0.9})`;
-        ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = `rgba(120,100,160,${a})`;
-        ctx.beginPath(); ctx.arc(x - 1.5, y, 3.2, 0, Math.PI * 2); ctx.fill();
+        ctx.save(); ctx.globalAlpha *= a;
+        ctx.beginPath(); ctx.arc(x, y, ms, 0, Math.PI * 2);
+        ctx.fillStyle = C.mono; ctx.fill(); outline(2); ctx.stroke();
+        ctx.fillStyle = "#e7dcff";
+        ctx.beginPath(); ctx.arc(x + ms * 0.35, y - ms * 0.35, ms * 0.25, 0, Math.PI * 2); ctx.fill();
+        face(x, y + ms * 0.05, ms * 0.7, 0.3);
+        ctx.restore();
+      }
+    }
+
+    // 最后一幕：飘起的小爱心
+    if (S.heal > 0.02) {
+      for (const h of hearts) {
+        const x = h.x * W, y = ((h.y - time * 0.04) % 1 + 1) % 1 * H;
+        ctx.save(); ctx.globalAlpha *= S.heal * 0.9;
+        heart(x, y, Math.max(7, H * 0.02) * (1 + 0.1 * Math.sin(time * 3 + h.ph)), "#ff9fb0");
+        ctx.restore();
       }
     }
     return g;
   }
 
-  // ---------- 绘制：毛细血管 ----------
+  // ---------- 毛细血管 ----------
   function drawMicro() {
-    const cy = H * 0.5, h = H * 0.075;
-    const bm = 3 + S.ages * H * 0.035;
-    ctx.fillStyle = "#1c1014"; ctx.fillRect(0, 0, W, H);
-    // 周围组织细胞
-    ctx.fillStyle = "#2a171c";
-    for (let i = 0; i < 40; i++) {
+    const cy = H * 0.52, h = H * 0.085;
+    const bm = 4 + S.ages * H * 0.04;
+    ctx.fillStyle = C.tissue; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 26; i++) {
       const x = rnd(i + 7000) * W, y = rnd(i + 7100) * H;
-      if (Math.abs(y - cy) < h + bm + 20) continue;
-      ctx.beginPath(); ctx.ellipse(x, y, 22, 14, rnd(i + 7200) * 3, 0, Math.PI * 2); ctx.fill();
+      if (Math.abs(y - cy) < h + bm + 30) continue;
+      ctx.beginPath(); ctx.ellipse(x, y, 26, 17, rnd(i + 7200) * 3, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffd6cf"; ctx.fill(); outline(1.5); ctx.stroke();
+      ctx.fillStyle = "#f5b3c0"; ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
     }
     // 基底膜
-    ctx.fillStyle = "#8a6a9a";
+    ctx.fillStyle = C.bm;
     ctx.fillRect(0, cy - h - bm, W, bm); ctx.fillRect(0, cy + h, W, bm);
-    // 内皮
-    ctx.fillStyle = "#e0a198";
-    ctx.fillRect(0, cy - h - 2, W, 4); ctx.fillRect(0, cy + h - 2, W, 4);
-    // 管腔
-    ctx.fillStyle = "#4a1e18"; ctx.fillRect(0, cy - h + 2, W, 2 * h - 4);
-    // 渗漏
+    outline(2.5);
+    ctx.beginPath(); ctx.moveTo(0, cy - h - bm); ctx.lineTo(W, cy - h - bm); ctx.moveTo(0, cy + h + bm); ctx.lineTo(W, cy + h + bm); ctx.stroke();
+    // 内皮 + 管腔
+    ctx.fillStyle = "#ffe0e6"; ctx.fillRect(0, cy - h - 3, W, 6); ctx.fillRect(0, cy + h - 3, W, 6);
+    ctx.fillStyle = C.lumenSweet; ctx.fillRect(0, cy - h + 3, W, 2 * h - 6);
+    // 渗出的小糖滴
     for (const l of leaks) {
-      const a = clamp(l.life / 2.4, 0, 1);
-      ctx.fillStyle = `rgba(242,193,78,${a})`;
-      ctx.beginPath(); ctx.arc(l.x, cy + l.dir * (h + bm * 0.5 + l.d), 2.4, 0, Math.PI * 2); ctx.fill();
+      ctx.save(); ctx.globalAlpha *= clamp(l.life / 2.4, 0, 1);
+      sugarCube(l.x, cy + l.dir * (h + bm * 0.5 + l.d), Math.max(3, H * 0.009), l.x);
+      ctx.restore();
     }
-    // 单排红细胞（需要变形通过）
+    // 排队挤过去的红细胞
+    const mood = rbcMood();
     for (const c of capR) {
       const x = c.x * W;
       ctx.save(); ctx.translate(x, cy);
-      ctx.fillStyle = "#c83a44";
-      ctx.beginPath(); ctx.moveTo(-h * 0.5, -h * 0.8);
-      ctx.quadraticCurveTo(h * 0.9, 0, -h * 0.5, h * 0.8);
-      ctx.quadraticCurveTo(-h * 0.1, 0, -h * 0.5, -h * 0.8); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(0, 0, h * 0.62, h * 0.82, 0, 0, Math.PI * 2);
+      ctx.fillStyle = C.rbc; ctx.fill(); outline(2.2); ctx.stroke();
+      face(0, 0, h * 0.5, mood - 0.3);
       ctx.restore();
     }
     return { cy, h, bm };
   }
 
-  // ---------- 标注 ----------
+  // ---------- 对话框标注 ----------
   function callout(key, on, tx, ty, lx, ly, text) {
     const a = labelAlpha[key] = lerp(labelAlpha[key] || 0, on ? 1 : 0, 0.08);
     if (a < 0.02) return;
     ctx.save();
     ctx.globalAlpha *= a;
-    ctx.strokeStyle = "#f3e9e4"; ctx.fillStyle = "#f3e9e4"; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(tx, ty, 3, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(lx, ly); ctx.stroke();
-    const fs = Math.max(11, W / 70);
-    ctx.font = `500 ${fs}px "Noto Sans SC", "PingFang SC", sans-serif`;
-    const w = ctx.measureText(text).width + 12;
-    const bx = clamp(lx - w / 2, 4, W - w - 4), by = ly < ty ? ly - fs - 8 : ly;
-    ctx.fillStyle = "rgba(20,12,15,0.85)";
-    ctx.fillRect(bx, by, w, fs + 8);
-    ctx.fillStyle = "#f3e9e4"; ctx.textBaseline = "top";
-    ctx.fillText(text, bx + 6, by + 4);
+    const fs = Math.max(12, W / 56);
+    ctx.font = `${fs}px ${ROUND}`;
+    const w = ctx.measureText(text).width + 22, bh = fs + 14;
+    const bx = clamp(lx - w / 2, 6, W - w - 6), by = clamp(ly < ty ? ly - bh : ly, 6, H - bh - 6);
+    outline(2);
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(clamp(lx, bx + 12, bx + w - 12), ly < ty ? by + bh : by); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = C.paper;
+    ctx.beginPath(); ctx.arc(tx, ty, 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    rrect(bx, by, w, bh, bh / 2); ctx.fill(); outline(2.5); ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.textBaseline = "middle";
+    ctx.fillText(text, bx + 11, by + bh / 2 + 1);
     ctx.restore();
   }
 
-  function hud(g, onMacro) {
-    const fs = Math.max(11, W / 64);
-    ctx.textBaseline = "top";
-    ctx.font = `500 ${fs * 0.8}px "JetBrains Mono", monospace`;
-    ctx.fillStyle = "#a8948f";
-    ctx.fillText("血糖 mmol/L", 14, 12);
-    ctx.font = `500 ${fs * 1.6}px "JetBrains Mono", monospace`;
-    ctx.fillStyle = S.glucose > 7 ? "#f2c14e" : "#9fd6a4";
-    ctx.fillText(S.glucose.toFixed(1), 14, 12 + fs);
+  function pill(x, y, label, value, color, alignRight) {
+    const fs = Math.max(12, W / 60);
+    ctx.font = `${fs}px ${ROUND}`;
+    const t1 = ctx.measureText(label).width;
+    ctx.font = `${fs * 1.4}px ${ROUND}`;
+    const t2 = ctx.measureText(value).width;
+    const w = t1 + t2 + 34, h = fs * 1.4 + 14;
+    const bx = alignRight ? x - w : x;
+    rrect(bx, y, w, h, h / 2); ctx.fillStyle = C.paper; ctx.fill(); outline(2.5); ctx.stroke();
+    ctx.textBaseline = "middle";
+    ctx.font = `${fs}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText(label, bx + 14, y + h / 2 + 1);
+    ctx.font = `${fs * 1.4}px ${ROUND}`; ctx.fillStyle = color; ctx.fillText(value, bx + 20 + t1, y + h / 2 + 1);
+  }
+  function hud(onMacro) {
+    const high = S.glucose > 7;
+    pill(14, 12, "血糖", S.glucose.toFixed(1), high ? "#e7a500" : C.mint, false);
     if (onMacro) {
       const nar = Math.round(S.plaque * 39);
-      ctx.textAlign = "right";
-      ctx.font = `500 ${fs * 0.8}px "JetBrains Mono", monospace`;
-      ctx.fillStyle = "#a8948f";
-      ctx.fillText("管腔狭窄", W - 14, 12);
-      ctx.font = `500 ${fs * 1.6}px "JetBrains Mono", monospace`;
-      ctx.fillStyle = nar > 20 ? "#e5646c" : "#f3e9e4";
-      ctx.fillText(nar + "%", W - 14, 12 + fs);
-      ctx.textAlign = "left";
+      pill(W - 14, 12, "管腔变窄", nar + "%", nar > 20 ? "#f25f6b" : C.mint, true);
     }
   }
 
@@ -481,43 +572,42 @@
     const L = CH[cur].labels;
     const m = S.micro;
     ctx.globalAlpha = 1;
-    let g = null;
     if (m < 0.99) {
-      ctx.globalAlpha = 1;
-      g = drawMacro();
+      const g = drawMacro();
       const on = (k) => L.includes(k) && m < 0.5;
-      const ex = W * 0.2, ey = topE(g, ex);
-      callout("endo", on("endo"), ex, ey + 3, ex + W * 0.06, ey - H * 0.12, "内皮细胞：光滑的内衬");
-      const r = rbcs.find(p => p.x > 0.35 && p.x < 0.55) || rbcs[0];
-      const rx = r.x * W, ry = mid(g, rx) + r.yn * half(g, rx) * 0.78;
-      callout("rbc", on("rbc"), rx, ry, rx + W * 0.08, g.cy + g.R + g.wallT * 0.6, "红细胞");
-      const gp = glus.slice(0, Math.max(1, Math.round(clamp((S.glucose - 3) / 11, 0, 1) * glus.length))).find(p => p.x > 0.7 && p.x < 0.85);
-      if (gp) { const gx = gp.x * W, gy = mid(g, gx) + gp.yn * half(g, gx) * 0.9; callout("glu", on("glu"), gx, gy, gx - W * 0.04, H * 0.07, "葡萄糖"); }
+      const ex = W * 0.2;
+      callout("endo", on("endo"), ex, topE(g, ex) + 4, ex + W * 0.1, g.cy - g.R - g.wallT * 0.4, "内皮细胞：光滑的内衬");
+      const r = rbcs.find(p => p.x > 0.38 && p.x < 0.55) || rbcs[0];
+      const rx = r.x * W, ry = mid(g, rx) + r.yn * half(g, rx) * 0.7;
+      callout("rbc", on("rbc"), rx, ry, rx + W * 0.1, g.cy + g.R + g.wallT * 0.35, "红细胞小伙伴");
+      const nG = Math.max(1, Math.round(clamp((S.glucose - 3) / 11, 0, 1) * glus.length));
+      const gp = glus.slice(0, nG).find(p => p.x > 0.68 && p.x < 0.85);
+      if (gp) { const gx = gp.x * W; callout("glu", on("glu"), gx, mid(g, gx) + gp.yn * half(g, gx) * 0.88, gx - W * 0.05, g.cy - g.R - g.wallT * 0.4, "葡萄糖（小方糖）"); }
       else callout("glu", false, 0, 0, 0, 0, "");
-      const ax = W * 0.33;
-      callout("age", on("age"), ax, botE(g, ax) - 8, ax - W * 0.05, g.cy + g.R + g.wallT * 0.7, "AGEs 附着在内皮上");
-      const wx = W * 0.82;
-      callout("wall", on("wall"), wx, g.cy - g.R - g.wallT * 0.35, wx - W * 0.02, H * 0.05, "胶原交联 → 管壁变硬");
-      const sx = W * 0.16;
-      callout("ros", on("ros"), sx, topE(g, sx) + 12, sx + W * 0.05, H * 0.05, "活性氧（氧化应激）");
-      const gx2 = W * 0.42;
-      callout("gap", on("gap"), gx2, botE(g, gx2) - 3, gx2 - W * 0.06, g.cy + g.R + g.wallT * 0.7, "内皮出现缝隙");
-      callout("mono", on("mono"), g.px, botE(g, g.px) - 10, g.px + W * 0.12, g.cy + g.R + g.wallT * 0.7, "白细胞黏附、钻入管壁");
-      callout("core", on("core"), g.px, g.cy + g.R - S.plaque * g.R * 0.25, g.px + W * 0.16, g.cy + g.R + g.wallT * 0.7, "脂质核心（泡沫细胞）");
-      callout("cap", on("cap"), g.px - g.sig * 0.6, botE(g, g.px - g.sig * 0.6), g.px - W * 0.2, g.cy - g.R * 0.2, "纤维帽");
-      ctx.globalAlpha = 1;
-      hud(g, true);
+      const ax = W * 0.35;
+      callout("age", on("age"), ax, botE(g, ax) - 12, ax - W * 0.06, g.cy + g.R + g.wallT * 0.35, "AGEs 黏在内皮上");
+      const wx = W * 0.8;
+      callout("wall", on("wall"), wx, g.cy - g.R - g.wallT * 0.42, wx - W * 0.04, g.cy - g.R - g.wallT * 0.95, "纤维被绑住，管壁变硬");
+      const sx = W * 0.18;
+      callout("ros", on("ros"), sx, topE(g, sx) + 20, sx + W * 0.06, g.cy - g.R - g.wallT * 0.4, "活性氧小闪电");
+      const gx2 = W * 0.4;
+      callout("gap", on("gap"), gx2, botE(g, gx2) - 4, gx2 - W * 0.08, g.cy + g.R + g.wallT * 0.35, "内皮出现缝隙");
+      callout("mono", on("mono"), g.px, botE(g, g.px) - 14, g.px + W * 0.14, g.cy + g.R + g.wallT * 0.35, "白细胞钻进管壁");
+      callout("core", on("core"), g.px, g.cy + g.R - S.plaque * g.R * 0.22, g.px + W * 0.18, g.cy + g.R + g.wallT * 0.35, "脂质核心（泡沫细胞）");
+      callout("cap", on("cap"), g.px - g.sig * 0.7, botE(g, g.px - g.sig * 0.7), g.px - W * 0.22, g.cy - g.R * 0.35, "纤维帽");
+      callout("heal", on("heal"), W * 0.5, g.cy, W * 0.5, g.cy - g.R - g.wallT * 0.35, "损伤放慢，斑块更稳定");
+      hud(true);
     }
     if (m > 0.01) {
-      ctx.globalAlpha = m;
+      ctx.save(); ctx.globalAlpha = m;
       const c = drawMicro();
       const on = (k) => L.includes(k);
-      callout("bm", on("bm"), W * 0.3, c.cy - c.h - c.bm / 2, W * 0.36, H * 0.14, "基底膜增厚");
+      callout("bm", on("bm"), W * 0.3, c.cy - c.h - c.bm / 2, W * 0.34, H * 0.2, "基底膜变厚");
       const lk = leaks.find(l => l.dir > 0 && l.life > 1.2);
-      callout("leak", on("leak") && !!lk, lk ? lk.x : 0, lk ? c.cy + c.h + c.bm * 0.5 + lk.d : 0, W * 0.62, H * 0.86, "管壁渗漏");
-      callout("single", on("single"), W * 0.8, c.cy, W * 0.8, H * 0.22, "红细胞排成单行、挤过毛细血管");
-      hud(null, false);
-      ctx.globalAlpha = 1;
+      callout("leak", on("leak") && !!lk, lk ? lk.x : 0, lk ? c.cy + c.h + c.bm * 0.5 + lk.d : 0, W * 0.6, H * 0.84, "管壁渗漏");
+      callout("single", on("single"), W * 0.78, c.cy - c.h * 0.8, W * 0.74, H * 0.25, "排好队，一个一个挤过去");
+      hud(false);
+      ctx.restore();
     }
   }
 
@@ -527,7 +617,7 @@
     const li = document.createElement("li");
     const b = document.createElement("button");
     b.type = "button"; b.id = "ch" + i;
-    b.innerHTML = `<span>0${i + 1}</span>${c.title}`;
+    b.innerHTML = `<span>${i + 1}</span>${c.title}`;
     b.addEventListener("click", () => go(i));
     li.appendChild(b); list.appendChild(li);
   });
