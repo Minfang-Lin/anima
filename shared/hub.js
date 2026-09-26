@@ -9,16 +9,16 @@
 
   // 人体图旁边的标签：organ 上的锚点 (ax, ay) → 标签位置 (lx, ly)，side 决定标签在左边还是右边
   const LABELS = [
-    { organ: "brain", ax: 172, ay: 64, lx: 4, ly: 30, side: "left" },
-    { organ: "lungs", ax: 160, ay: 222, lx: 4, ly: 196, side: "left" },
-    { organ: "liver", ax: 160, ay: 296, lx: 4, ly: 262, side: "left" },
-    { organ: "kidney", ax: 162, ay: 362, lx: 4, ly: 420, side: "left" },
-    { organ: "vessels", ax: 84, ay: 322, lx: 4, ly: 476, side: "left" },
-    { organ: "joint", ax: 124, ay: 604, lx: 4, ly: 626, side: "left" },
-    { organ: "heart", ax: 240, ay: 238, lx: 416, ly: 170, side: "right" },
-    { organ: "stomach", ax: 270, ay: 300, lx: 416, ly: 236, side: "right" },
-    { organ: "pancreas", ax: 254, ay: 334, lx: 416, ly: 380, side: "right" },
-    { organ: "bone", ax: 256, ay: 470, lx: 416, ly: 470, side: "right" },
+    { organ: "brain", ax: 192, ay: 40, lx: 4, ly: 30, side: "left" },
+    { organ: "lungs", ax: 172, ay: 200, lx: 4, ly: 186, side: "left" },
+    { organ: "liver", ax: 172, ay: 262, lx: 4, ly: 256, side: "left" },
+    { organ: "kidney", ax: 178, ay: 318, lx: 4, ly: 440, side: "left" },
+    { organ: "vessels", ax: 180, ay: 470, lx: 4, ly: 500, side: "left" },
+    { organ: "joint", ax: 191, ay: 640, lx: 4, ly: 626, side: "left" },
+    { organ: "heart", ax: 232, ay: 214, lx: 416, ly: 170, side: "right" },
+    { organ: "stomach", ax: 252, ay: 264, lx: 416, ly: 244, side: "right" },
+    { organ: "pancreas", ax: 240, ay: 293, lx: 416, ly: 302, side: "right" },
+    { organ: "bone", ax: 246, ay: 420, lx: 416, ly: 440, side: "right" },
   ];
 
   const epsFor = (key, field) => eps.filter((e) => (e[field] || []).includes(key));
