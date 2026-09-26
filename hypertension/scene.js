@@ -233,7 +233,9 @@ Anima.register("hypertension", {
     ctx.ellipse(x, cy + s * 0.05, s * 1.05, s * 0.72, 0, 0, 6.3);
     ctx.fillStyle = C.brain; ctx.fill();
     ctx.beginPath(); ctx.ellipse(x, cy, s * 1.05, s * 0.8, 0, 0, 6.3); ctx.fill(); outline(2); ctx.stroke();
-    outline(1.4); ctx.beginPath(); ctx.moveTo(x, cy - s * 0.78); ctx.quadraticCurveTo(x + s * 0.15, cy - s * 0.3, x, cy + s * 0.1); ctx.stroke();
+    outline(1.4); ctx.beginPath(); ctx.moveTo(x, cy - s * 0.78); ctx.quadraticCurveTo(x + s * 0.15, cy - s * 0.3, x, cy + s * 0.1);
+    ctx.moveTo(x - s * 0.75, cy - s * 0.2); ctx.quadraticCurveTo(x - s * 0.45, cy - s * 0.45, x - s * 0.3, cy - s * 0.2);
+    ctx.moveTo(x + s * 0.75, cy - s * 0.2); ctx.quadraticCurveTo(x + s * 0.45, cy - s * 0.45, x + s * 0.3, cy - s * 0.2); ctx.stroke();
     face(x, cy + s * 0.2, s * 0.5, -0.8, false);
     // 肾脏：蚕豆形
     x = xs[1];
@@ -366,8 +368,8 @@ Anima.register("hypertension", {
     const nSalt = Math.round(S.salt * salts.length);
     for (let i = 0; i < nSalt; i++) {
       const p = salts[i], x = p.x * W, y = yIn(x, p.yn, rr) + Math.sin(time * 1.5 + p.ph) * 2;
-      saltCube(x, y, rr * 0.5, Math.sin(time + p.ph) * 0.3);
-      if (!salt0 && x > W * 0.3 && x < W * 0.55) salt0 = { x, y };
+      saltCube(x, y, rr * 0.62, Math.sin(time + p.ph) * 0.3);
+      if (!salt0 && x > W * 0.5 && x < W * 0.8) salt0 = { x, y };
     }
     // 红细胞
     const mood = clamp(1 - 1.8 * S.press + 0.5 * S.heal, -1, 1);
@@ -427,9 +429,9 @@ Anima.register("hypertension", {
     callout("gauge", on("gauge"), r.gz.x - r.gz.r * 0.7, r.gz.y, W * 0.42, H * 0.86, "收缩时高压，放松时低压");
 
     const s0 = r.salt0;
-    callout("salt", on("salt") && !!s0, s0 ? s0.x : 0, s0 ? s0.y : 0, s0 ? s0.x + W * 0.04 : 0, above - H * 0.04, "盐把水留在血管里");
-    const c0 = near(0.22);
-    callout("crowd", on("crowd"), c0.x, c0.y, W * 0.24, below + H * 0.06, "血多了，挤一挤");
+    callout("salt", on("salt") && !!s0, s0 ? s0.x : 0, s0 ? s0.y : 0, W * 0.7, above - H * 0.04, "盐把水留在血管里");
+    const c0 = near(0.4);
+    callout("crowd", on("crowd"), c0.x, c0.y, W * 0.26, above - H * 0.04, "血多了，挤一挤");
 
     const t0 = r.tears[1] || { x: 0, y: 0 };
     callout("crack", on("crack") && r.tears.length > 1, t0.x, t0.y, W * 0.66, above - H * 0.04, "管壁被撑出小伤口");

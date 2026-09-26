@@ -265,7 +265,7 @@ Anima.register("insulin", {
     }
 
     // 钥匙：从血管里落下来，插进锁里拧；锁生锈时要来回拧好几下
-    const ks = Math.max(4, ls * 0.55);
+    const ks = Math.max(4, ls * 0.7);
     let keyPos = null;
     if (hasKey && pw > dw * 0.3 || hasKey && ph < turnEnd + 0.1) {
       const fromY = g.vb + g.wall + ks, fx = lockX - ks * 3.3;
@@ -381,7 +381,7 @@ Anima.register("insulin", {
     const gap = g.vb + g.wall + H * 0.05; // 血管和房子之间那一排
     const pick = (arr, n, a, b) => arr.slice(0, n).find((p) => p.x > a && p.x < b);
     // 两排标注：A 排在血管下面，B 排在画面最下面；每排左右各放一个
-    const A = gap, B = H * 0.99, lx = W * 0.27, rx = W * 0.74;
+    const A = gap, B = H * 0.99, B2 = g.narrow ? A + H * 0.12 : B, lx = W * 0.27, rx = W * 0.74;
     const c0 = pick(cubes, nCube(), 0.25, 0.45);
     callout("sugar", on("sugar") && !!c0, c0 ? c0.x * W : 0, c0 ? yIn(c0.yn, cs) : 0, lx + W * 0.06, A, "饭后，糖进入血液");
     const k0 = pick(keysV, nKey(), 0.6, 0.9);
@@ -390,17 +390,17 @@ Anima.register("insulin", {
     const h0 = hs[0], h1 = hs[1], h2 = hs[2];
     callout("lock", on("lock"), h0.lockX, h0.lockY, lx, A, "钥匙一拧，门开了");
     callout("enter", on("enter"), h1.dx, h1.dy + h1.dh * 0.3, rx, A, "糖走进细胞");
-    callout("energy", on("energy"), h2.dx, h2.dy + h2.dh * 0.55, rx, B, "变成能量，多的存起来");
+    callout("energy", on("energy"), h2.dx, h2.dy + h2.dh * 0.55, rx, B2, "变成能量，多的存起来");
     callout("rust", on("rust"), h1.lockX, h1.lockY, W * 0.58, A, "锁生锈，要拧好几下");
     callout("work", on("work"), f.x, f.faceY - g.fh * 0.25, lx, B, "β 细胞加班做钥匙");
-    callout("fat", on("fat"), h2.x + h2.hw * 0.2, h2.top + h2.bh * 0.7, rx + W * 0.05, B, "脂肪细胞撑大了");
+    callout("fat", on("fat"), h2.x + h2.hw * 0.2, h2.top + h2.bh * 0.7, rx + W * 0.05, B2, "脂肪细胞撑大了");
     callout("tired", on("tired"), f.x, f.faceY - g.fh * 0.25, lx, A, "工厂累了，钥匙变少");
-    callout("nokey", on("nokey"), h2.lockX, h2.lockY, rx, B, "等不到钥匙，门不开");
+    callout("nokey", on("nokey"), h2.lockX, h2.lockY, rx, B2, "等不到钥匙，门不开");
     const c1 = pick(cubes, nCube(), 0.3, 0.5);
     callout("pile", on("pile") && !!c1, c1 ? c1.x * W : 0, c1 ? yIn(c1.yn, cs) : 0, lx + W * 0.04, A, "糖进不去，堆在血里");
     callout("vessel", on("vessel"), W * 0.84, g.vb + g.wall * 0.5, rx + W * 0.06, A, "血管也跟着受伤");
     callout("exercise", on("exercise") && !!db, db ? db.x + h0.hw * 0.3 : 0, db ? db.y : 0, lx + W * 0.06, A, "运动的肌肉自己开门");
-    callout("lighter", on("lighter"), h2.lockX, h2.lockY, rx, B, "减重后，锁灵活多了");
+    callout("lighter", on("lighter"), h2.lockX, h2.lockY, rx, B2, "减重后，锁灵活多了");
     hud();
   }
 
