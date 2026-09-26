@@ -25,17 +25,17 @@ Anima.register("heart-attack", {
       text: "斑块外面盖着一层纤维帽。有一天，它可能突然裂开，里面的脂质露了出来。血小板以为血管破了，赶紧跑来“补洞”，纤维蛋白丝再缠成一张网，把红细胞也兜住，结果补成了一个大血栓。很多心梗，就发生在原本并不太窄的血管上。",
       fact: "斑块稳不稳定，往往比斑块大小更要紧",
       labels: ["cap", "platelet"] },
-    { title: "血管被堵死了", plaque: 0.5, rupture: 1, clot: 1, plate: 1, exert: 0, isch: 1, necro: 0.55, stent: 0, crown: 0, person: 0, heal: 0, flow: 0,
+    { title: "血管被堵死了", plaque: 0.5, rupture: 1, clot: 1, plate: 1, exert: 0, isch: 1, necro: 0.45, stent: 0, crown: 0, person: 0, heal: 0, flow: 0,
       pill: ["发病时间", "30 分钟", "bad"],
       text: "血栓一旦把血管完全堵死，下游的心肌就断了“粮”。缺血二三十分钟后，心肌细胞就开始坏死，而且时间越长，坏死的范围越大。坏死的心肌不能再长回来，心脏的泵血能力会因此变弱，还可能出现危险的心律失常。",
       fact: "时间就是心肌：堵得越久，坏死越多",
       labels: ["clot", "dead"] },
-    { title: "认出心梗，马上打 120", plaque: 0.5, rupture: 1, clot: 1, plate: 1, exert: 0, isch: 1, necro: 0.8, stent: 0, crown: 0, person: 1, heal: 0, flow: 0,
+    { title: "认出心梗，马上打 120", plaque: 0.5, rupture: 1, clot: 1, plate: 1, exert: 0, isch: 1, necro: 0.6, stent: 0, crown: 0, person: 1, heal: 0, flow: 0,
       pill: ["发病时间", "90 分钟", "bad"],
       text: "心梗最典型的表现，是胸口正中压榨样的疼痛或憋闷，超过 15 分钟也不缓解，可能放射到左臂、下巴或后背，常伴大汗、恶心。老人、女性和糖尿病患者的症状可能不典型。一旦怀疑，立刻拨打 120，不要自己开车，也不要硬扛。",
       fact: "胸痛超过 15 分钟不缓解，立即拨打 120；用药听从急救人员或医生指导",
       labels: ["chest", "call"] },
-    { title: "开通血管，越早越好", plaque: 0.5, rupture: 0, clot: 0, plate: 0, exert: 0, isch: 0, necro: 0.3, stent: 1, crown: 0, person: 0, heal: 1, flow: 95,
+    { title: "开通血管，越早越好", plaque: 0.5, rupture: 0, clot: 0, plate: 0, exert: 0, isch: 0, necro: 0.58, stent: 1, crown: 0, person: 0, heal: 1, flow: 95,
       pill: ["发病时间", "已开通", "ok"],
       text: "到了有胸痛中心的医院，医生会尽快把堵住的血管打通：可以用溶栓药把血栓溶开，也可以通过导管放入支架把血管撑开。开通得越早，救回的心肌越多。平时管好血压、血脂和血糖，不吸烟、多运动，让斑块少长、别破。",
       fact: "从发病到开通血管，最好在 2 小时内完成：时间就是心肌",
@@ -464,7 +464,7 @@ Anima.register("heart-attack", {
 
     const sp = r.stentPt;
     callout("stent", on("stent") && !!sp, sp ? sp.x : 0, sp ? sp.y : 0, g.px + W * 0.32, above - H * 0.02, "支架把血管撑开");
-    const top = downCells.filter((c) => c.y < g.myoTop + H * 0.1 && c.dead < 0.5);
+    const top = r.cl.filter((c) => c.down && c.y < g.myoTop + H * 0.1 && c.dead < 0.5 && c.cx > g.px + g.sig && c.cx < W * 0.95);
     const sv = top[top.length - 1];
     callout("saved", on("saved") && !!sv, sv ? sv.cx : 0, sv ? sv.cy : 0, W * 0.72, midY, "血流回来，心肌得救");
     const sc = downCells.filter((c) => c.dead > 0.5).sort((a, b) => b.y - a.y || a.cx - b.cx)[0];

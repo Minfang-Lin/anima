@@ -351,7 +351,7 @@ Anima.register("h-pylori", {
       rrect(cx - w / 2, y - h / 2 - (hot === i ? 3 : 0), w, h, h / 2);
       ctx.fillStyle = ["#ffe0cc", "#ffd0b8", "#e6d8ff", "#f6c1c1"][i]; ctx.fill();
       outline(2); if (i === 3) ctx.setLineDash([5, 4]); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = C.ink; ctx.font = `${fs * (names[i].length > 2 ? 0.85 : 1)}px ${Anima.ROUND}`;
+      ctx.fillStyle = C.ink; ctx.font = `${Math.min(fs, (w - 10) / names[i].length)}px ${Anima.ROUND}`;
       ctx.fillText(names[i], cx, y - (hot === i ? 3 : 0) + 1);
       ctx.restore();
       if (i < 3) {
@@ -367,21 +367,20 @@ Anima.register("h-pylori", {
   }
   // 呼气试验：吹口气就能查
   function drawTest() {
-    const k = cardBox(0.4, 0.62);
+    const cw = Math.min(W * 0.34, H * 0.5), k = { x: W - cw - 14, y: H * 0.1 + (Anima.UI > 1 ? H * 0.08 : 0), cw, ch: cw * 0.78 };
     ctx.save(); cardBg(k, S.test);
-    const fs = k.cw / 8.5, cx = k.x + k.cw * 0.5, s = k.cw * 0.2;
+    const fs = k.cw / 9, cx = k.x + k.cw * 0.5, s = k.cw * 0.2;
     // 小人侧脸吹气
     const hx = k.x + k.cw * 0.25, hy = k.y + k.ch * 0.42;
     ctx.beginPath(); ctx.arc(hx, hy, s * 0.8, 0, 6.3); ctx.fillStyle = "#ffe0cc"; ctx.fill(); outline(2); ctx.stroke();
-    ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(hx - s * 0.15, hy - s * 0.15, s * 0.1, 0, 6.3); ctx.fill();
-    ctx.beginPath(); ctx.arc(hx + s * 0.45, hy + s * 0.2, s * 0.14, 0, 6.3); ctx.stroke();
+    face(hx - s * 0.1, hy - s * 0.05, s * 0.55, 0.6);
     // 吹进袋子
     const blow = 0.85 + 0.15 * Math.sin(time * 2.5);
-    const bx = k.x + k.cw * 0.7, byy = k.y + k.ch * 0.42;
-    outline(2); ctx.beginPath(); ctx.moveTo(hx + s * 0.6, hy + s * 0.2); ctx.lineTo(bx - s * 0.9 * blow, byy + s * 0.2); ctx.stroke();
+    const bx = k.x + k.cw * 0.72, byy = k.y + k.ch * 0.4;
+    outline(2); ctx.beginPath(); ctx.moveTo(hx + s * 0.75, hy + s * 0.15); ctx.lineTo(bx - s * 0.9 * blow, byy + s * 0.15); ctx.stroke();
     ctx.beginPath(); ctx.ellipse(bx, byy, s * 0.95 * blow, s * 1.2 * blow, 0, 0, 6.3); ctx.fillStyle = C.bag; ctx.fill(); outline(2); ctx.stroke();
     ctx.fillStyle = C.ink; ctx.font = `${fs * 0.8}px ${Anima.ROUND}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText("¹³C", bx, byy + 1);
+    ctx.fillText("13C", bx, byy + 1);
     ctx.font = `${fs}px ${Anima.ROUND}`;
     ctx.fillText("呼气试验", cx, k.y + k.ch - fs * 0.95);
     ctx.textAlign = "left";
@@ -418,9 +417,9 @@ Anima.register("h-pylori", {
     callout("gastritis", on("gastritis") && !!im, im ? im.x : 0, im ? im.y : 0, W * 0.2, bot, "免疫细胞赶来：慢性胃炎");
     callout("ulcer", on("ulcer") && !!r.pit, r.pit ? r.pit.x : 0, r.pit ? r.pit.y : 0, g.ux + W * 0.04, upper - H * 0.1, "溃疡：黏膜破了个坑");
     const at = r.cells.find((c) => !c.goblet && c.atroHere > 0.6);
-    callout("atro", on("atro") && !!at, at ? at.x : 0, at ? at.y + at.h * 0.5 : 0, W * 0.18, bot, "萎缩：黏膜变薄");
+    callout("atro", on("atro") && !!at, at ? at.x : 0, at ? at.y + at.h * 0.5 : 0, W * 0.18, bot, "萎缩：变薄了");
     const gb = r.cells.find((c) => c.goblet && c.x > W * 0.2);
-    callout("im", on("im") && !!gb, gb ? gb.x : 0, gb ? gb.y + gb.h * 0.3 : 0, W * 0.58, bot, "肠化：像肠子的细胞");
+    callout("im", on("im") && !!gb, gb ? gb.x : 0, gb ? gb.y + gb.h * 0.3 : 0, W * 0.62, bot, "肠化：像肠细胞");
     if (r.testCard) callout("breath", on("breath"), r.testCard.bag.x, r.testCard.bag.y + r.testCard.k.ch * 0.2, r.testCard.k.x + r.testCard.k.cw * 0.3, r.testCard.k.y + r.testCard.k.ch + H * 0.08, "吹口气就能查");
     else callout("breath", false, 0, 0, 0, 0, "");
     callout("med", on("med"), W * 0.32, H * 0.3, W * 0.22, upper - H * 0.1, "按时足量吃完药");
