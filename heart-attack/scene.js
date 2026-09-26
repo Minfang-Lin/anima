@@ -463,7 +463,7 @@ Anima.register("heart-attack", {
     callout("chest", on("chest") && !!pc, pc ? pc.chest.x : 0, pc ? pc.chest.y : 0, lx, pc ? pc.chest.y + H * 0.02 : 0, "胸口压榨样疼痛");
 
     const sp = r.stentPt;
-    callout("stent", on("stent") && !!sp, sp ? sp.x : 0, sp ? sp.y : 0, g.px + W * 0.2, above - H * 0.02, "支架把血管撑开");
+    callout("stent", on("stent") && !!sp, sp ? sp.x : 0, sp ? sp.y : 0, g.px + W * 0.32, above - H * 0.02, "支架把血管撑开");
     const top = downCells.filter((c) => c.y < g.myoTop + H * 0.1 && c.dead < 0.5);
     const sv = top[top.length - 1];
     callout("saved", on("saved") && !!sv, sv ? sv.cx : 0, sv ? sv.cy : 0, W * 0.72, midY, "血流回来，心肌得救");
