@@ -42,7 +42,12 @@
   0%, 100% { filter: drop-shadow(0 0 0 rgba(255, 201, 77, 0)); }
   50% { filter: drop-shadow(0 0 7px rgba(255, 190, 60, .95)); }
 }
-.body .organ:hover, .body .organ:focus-visible { transform: scale(1.08); opacity: 1; outline: none; }
+.body .organ, .body .label { -webkit-tap-highlight-color: transparent; }
+/* 关掉展签后焦点会回到器官上：不画浏览器默认的方框（旧版手机浏览器不认识 :focus-visible，会直接画框） */
+.body .organ:focus, .body .label:focus { outline: none; }
+/* :focus-visible 单独成行，旧浏览器不认识时只丢这一条，不连累 :hover */
+.body .organ:hover { transform: scale(1.08); opacity: 1; }
+.body .organ:focus-visible { transform: scale(1.08); opacity: 1; }
 
 /* 标签 */
 .body .label { cursor: pointer; }
@@ -53,8 +58,8 @@
 .body .label.off rect { stroke-dasharray: 4 4; }
 .body .label .leader { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 3 4; }
 .body .label .pin { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
-.body .label:hover rect, .body .label:focus-visible rect { stroke-width: 3.5; }
-.body .label:focus-visible { outline: none; }
+.body .label:hover rect { stroke-width: 3.5; }
+.body .label:focus-visible rect { stroke-width: 3.5; }
 
 /* 小剧场卡片列表 */
 .ep-list { list-style: none; margin: 0; padding: 0; display: grid; grid-gap: 10px; gap: 10px; }

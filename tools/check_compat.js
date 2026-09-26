@@ -27,6 +27,8 @@ const CSS_RULES = [
   [/(^|[;{\s])inset\s*:/, "inset（Chrome 87），请写 top/right/bottom/left"],
   [/:\s*[^;{}]*\b(min|max|clamp)\(/, "CSS 的 min()/max()/clamp()（Chrome 79）"],
   [/:(is|where|has)\(/, ":is()/:where()/:has() 选择器"],
+  // 旧浏览器遇到不认识的伪类会丢掉整条规则，:focus-visible 必须单独写一条
+  [/,[^{};]*:focus-visible[^{};]*\{|:focus-visible[^{};]*,[^{};]*\{/, ":focus-visible（Chrome 86）和其他选择器写在一起，旧浏览器会丢掉整条规则"],
 ];
 
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:"'\\])\/\/[^\n]*/g, "$1");

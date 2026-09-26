@@ -60,6 +60,7 @@ ol.chapters button span {
 ol.chapters button:hover { color: var(--ink); background: var(--paper); }
 ol.chapters button[aria-current="step"] { background: var(--paper); color: var(--ink); border-color: var(--ink); }
 ol.chapters button[aria-current="step"] span { background: var(--coral); color: var(--paper); }
+button:focus { outline: none; }
 button:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
 
 .narr {
