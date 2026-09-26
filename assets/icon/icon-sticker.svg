@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <pattern id="dots" width="56" height="56" patternUnits="userSpaceOnUse"><circle cx="28" cy="28" r="5" fill="#6d4a5b"/></pattern>
+    <clipPath id="card"><circle cx="512" cy="512" r="360"/></clipPath>
+  </defs>
+  <rect width="1024" height="1024" fill="#5b3a4a"/>
+  <rect width="1024" height="1024" fill="url(#dots)"/>
+  <!-- 贴纸：白边 + 粉色底 -->
+  <circle cx="524" cy="524" r="400" fill="#3f2733"/>
+  <circle cx="512" cy="512" r="400" fill="#ffffff"/>
+  <g clip-path="url(#card)">
+    <rect width="1024" height="1024" fill="#ffe7e3"/>
+    <g fill="#ffd6cf"><circle cx="300" cy="300" r="22"/><circle cx="720" cy="280" r="18"/><circle cx="280" cy="700" r="20"/></g>
+    <!-- 从底部探出头的红细胞 -->
+    <g stroke="#5b3a4a" stroke-width="18" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M300 720 Q250 620 300 540" fill="none" stroke-width="48"/>
+      <path d="M300 720 Q250 620 300 540" fill="none" stroke="#ff7b7b" stroke-width="18"/>
+      <circle cx="302" cy="528" r="34" fill="#ff7b7b" stroke-width="14"/>
+      <ellipse cx="512" cy="760" rx="300" ry="270" fill="#ff7b7b"/>
+    </g>
+    <ellipse cx="400" cy="620" rx="58" ry="30" fill="#fff" opacity=".6" transform="rotate(-24 400 620)"/>
+    <ellipse cx="450" cy="690" rx="20" ry="27" fill="#5b3a4a"/>
+    <ellipse cx="574" cy="690" rx="20" ry="27" fill="#5b3a4a"/>
+    <circle cx="457" cy="680" r="7" fill="#fff"/>
+    <circle cx="581" cy="680" r="7" fill="#fff"/>
+    <ellipse cx="406" cy="744" rx="34" ry="18" fill="#ffb3c1"/>
+    <ellipse cx="618" cy="744" rx="34" ry="18" fill="#ffb3c1"/>
+    <path d="M478 744 Q512 780 546 744" fill="none" stroke="#5b3a4a" stroke-width="14" stroke-linecap="round"/>
+    <path d="M690 380 C660 356 666 330 682 330 C690 330 694 338 694 342 C694 338 698 330 706 330 C722 330 728 356 694 380 Z" fill="#ff9fb0" stroke="#5b3a4a" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M512 250 L522 276 L548 280 L528 296 L534 322 L512 308 L490 322 L496 296 L476 280 L502 276 Z" fill="#ffc94d" stroke="#5b3a4a" stroke-width="9" stroke-linejoin="round"/>
+  </g>
+  <circle cx="512" cy="512" r="360" fill="none" stroke="#5b3a4a" stroke-width="16"/>
+  <circle cx="512" cy="512" r="400" fill="none" stroke="#5b3a4a" stroke-width="16"/>
+  <!-- 播放按钮 -->
+  <circle cx="800" cy="800" r="112" fill="#6cc9ae" stroke="#5b3a4a" stroke-width="18"/>
+  <path d="M770 750 L860 800 L770 850 Z" fill="#ffffff" stroke="#5b3a4a" stroke-width="12" stroke-linejoin="round"/>
+</svg>
