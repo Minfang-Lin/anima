@@ -23,7 +23,7 @@ Anima.register("premature-beats", {
       text: "早搏，就是还没到点，别的地方先“抢拍”发了个信号，心脏提前跳了一下，后面常跟着一个稍长的停顿，叫代偿间歇。很多人会觉得心里“咯噔”一下，好像漏跳了一拍。抢拍的信号来自心房，叫房性早搏；来自心室，叫室性早搏。",
       fact: "早搏也叫期前收缩，常见的有房性早搏和室性早搏",
       labels: ["pac", "pvc"] },
-    { title: "早搏很常见", every: 6, kind: "mix", freq: 0.25, ecto: 0.6, mood: 0.6, metro: 0, person: 0, trig: 1, holter: 0, warn: 0, care: 0, heal: 0,
+    { title: "早搏很常见", every: 5, kind: "mix", freq: 0.25, ecto: 0.6, mood: 0.6, metro: 0, person: 0, trig: 1, holter: 0, warn: 0, care: 0, heal: 0,
       pill: ["健康人", "也常见", "ok"],
       text: "早搏非常常见，不少健康人做 24 小时动态心电图，也能查到少量早搏，自己往往毫无感觉。熬夜、劳累、紧张焦虑，喝咖啡浓茶、喝酒、吸烟，或者血钾偏低，都可能让心脏更容易“抢拍”。把这些诱因去掉，早搏常常就少了。",
       fact: "偶尔出现少量早搏，在健康人里也很常见",
@@ -286,7 +286,7 @@ Anima.register("premature-beats", {
       const col = b.type === "A" ? C.pacCol : C.pvcCol;
       ctx.save(); ctx.globalAlpha *= 0.28; ctx.fillStyle = col;
       rrect(xr - e.h * 0.2, e.y + e.h * 0.2, e.h * 0.4, e.h * 0.74, e.h * 0.12); ctx.fill(); ctx.restore();
-      if (xr > labEnd + fs) text(b.type === "A" ? "房早" : "室早", xr, e.y + fs * 0.75, fs, col === C.pacCol ? "#d48600" : "#e04a57");
+      if (xr > labEnd + fs * 1.4) text(b.type === "A" ? "房早" : "室早", xr, e.y + fs * 0.75, fs, col === C.pacCol ? "#d48600" : "#e04a57");
       // 后面的停顿
       const nb = beats[i + 1];
       const xe = nb ? tx(rTime(nb)) : x1;
@@ -296,7 +296,7 @@ Anima.register("premature-beats", {
         ctx.beginPath(); ctx.moveTo(xr + e.h * 0.22, yb); ctx.lineTo(xe - 6, yb); ctx.stroke(); ctx.restore();
         text("停顿", (xr + xe) / 2 + e.h * 0.1, yb - fs * 0.7, fs * 0.85, C.soft);
       }
-      pre.push({ x: xr, y: base - amp * (b.type === "V" ? 1.15 : 1), type: b.type });
+      pre.push({ x: xr + e.h * 0.1, y: base - amp * 0.45, type: b.type });
     }
     // 波形
     ctx.strokeStyle = C.trace; ctx.lineWidth = Math.max(2, H * 0.006); ctx.lineJoin = "round";
@@ -633,7 +633,7 @@ Anima.register("premature-beats", {
     callout("pvc", on("pvc"), hc.pvc.x, hc.pvc.y, L.hx + L.s * 0.9, midY, T.pvc);
     // 心电图上最近的一个早搏（离画面右边太近的不选，免得标注挤到边上）
     const pick = (type) => {
-      const list = eg.pre.filter((p) => (!type || p.type === type) && p.x < W * 0.8 && p.x > W * 0.15);
+      const list = eg.pre.filter((p) => (!type || p.type === type) && p.x < W * 0.9 && p.x > W * 0.1);
       return list[list.length - 1] || null;
     };
     const pf = pick();
