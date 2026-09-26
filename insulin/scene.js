@@ -562,7 +562,7 @@ Anima.register("insulin", {
     // 第 3 幕
     put(g, "rust", on("rust"), R1.x, R1.cy, n ? A.x + A.w * 0.71 : R1.x, upY, "锁生锈，要拧好几下", K.red);
     put(g, "work", on("work"), B.cx, B.cy - B.ry * 0.2, n ? A.x + A.w * 0.25 : B.cx + B.rx * 0.3, n ? upY : B.cy + B.ry * 0.62, "β 细胞加班做钥匙", K.fire);
-    put(g, "fat", on("fat"), F.cx - F.r * 0.2, F.cy + F.r * 0.3, n ? A.x + A.w * 0.6 : F.cx - F.r * 0.4, n ? g.cB - lf * 0.9 : F.cy + F.r + lf * 2.2, "脂肪细胞撑大了", K.lip[2]);
+    put(g, "fat", on("fat"), F.cx - F.r * 0.2, F.cy + F.r * 0.3, n ? A.x + A.w * 0.6 : F.cx - F.r * 0.2, n ? g.cB - lf * 0.9 : upY, "脂肪细胞撑大了", K.lip[2]);
     // 第 4 幕
     put(g, "tired", on("tired"), B.cx, B.cy - B.ry * 0.2, n ? A.x + A.w * 0.27 : B.cx + B.rx * 0.6, n ? upY : B.cy + B.ry * 0.62, "工厂累了，钥匙变少", K.soft);
     put(g, "nokey", on("nokey"), R1.x, R1.top + g.Ry * 0.2, n ? A.x + A.w * 0.73 : R1.x + A.w * 0.02, upY, "等不到钥匙，门不开", K.insr[2]);

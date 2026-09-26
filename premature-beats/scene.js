@@ -102,7 +102,15 @@ Anima.register("premature-beats", {
   }
 
   function update(dt) {
-    if (cur !== lastCur) { prevCur = lastCur; prevLt = lt; lastCur = cur; lt = 0; }
+    if (cur !== lastCur) {
+      prevCur = lastCur; prevLt = lt; lastCur = cur; lt = 0;
+      // 第 5 幕（室早二联律）：进场时把心电图上的历史也换成“正常—室早”交替，条带上一眼就是二联律
+      if (CH[cur].every === 2) {
+        beats.length = 0; nNorm = 0;
+        nextT = time - 8; nextType = "N";
+        while (time >= nextT) { const b = { t: nextT, type: nextType, n: nBeat++ }; beats.push(b); schedule(b); }
+      }
+    }
     lt += dt; prevLt += dt;
     if (nextT === null) nextT = time - 8; // 开场时心电图上已经有一排波
     else if (nextT < time - 2) nextT = time; // 跳过很久没画的时间（切到后台等）
