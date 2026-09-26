@@ -90,7 +90,7 @@ const FFMPEG = process.env.FFMPEG || "ffmpeg";
   await browser.close();
   console.log(`\r完成：${OUT}（${frames} 帧，${total} 秒）`);
   if (TIMELINE && !AUDIO) {
-    const mmss = (t) => `${Math.floor(t / 60)}:${String(Math.round(t % 60 * 10) / 10).padStart(2, "0")}`;
+    const mmss = (t) => { const sec = Math.round((t % 60) * 10) / 10; return `${Math.floor(t / 60)}:${sec < 10 ? "0" : ""}${sec % 1 ? sec.toFixed(1) : sec}`; };
     let t = TIMELINE.intro;
     const starts = TIMELINE.durs.map((d, i) => { const at = i === 0 ? TIMELINE.intro : t; t = i === 0 ? d : t + d; return at; });
     console.log("在剪映里把每段朗读放到这些时间点：片头 0:00，" + starts.map((a, i) => `第 ${i + 1} 幕 ${mmss(a)}`).join("，"));
