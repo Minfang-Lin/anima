@@ -246,7 +246,7 @@ Anima.register("h-pylori", {
       if (S.ulcer > 0.1 && Math.abs(p.x - g.ux) < g.uw + g.br * 2) p.y = mTop(g, p.x) + g.br * 1.5;
       const wig = Math.sin(time * 2 + p.k) * g.br * 0.2;
       const h = bug(p.x + wig, p.y, g.br, p.ang + Math.sin(time * 1.5 + p.k) * 0.15, S.shield * 0.8, 0.8);
-      bugs.push({ ...p, ...h });
+      bugs.push(Object.assign({}, p, h));
     }
 
     // 正在钻进黏液的那一只
@@ -260,7 +260,7 @@ Anima.register("h-pylori", {
       const ang = Math.atan2(y1 - y0, x1 - x0) + Math.sin(time * 5) * 0.2;
       const h = bug(x, y, g.br * 1.15, ang, S.shield, 1);
       ctx.restore();
-      swimmer = { x, y, ...h, sr: g.br * 1.15 * 2.7, a };
+      swimmer = Object.assign({ x, y, sr: g.br * 1.15 * 2.7, a }, h);
     }
 
     // 药物胶囊：飘进来，清除细菌

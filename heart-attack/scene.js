@@ -365,7 +365,7 @@ Anima.register("heart-attack", {
     ctx.fillText("冠状动脉", hx, b.y + ch - cw / 11);
     ctx.textAlign = "left";
     ctx.restore();
-    return { ...b, heart: { x: hx - s * 0.62, y: hy - s * 0.22 } };
+    return Object.assign({}, b, { heart: { x: hx - s * 0.62, y: hy - s * 0.22 } });
   }
 
   // 小卡片：心梗的样子
@@ -419,7 +419,7 @@ Anima.register("heart-attack", {
     ctx.fillText("持续 > 15 分钟", px, b.y + ch - u * 0.7);
     ctx.textAlign = "left";
     ctx.restore();
-    return { ...b, chest: { x: px - u * 2, y: chy }, arm: { x: armX + u * 0.5, y: armY }, phone: { x: phx - pw / 2, y: phy } };
+    return Object.assign({}, b, { chest: { x: px - u * 2, y: chy }, arm: { x: armX + u * 0.5, y: armY }, phone: { x: phx - pw / 2, y: phy } });
   }
 
   function hud() {
