@@ -1,4 +1,22 @@
-(() => {
+Anima.register("gout", {
+    "title": "痛风小针",
+    "tag": "关节小剧场 · 7 幕",
+    "headline": "尿酸变成【小针】，关节为什么这么痛",
+    "lede": "走进大脚趾的关节看一看：尿酸从哪里来，怎样变成针一样的结晶，为什么会突然痛得走不了路，又该怎样把它赶走。",
+    "summary": "尿酸变成针状结晶，关节为什么会突然红肿剧痛，又该怎样把尿酸降下来。",
+    "footer": "痛风发作或尿酸偏高，请到风湿免疫科或内分泌科就诊。",
+    "canvasLabel": "卡通大脚趾关节剖面动画",
+    "disease": "痛风",
+    "organs": [
+      "joint",
+      "kidney"
+    ],
+    "categories": [
+      "metabolic",
+      "bone"
+    ],
+    "color": "#5aaad8"
+  }, () => {
   const CH = [
     { title: "健康的关节", ua: 300, food: 0, kidney: 1, crystals: 0, inflame: 0, tophi: 0, heal: 0,
       text: "这是大脚趾的关节。两块骨头的末端包着光滑的软骨，中间有少量关节液润滑，走起路来又顺又不痛。血液里也有一些尿酸（蓝色小圆点），它是身体代谢的正常产物。",
@@ -31,7 +49,7 @@
   ];
   const DUR = 11; // 每幕秒数
 
-  const C = Object.assign(Anima.C, {
+  const C = Object.assign({}, Anima.C, {
     vessel: "#ffb3b3", lumen: "#fff4ec", kidney: "#f28b8b", urine: "#ffe58a",
     urate: "#8fd0f5", crystal: "#ffffff", crystalEdge: "#5aaad8",
     bone: "#fff3dc", boneDot: "#f3dfbd", cart: "#bfe6f5", fluid: "#fff6d6", fluidHot: "#ffc9b8",
@@ -410,10 +428,10 @@
     hud();
   }
 
-  Anima.start({
+  return {
     chapters: CH, state: S, dur: DUR, accent: "#5aaad8",
     titleCard: { lines: ["尿酸变成小针，", "关节为什么这么痛"], sub: "关节小剧场 · 7 幕" },
     sync(e) { W = e.W; H = e.H; time = e.time; cur = e.cur; },
     update, draw,
-  });
-})();
+  };
+});

@@ -1,5 +1,5 @@
 // 科普动画共用引擎：绘本风画笔、章节切换、网页播放和逐帧录制。
-// 每个主题页面只需要提供章节数据、状态、update() 和 draw()，然后调用 Anima.start(...)。
+// 每一集在自己的 scene.js 里用 Anima.register(...) 登记章节数据、状态、update() 和 draw()。
 (() => {
   // 老版本 iOS / 安卓 WebView 没有 roundRect，这里补一个简单版本
   if (!CanvasRenderingContext2D.prototype.roundRect) {
@@ -142,160 +142,227 @@
     return lines;
   }
 
-  // ---------- 启动 ----------
-  function start(cfg) {
-    const CH = cfg.chapters, S = cfg.state, DUR = cfg.dur || 11;
-    const accent = cfg.accent || C.coral;
-    let chT = 0, playing = !reduce;
-    const sync = () => cfg.sync({ W, H, time, cur });
+  // ---------- 小剧场登记与播放 ----------
+  // 每一集的 scene.js 调用 Anima.register(id, meta, factory)：
+  //   meta    标题、页头文字、所属器官和病种等
+  //   factory 每次播放时调用一次，返回 { chapters, state, dur, accent, titleCard, sync, update, draw }
+  // 单集页面在 <body data-episode="id"> 里写明要播哪一集；展厅页面用 Anima.play(id) / Anima.stop() 切换。
+  const registry = {};
+  let ep = null;          // 正在播放的这一集
+  let playing = !reduce;
+  let rafId = 0, last = 0;
+  const $ = (id) => document.getElementById(id);
 
-    function resize() {
-      if (REC) { W = LY.SW / LY.K; H = LY.SH / LY.K; cv.width = VW; cv.height = VH; }
-      else {
-        // 手机等窄屏用接近方形的舞台（和竖版视频一致），标注字号也放大一些
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const narrow = cv.clientWidth < 640;
-        cv.style.aspectRatio = narrow ? "1000 / 820" : "16 / 9";
-        UI = narrow ? 1.25 : 1;
-        W = cv.clientWidth; H = W * (narrow ? 0.82 : 9 / 16);
-        cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  function register(id, meta, factory) { registry[id] = { id, meta, factory }; }
+  function episodes() { return Object.values(registry).map((r) => ({ id: r.id, ...r.meta })); }
+
+  function sync() { if (ep) ep.cfg.sync({ W, H, time, cur }); }
+  function resize() {
+    if (!ep) return;
+    if (REC) { W = LY.SW / LY.K; H = LY.SH / LY.K; cv.width = VW; cv.height = VH; }
+    else {
+      // 手机等窄屏用接近方形的舞台（和竖版视频一致），标注字号也放大一些
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const narrow = cv.clientWidth < 640;
+      cv.style.aspectRatio = narrow ? "1000 / 820" : "16 / 9";
+      UI = narrow ? 1.25 : 1;
+      W = cv.clientWidth; H = W * (narrow ? 0.82 : 9 / 16);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    sync();
+  }
+
+  function update(dt) {
+    const { CH, S } = ep;
+    const tgt = CH[cur];
+    const k = 1 - Math.exp(-dt * 1.4);
+    for (const key of Object.keys(S)) if (key in tgt) S[key] = lerp(S[key], tgt[key], k);
+    sync();
+    ep.cfg.update(dt);
+  }
+  function draw() { ctx.globalAlpha = 1; sync(); ep.cfg.draw(); }
+
+  function go(i) {
+    if (!ep) return;
+    const CH = ep.CH;
+    cur = (i + CH.length) % CH.length; ep.chT = 0;
+    const c = CH[cur];
+    $("nTitle").textContent = c.title;
+    $("nText").textContent = c.text;
+    $("nFact").textContent = c.fact;
+    $("chapters").querySelectorAll("button").forEach((b, j) => { if (j === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });
+    sync();
+  }
+
+  // 页头、章节列表等界面元素只绑定一次事件
+  let uiBound = false;
+  function bindUI() {
+    if (uiBound) return;
+    uiBound = true;
+    addEventListener("resize", resize);
+    $("prev").addEventListener("click", () => go(cur - 1));
+    $("next").addEventListener("click", () => go(cur + 1));
+    $("play").addEventListener("click", () => { playing = !playing; $("play").textContent = playing ? "暂停" : "播放"; });
+    cv.addEventListener("click", () => go(cur + 1)); // 点一下画面进入下一幕
+    addEventListener("keydown", (e) => {
+      if (!ep) return;
+      if (e.key === "ArrowRight") go(cur + 1);
+      if (e.key === "ArrowLeft") go(cur - 1);
+      if (e.key === " " && e.target === document.body) { e.preventDefault(); $("play").click(); }
+    });
+  }
+
+  // 用 meta 填写页头（标签、标题、简介）和页脚
+  function renderHeader(meta) {
+    const h = $("epHeader");
+    if (h) {
+      h.replaceChildren();
+      const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = meta.tag;
+      const h1 = document.createElement("h1");
+      // 标题里用【】包住的字会高亮
+      for (const [k, part] of meta.headline.split(/【|】/).entries()) {
+        if (!part) continue;
+        if (k % 2) { const em = document.createElement("em"); em.textContent = part; h1.appendChild(em); }
+        else h1.appendChild(document.createTextNode(part));
       }
-      sync();
+      const p = document.createElement("p"); p.className = "lede"; p.textContent = meta.lede;
+      h.append(tag, h1, p);
     }
-    addEventListener("resize", resize); resize();
+    const f = $("epFooter");
+    if (f) f.textContent = "科普示意动画，比例和形象都经过卡通化处理，不能替代医生的诊断和建议。" + (meta.footer || "");
+    if (meta.canvasLabel) cv.setAttribute("aria-label", meta.canvasLabel);
+  }
 
-    function update(dt) {
-      const tgt = CH[cur];
-      const k = 1 - Math.exp(-dt * 1.4);
-      for (const key of Object.keys(S)) if (key in tgt) S[key] = lerp(S[key], tgt[key], k);
-      sync();
-      cfg.update(dt);
-    }
-    function draw() { ctx.globalAlpha = 1; sync(); cfg.draw(); }
+  function frame(now) {
+    if (!ep) { rafId = 0; return; }
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    time += dt;
+    if (playing) { ep.chT += dt; if (ep.chT > ep.DUR) go(cur + 1); }
+    $("prog").style.width = (ep.chT / ep.DUR * 100).toFixed(2) + "%";
+    update(dt);
+    draw();
+    rafId = requestAnimationFrame(frame);
+  }
 
-    // 界面
-    const list = document.getElementById("chapters");
-    CH.forEach((c, i) => {
+  function play(id) {
+    const r = registry[id];
+    if (!r) throw new Error("没有登记这一集：" + id);
+    const cfg = r.factory();
+    ep = { id, meta: r.meta, cfg, CH: cfg.chapters, S: cfg.state, DUR: cfg.dur || 11, accent: cfg.accent || C.coral, chT: 0 };
+    for (const k of Object.keys(labelAlpha)) delete labelAlpha[k];
+    time = 0; cur = 0;
+    bindUI();
+    renderHeader(r.meta);
+    const list = $("chapters");
+    list.replaceChildren();
+    ep.CH.forEach((c, i) => {
       const li = document.createElement("li");
       const b = document.createElement("button");
       b.type = "button"; b.id = "ch" + i;
-      b.innerHTML = `<span>${i + 1}</span>${c.title}`;
+      const num = document.createElement("span"); num.textContent = i + 1;
+      b.append(num, document.createTextNode(c.title));
       b.addEventListener("click", () => go(i));
       li.appendChild(b); list.appendChild(li);
     });
-    const playBtn = document.getElementById("play");
-    function go(i) {
-      cur = (i + CH.length) % CH.length; chT = 0;
-      const c = CH[cur];
-      document.getElementById("nTitle").textContent = c.title;
-      document.getElementById("nText").textContent = c.text;
-      document.getElementById("nFact").textContent = c.fact;
-      list.querySelectorAll("button").forEach((b, j) => { if (j === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });
-      sync();
-    }
-    document.getElementById("prev").addEventListener("click", () => go(cur - 1));
-    document.getElementById("next").addEventListener("click", () => go(cur + 1));
-    playBtn.addEventListener("click", () => { playing = !playing; playBtn.textContent = playing ? "暂停" : "播放"; });
-    cv.addEventListener("click", () => go(cur + 1)); // 点一下画面进入下一幕
-    playBtn.textContent = playing ? "暂停" : "播放";
-    addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") go(cur + 1);
-      if (e.key === "ArrowLeft") go(cur - 1);
-      if (e.key === " " && e.target === document.body) { e.preventDefault(); playBtn.click(); }
-    });
+    $("play").textContent = playing ? "暂停" : "播放";
+    resize();
     go(0);
+    if (REC) { setupRecording(); return; }
+    last = performance.now();
+    if (!rafId) rafId = requestAnimationFrame(frame);
+  }
 
-    // 录制画面：舞台 + 片头 + 字幕卡
-    function renderVideo() {
-      const SW = LY.SW, SH = LY.SH, portrait = VH > VW, c = CH[cur];
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.fillStyle = "#fff1ee"; ctx.fillRect(0, 0, VW, VH);
-      ctx.fillStyle = "#ffdcd6";
-      for (let y = 11; y < VH; y += 22) for (let x = 11; x < VW; x += 22) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill(); }
-      ctx.fillStyle = C.ink; rrect(SX + 8, SY + 8, SW, SH, 36); ctx.fill();
-      ctx.save(); ctx.translate(SX, SY); rrect(0, 0, SW, SH, 36); ctx.clip(); ctx.scale(LY.K, LY.K);
-      draw();
-      const titleT = window.__TIMELINE ? window.__TIMELINE.intro : 2.5;
-      const ta = time < titleT ? 1 : clamp(1 - (time - titleT), 0, 1);
-      if (ta > 0) {
-        ctx.globalAlpha = ta;
-        ctx.fillStyle = "rgba(255,241,238,0.92)"; ctx.fillRect(0, 0, W, H);
-        ctx.fillStyle = C.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        const lines = portrait ? cfg.titleCard.lines : [cfg.titleCard.lines.join("")];
-        const fs = portrait ? 62 : 72;
-        ctx.font = `${fs}px ${ROUND}`;
-        lines.forEach((ln, i) => ctx.fillText(ln, W / 2, H / 2 - 30 - (lines.length - 1 - i) * fs * 1.25));
-        ctx.font = `${fs * 0.47}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText(cfg.titleCard.sub, W / 2, H / 2 + 50);
-        ctx.textAlign = "left"; ctx.globalAlpha = 1;
-      }
-      ctx.restore();
-      outline(4); rrect(SX, SY, SW, SH, 36); ctx.stroke();
+  function stop() {
+    ep = null;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
 
-      ctx.textBaseline = "middle";
-      const badgeAt = (x, y, fs) => {
-        ctx.font = `${fs}px ${ROUND}`;
-        const badge = `第 ${cur + 1} 幕`, bw = ctx.measureText(badge).width + fs * 1.1, bh = fs * 1.6;
-        rrect(x, y - bh / 2, bw, bh, bh / 2); ctx.fillStyle = accent; ctx.fill(); outline(3); ctx.stroke();
-        ctx.fillStyle = C.paper; ctx.fillText(badge, x + fs * 0.55, y + 1);
-        return bw;
-      };
-      if (!portrait) {
-        const cy0 = SY + SH + 26, ch = VH - cy0 - 22;
-        ctx.fillStyle = C.ink; rrect(SX + 6, cy0 + 6, SW, ch, 28); ctx.fill();
-        ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 28); ctx.fill(); outline(4); ctx.stroke();
-        const bw = badgeAt(SX + 26, cy0 + 43, 28);
-        ctx.fillStyle = C.ink; ctx.font = `36px ${ROUND}`; ctx.fillText(c.title, SX + 46 + bw, cy0 + 43);
-        ctx.font = `24px ${SANS}`;
-        wrapText(c.text, SW - 56).slice(0, 3).forEach((ln, i) => ctx.fillText(ln, SX + 28, cy0 + 90 + i * 34));
-        return;
-      }
-      const bw = badgeAt(SX, 78, 34);
-      ctx.fillStyle = C.ink; ctx.font = `50px ${ROUND}`;
-      ctx.fillText(c.title, SX + bw + 20, 80);
-      const cy0 = SY + SH + 34, ch = VH - cy0 - 40;
-      ctx.fillStyle = C.ink; rrect(SX + 8, cy0 + 8, SW, ch, 32); ctx.fill();
-      ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 32); ctx.fill(); outline(4); ctx.stroke();
-      ctx.fillStyle = C.ink; ctx.font = `35px ${SANS}`;
-      wrapText(c.text, SW - 70).slice(0, 5).forEach((ln, i) => ctx.fillText(ln, SX + 35, cy0 + 52 + i * 52));
-      ctx.font = `26px ${SANS}`;
-      const fy = cy0 + ch - 58;
-      rrect(SX + 28, fy - 26, SW - 56, 52, 18); ctx.fillStyle = "#fff6da"; ctx.fill();
-      ctx.strokeStyle = C.sugar; ctx.lineWidth = 2.5; ctx.setLineDash([8, 6]); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = C.ink; ctx.fillText(wrapText(c.fact, SW - 90)[0], SX + 45, fy + 1);
+  // ---------- 录制：舞台 + 片头 + 字幕卡 ----------
+  function renderVideo() {
+    const { CH, cfg, accent } = ep;
+    const SW = LY.SW, SH = LY.SH, portrait = VH > VW, c = CH[cur];
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = "#fff1ee"; ctx.fillRect(0, 0, VW, VH);
+    ctx.fillStyle = "#ffdcd6";
+    for (let y = 11; y < VH; y += 22) for (let x = 11; x < VW; x += 22) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill(); }
+    ctx.fillStyle = C.ink; rrect(SX + 8, SY + 8, SW, SH, 36); ctx.fill();
+    ctx.save(); ctx.translate(SX, SY); rrect(0, 0, SW, SH, 36); ctx.clip(); ctx.scale(LY.K, LY.K);
+    draw();
+    const titleT = window.__TIMELINE ? window.__TIMELINE.intro : 2.5;
+    const ta = time < titleT ? 1 : clamp(1 - (time - titleT), 0, 1);
+    if (ta > 0) {
+      ctx.globalAlpha = ta;
+      ctx.fillStyle = "rgba(255,241,238,0.92)"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = C.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      const lines = portrait ? cfg.titleCard.lines : [cfg.titleCard.lines.join("")];
+      const fs = portrait ? 62 : 72;
+      ctx.font = `${fs}px ${ROUND}`;
+      lines.forEach((ln, i) => ctx.fillText(ln, W / 2, H / 2 - 30 - (lines.length - 1 - i) * fs * 1.25));
+      ctx.font = `${fs * 0.47}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText(cfg.titleCard.sub, W / 2, H / 2 + 50);
+      ctx.textAlign = "left"; ctx.globalAlpha = 1;
     }
+    ctx.restore();
+    outline(4); rrect(SX, SY, SW, SH, 36); ctx.stroke();
 
-    const prog = document.getElementById("prog");
-    if (REC) {
-      // 由 record.js 调用：每次推进一帧并画出来；有配音时每幕时长跟着 __TIMELINE 走
-      const TL = window.__TIMELINE;
-      const durs = TL ? TL.durs : CH.map(() => DUR);
-      window.__rec = {
-        total: durs.reduce((a, b) => a + b, 0),
-        tick(dt) {
-          time += dt; chT += dt;
-          if (chT > durs[cur] && cur < CH.length - 1) { const over = chT - durs[cur]; go(cur + 1); chT = over; }
-          update(dt); renderVideo();
-        },
-      };
+    ctx.textBaseline = "middle";
+    const badgeAt = (x, y, fs) => {
+      ctx.font = `${fs}px ${ROUND}`;
+      const badge = `第 ${cur + 1} 幕`, bw = ctx.measureText(badge).width + fs * 1.1, bh = fs * 1.6;
+      rrect(x, y - bh / 2, bw, bh, bh / 2); ctx.fillStyle = accent; ctx.fill(); outline(3); ctx.stroke();
+      ctx.fillStyle = C.paper; ctx.fillText(badge, x + fs * 0.55, y + 1);
+      return bw;
+    };
+    if (!portrait) {
+      const cy0 = SY + SH + 26, ch = VH - cy0 - 22;
+      ctx.fillStyle = C.ink; rrect(SX + 6, cy0 + 6, SW, ch, 28); ctx.fill();
+      ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 28); ctx.fill(); outline(4); ctx.stroke();
+      const bw = badgeAt(SX + 26, cy0 + 43, 28);
+      ctx.fillStyle = C.ink; ctx.font = `36px ${ROUND}`; ctx.fillText(c.title, SX + 46 + bw, cy0 + 43);
+      ctx.font = `24px ${SANS}`;
+      wrapText(c.text, SW - 56).slice(0, 3).forEach((ln, i) => ctx.fillText(ln, SX + 28, cy0 + 90 + i * 34));
       return;
     }
-    let last = performance.now();
-    function frame(now) {
-      const dt = Math.min(0.05, (now - last) / 1000); last = now;
-      time += dt;
-      if (playing) { chT += dt; if (chT > DUR) go(cur + 1); }
-      prog.style.width = (chT / DUR * 100).toFixed(2) + "%";
-      update(dt);
-      draw();
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
+    const bw = badgeAt(SX, 78, 34);
+    ctx.fillStyle = C.ink; ctx.font = `50px ${ROUND}`;
+    ctx.fillText(c.title, SX + bw + 20, 80);
+    const cy0 = SY + SH + 34, ch = VH - cy0 - 40;
+    ctx.fillStyle = C.ink; rrect(SX + 8, cy0 + 8, SW, ch, 32); ctx.fill();
+    ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 32); ctx.fill(); outline(4); ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.font = `35px ${SANS}`;
+    wrapText(c.text, SW - 70).slice(0, 5).forEach((ln, i) => ctx.fillText(ln, SX + 35, cy0 + 52 + i * 52));
+    ctx.font = `26px ${SANS}`;
+    const fy = cy0 + ch - 58;
+    rrect(SX + 28, fy - 26, SW - 56, 52, 18); ctx.fillStyle = "#fff6da"; ctx.fill();
+    ctx.strokeStyle = C.sugar; ctx.lineWidth = 2.5; ctx.setLineDash([8, 6]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C.ink; ctx.fillText(wrapText(c.fact, SW - 90)[0], SX + 45, fy + 1);
   }
+
+  // 由 record.js 调用：每次推进一帧并画出来；有配音时每幕时长跟着 __TIMELINE 走
+  function setupRecording() {
+    const TL = window.__TIMELINE;
+    const durs = TL ? TL.durs : ep.CH.map(() => ep.DUR);
+    window.__rec = {
+      total: durs.reduce((a, b) => a + b, 0),
+      tick(dt) {
+        time += dt; ep.chT += dt;
+        if (ep.chT > durs[cur] && cur < ep.CH.length - 1) { const over = ep.chT - durs[cur]; go(cur + 1); ep.chT = over; }
+        update(dt); renderVideo();
+      },
+    };
+  }
+
+  // 单集页面：所有脚本加载完后，自动播放 <body data-episode> 指定的那一集
+  document.addEventListener("DOMContentLoaded", () => {
+    const id = document.body.dataset.episode;
+    if (id) play(id);
+  });
 
   window.Anima = {
     ctx, C, ROUND, SANS, rnd, lerp, clamp, mix,
-    outline, rrect, face, sweat, heart, bolt, dots, callout, pill, start,
+    outline, rrect, face, sweat, heart, bolt, dots, callout, pill,
+    register, episodes, play, stop,
     get UI() { return UI; },
   };
 })();

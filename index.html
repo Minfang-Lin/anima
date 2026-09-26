@@ -8,31 +8,158 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="shared/style.css">
-<style>
-  .topics { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
-  .topics a {
-    display: grid; gap: 6px; height: 100%; padding: 18px 22px; text-decoration: none; color: var(--ink);
-    background: var(--paper); border: 3px solid var(--ink); border-radius: 22px; box-shadow: 5px 5px 0 var(--ink);
-  }
-  .topics a:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
-  .topics a:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
-  .topics b { font: 400 24px/1.3 var(--round); }
-  .topics span { color: var(--soft); font-size: 14px; }
-</style>
+<link rel="stylesheet" href="shared/hub.css">
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <span class="tag">身体小剧场</span>
-    <h1>用卡通动画讲清楚身体里的事</h1>
-    <p class="lede">每一集用七个小场景，讲一种常见慢性病在身体里是怎样发生的，以及我们能做些什么。</p>
-  </header>
-  <ul class="topics">
-    <li><a href="diabetes-vessels/index.html"><b>糖与血管</b><span>多余的糖，如何一步步伤害血管：糖化、内皮受伤、斑块和微血管病变。</span></a></li>
-    <li><a href="fatty-liver/index.html"><b>肝里的油</b><span>瘦人也会得脂肪肝？肝里的油从哪来，怎样发展成肝硬化，又怎样逆转回来。</span></a></li>
-    <li><a href="gout/index.html"><b>痛风小针</b><span>尿酸变成针状结晶，关节为什么会突然红肿剧痛，又该怎样把尿酸降下来。</span></a></li>
-  </ul>
-  <footer>科普示意动画，不能替代医生的诊断和建议。</footer>
+
+  <!-- 展厅首页 -->
+  <section id="home" class="home">
+    <header>
+      <span class="tag">身体小剧场 · 互动展厅</span>
+      <h1>身体里在<em>上演</em>什么？</h1>
+      <p class="lede">像逛博物馆一样，点一点身体的各个部位，每个部位都藏着一出小剧场。会发光的部位已经开演，灰色的还在筹备中。</p>
+      <p class="count" id="count"></p>
+    </header>
+
+    <div class="tabs" role="tablist" aria-label="浏览方式">
+      <button type="button" role="tab" id="tabBody" aria-selected="true" aria-controls="panelBody">按部位</button>
+      <button type="button" role="tab" id="tabDisease" aria-selected="false" aria-controls="panelDisease">按病种</button>
+    </div>
+
+    <div id="panelBody" role="tabpanel" aria-labelledby="tabBody" class="panel">
+      <svg id="body" class="body" viewBox="0 0 420 660" role="group" aria-label="卡通人体图，点击器官查看小剧场">
+        <!-- 胳膊、腿、脚 -->
+        <g class="skin">
+          <rect x="92" y="172" width="34" height="176" rx="17" transform="rotate(14 109 172)"/>
+          <rect x="294" y="172" width="34" height="176" rx="17" transform="rotate(-14 311 172)"/>
+          <circle cx="70" cy="345" r="19"/>
+          <circle cx="350" cy="345" r="19"/>
+          <rect x="150" y="372" width="48" height="212" rx="24"/>
+          <rect x="222" y="372" width="48" height="212" rx="24"/>
+          <ellipse cx="160" cy="596" rx="40" ry="17"/>
+          <ellipse cx="260" cy="596" rx="40" ry="17"/>
+        </g>
+        <!-- 躯干和头 -->
+        <g class="skin">
+          <rect x="198" y="144" width="24" height="22"/>
+          <rect x="128" y="156" width="164" height="244" rx="58"/>
+          <circle cx="210" cy="92" r="62"/>
+        </g>
+        <g class="face" aria-hidden="true">
+          <circle cx="191" cy="114" r="4.5"/>
+          <circle cx="229" cy="114" r="4.5"/>
+          <ellipse class="blush" cx="178" cy="126" rx="8" ry="4.5"/>
+          <ellipse class="blush" cx="242" cy="126" rx="8" ry="4.5"/>
+          <path class="mouth" d="M201 126 Q210 134 219 126"/>
+        </g>
+
+        <!-- 血管：从心脏往下分到两条腿，两条胳膊上也有 -->
+        <g class="organ" data-organ="vessels">
+          <path class="hit" d="M222 250 L214 300 L210 368 L178 404 L172 566 M210 368 L242 404 L248 566 M160 186 L112 262 L80 330 M260 186 L308 262 L340 330"/>
+          <path class="vessel" d="M222 250 L214 300 L210 368 L178 404 L172 566 M210 368 L242 404 L248 566"/>
+          <path class="vessel" d="M160 186 L112 262 L80 330 M260 186 L308 262 L340 330"/>
+          <path class="vein" d="M200 250 L204 300 L200 368 L166 404 L162 566 M200 368 L232 404 L236 566"/>
+        </g>
+
+        <!-- 大脑 -->
+        <g class="organ" data-organ="brain">
+          <path class="fill-brain" d="M160 78 C154 48 184 34 210 40 C236 32 268 48 260 78 C262 94 240 100 210 98 C180 101 157 94 160 78 Z"/>
+          <path class="fold" d="M190 46 C196 58 186 66 194 78 M214 42 C208 56 222 64 212 80 M236 50 C230 62 244 70 236 84 M176 62 C184 70 176 80 184 88"/>
+        </g>
+        <!-- 肺 -->
+        <g class="organ" data-organ="lungs">
+          <path class="fill-lungs" d="M176 180 C160 184 150 214 150 240 C150 262 170 268 190 258 C198 254 200 236 198 210 C196 190 188 178 176 180 Z"/>
+          <path class="fill-lungs" d="M244 180 C260 184 270 214 270 240 C270 262 250 268 230 258 C222 254 220 236 222 210 C224 190 232 178 244 180 Z"/>
+        </g>
+        <!-- 心脏 -->
+        <g class="organ" data-organ="heart">
+          <path class="fill-heart" d="M224 270 C198 254 202 228 214 228 C220 228 224 234 224 238 C224 234 228 228 234 228 C246 228 250 254 224 270 Z"/>
+        </g>
+        <!-- 肝脏 -->
+        <g class="organ" data-organ="liver">
+          <path class="fill-liver" d="M146 290 C146 274 172 268 206 272 C226 274 234 284 224 298 C212 314 168 320 154 310 C147 305 146 298 146 290 Z"/>
+        </g>
+        <!-- 胃 -->
+        <g class="organ" data-organ="stomach">
+          <path class="fill-stomach" d="M236 280 C256 270 280 284 274 306 C270 324 244 328 236 314 C232 306 240 302 238 294 C236 288 232 286 236 280 Z"/>
+        </g>
+        <!-- 胰腺 -->
+        <g class="organ" data-organ="pancreas">
+          <path class="fill-pancreas" d="M188 330 C204 322 240 322 258 330 C252 340 212 342 188 338 Z"/>
+        </g>
+        <!-- 肾脏 -->
+        <g class="organ" data-organ="kidney">
+          <path class="fill-kidney" d="M168 344 C154 344 152 372 166 378 C176 382 180 370 176 362 C174 356 180 350 176 346 C174 344 171 344 168 344 Z"/>
+          <path class="fill-kidney" d="M252 344 C266 344 268 372 254 378 C244 382 240 370 244 362 C246 356 240 350 244 346 C246 344 249 344 252 344 Z"/>
+        </g>
+        <!-- 骨骼：右腿里的一根大腿骨 -->
+        <g class="organ" data-organ="bone">
+          <path class="fill-bone" d="M240 420 C232 412 238 402 246 406 C250 400 260 404 256 412 L256 510 C262 518 254 528 248 522 C242 528 232 520 240 512 Z"/>
+        </g>
+        <!-- 脚趾关节：左脚的大脚趾 -->
+        <g class="organ" data-organ="joint">
+          <circle class="fill-joint" cx="128" cy="592" r="12"/>
+        </g>
+
+        <!-- 标签由 hub.js 按目录生成 -->
+        <g id="labels"></g>
+      </svg>
+      <p class="hint">点器官或旁边的标签都可以</p>
+    </div>
+
+    <div id="panelDisease" role="tabpanel" aria-labelledby="tabDisease" class="panel" hidden>
+      <div id="diseaseList" class="disease-list"></div>
+    </div>
+
+    <footer>科普示意动画，比例和形象都经过卡通化处理，不能替代医生的诊断和建议。</footer>
+  </section>
+
+  <!-- 播放某一集 -->
+  <section id="episode" hidden>
+    <button type="button" id="back" class="back">← 回到展厅</button>
+    <header id="epHeader"></header>
+
+    <div class="stage">
+      <canvas id="cv" aria-label="科普动画"></canvas>
+      <div class="bar"><i id="prog"></i></div>
+    </div>
+
+    <div class="below">
+      <ol class="chapters" id="chapters"></ol>
+      <section class="narr" aria-live="polite">
+        <h2 id="nTitle"></h2>
+        <p id="nText"></p>
+        <div class="fact" id="nFact"></div>
+        <div class="controls">
+          <button id="prev" type="button">上一幕</button>
+          <button id="play" type="button" class="primary">暂停</button>
+          <button id="next" type="button">下一幕</button>
+        </div>
+      </section>
+    </div>
+
+    <footer id="epFooter"></footer>
+  </section>
 </div>
+
+<!-- 展签：点器官后从底部弹出 -->
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <button type="button" id="sheetClose" class="sheet-close" aria-label="关闭">×</button>
+    <h2 id="sheetTitle"></h2>
+    <p id="sheetFact" class="sheet-fact"></p>
+    <ul id="sheetList" class="ep-list"></ul>
+  </div>
+</div>
+
+<script src="shared/engine.js"></script>
+<!-- 每一集：新做好的小剧场在这里加一行 -->
+<script src="diabetes-vessels/scene.js"></script>
+<script src="gout/scene.js"></script>
+<script src="fatty-liver/scene.js"></script>
+<script src="shared/catalog.js"></script>
+<script src="shared/hub.js"></script>
 </body>
 </html>

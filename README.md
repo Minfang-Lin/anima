@@ -10,39 +10,52 @@
 
 ## 运行
 
-- **在电脑上浏览**：下载整个项目（GitHub 上 Code → Download ZIP）并解压，打开根目录的 `index.html`（目录页），或者某一集的 `<主题>/index.html`。
-- **只要某一集**：用 `dist/xiaohongshu/<主题>.zip`，解压后双击里面的 `index.html` 就能打开。
+下载整个项目（GitHub 上 Code → Download ZIP）并解压，双击根目录的 `index.html`，就会打开「身体小剧场」互动展厅：
 
-每一集的页面要和 `shared/` 文件夹放在一起才能显示，只单独拿出一个 `index.html` 会是空白页。
+- **按部位**：一个卡通小人，点大脑、肺、心脏、肝脏、肾脏、血管、骨骼、脚趾关节（或旁边的标签），底部会弹出展签，列出这个部位的小剧场。已开演的部位会发光，筹备中的是灰色。
+- **按病种**：按代谢病、心脑血管、消化、呼吸、肾脏、骨骼关节分组列出。
+- 进入某一集后，点“← 回到展厅”或用手机的返回手势回到展厅。网址里的 `#gout` 这类后缀会直接打开对应的一集。
 
-键盘 ← / → 切换场景，空格暂停；手机上点一下画面进入下一幕。手机等窄屏会自动换成接近方形的舞台，标注字号也更大。
+每一集也可以单独打开：`<主题>/index.html`（导出视频时用的就是它）。页面要和 `shared/` 文件夹放在一起才能显示。
+
+播放时键盘 ← / → 切换场景，空格暂停；手机上点一下画面进入下一幕。
 
 ## 发布到小红书「小工具」（Builder Hub）
 
+整个展厅打包成一个小工具：
+
 ```bash
 pip install fonttools brotli
-python3 build_xhs.py          # 输出 dist/xiaohongshu/<主题>.zip
+python3 build_xhs.py          # 输出 dist/xiaohongshu/body-theater.zip
 ```
 
-每个 zip 都可以直接在小红书创作者中心 → Builder Hub →「小工具」里上传。打包脚本会按小工具的规则处理并检查，任何一条不满足都会停止打包：
+这个 zip 可以直接在小红书创作者中心 → Builder Hub →「小工具」里上传。打包脚本会按小工具的规则处理并检查，任何一条不满足都会停止打包：
 
-- `index.html` 在 zip 根目录，总包 < 2MB（现在每集约 65KB）
-- 不能有网络请求：去掉 Google Fonts，把站酷快乐体按这一集用到的字裁剪后打包进去（OFL 许可证一起放在包里）
-- 不能有内联 `<script>` 和 `onclick=` 之类的内联事件：每集的动画在 `scene.js`，引擎在 `shared/engine.js`
+- `index.html` 在 zip 根目录，总包 < 2MB（现在 3 集约 125KB，每多一集大约多 20KB）
+- 不能有网络请求：去掉 Google Fonts，把站酷快乐体按用到的字裁剪后打包进去（OFL 许可证一起放在包里）
+- 不能有内联 `<script>` 和 `onclick=` 之类的内联事件：引擎、展厅脚本和每一集的动画都是单独的 .js 文件
 - 不能用 eval、iframe、fetch 等
 
-改了文案以后要重新运行 `build_xhs.py`，字体子集才会包含新出现的字。
+改了文案或新增一集以后，重新运行 `build_xhs.py`，字体子集会自动包含新出现的字。
 
 ## 项目结构
 
-- `shared/engine.js`：共用引擎。绘本风画笔（带表情的小脸、汗珠、爱心、闪电、对话框标注、数值胶囊）、章节切换、网页播放和逐帧录制都在这里。
+- `index.html`：「身体小剧场」互动展厅（人体图 + 按病种列表 + 播放器）。
+- `shared/engine.js`：共用引擎。绘本风画笔（带表情的小脸、汗珠、爱心、闪电、对话框标注、数值胶囊）、小剧场登记与切换、网页播放和逐帧录制。
+- `shared/hub.js`、`shared/hub.css`：展厅的交互和样式。
+- `shared/catalog.js`：展厅目录。人体图上每个器官的名字和一句小知识，病种分组，以及“筹备中”的小剧场。
 - `shared/style.css`：共用的页面样式。
-- `<主题>/index.html`：每一集的页面文字，以及 `video-meta`（配音的片头引子、读法替换和用小调配乐的幕）。
-- `<主题>/scene.js`：每一集的动画，只写自己的章节数据（`CH`）、画面状态（`S`）、`update()` 和 `draw()`，最后调用 `Anima.start(...)`。
-- `assets/fonts/`：站酷快乐体原始字体和 OFL 许可证，打包小红书小工具时使用。
+- `<主题>/scene.js`：每一集的动画。用 `Anima.register(id, meta, factory)` 登记：`meta` 里有标题、简介、所属器官（`organs`）和病种（`categories`）；`factory` 返回章节数据（`CH`）、画面状态（`S`）、`update()` 和 `draw()`。
+- `<主题>/index.html`：单独播放这一集的页面，以及 `video-meta`（配音的片头引子、读法替换和用小调配乐的幕）。
+- `assets/fonts/`：站酷快乐体原始字体和 OFL 许可证，打包小工具时使用。
 - `build_xhs.py`：打包小红书小工具。
 
-新做一集时，复制一个现有主题的文件夹，改掉 `scene.js` 里的 `CH` 和画面代码、`index.html` 里的文字和 `video-meta`，再在根目录 `index.html` 里加一个入口。
+### 新做一集
+
+1. 复制一个现有主题的文件夹，改 `scene.js` 里的 `meta`（标题、`organs`、`categories`、颜色）、`CH` 和画面代码，改 `index.html` 里的 `data-episode` 和 `video-meta`。
+2. 在根目录 `index.html` 末尾加一行 `<script src="<主题>/scene.js"></script>`（忘了加的话 `build_xhs.py` 会提示）。
+3. 如果这一集原来在 `shared/catalog.js` 的“筹备中”列表里，把它删掉。
+4. 运行 `python3 build_xhs.py` 重新打包。
 
 ## 糖与血管：七幕分镜
 

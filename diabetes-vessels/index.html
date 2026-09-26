@@ -9,16 +9,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="../shared/style.css">
 </head>
-<body>
+<body data-episode="diabetes-vessels">
 <div class="wrap">
-  <header>
-    <span class="tag">血管小剧场 · 7 幕</span>
-    <h1>多余的<em>糖</em>，如何一步步伤害血管</h1>
-    <p class="lede">跟着血管里的红细胞小伙伴走一趟：看看血糖升高后，血管里发生了什么，以及我们可以怎样帮它们。</p>
-  </header>
+  <header id="epHeader"></header>
 
   <div class="stage">
-    <canvas id="cv" aria-label="卡通血管纵切面动画"></canvas>
+    <canvas id="cv" aria-label="科普动画"></canvas>
     <div class="bar"><i id="prog"></i></div>
   </div>
 
@@ -36,7 +32,7 @@
     </section>
   </div>
 
-  <footer>科普示意动画，比例和形象都经过卡通化处理，不能替代医生的诊断和建议。</footer>
+  <footer id="epFooter"></footer>
 </div>
 
 <script id="video-meta" type="application/json">

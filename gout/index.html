@@ -9,16 +9,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="../shared/style.css">
 </head>
-<body>
+<body data-episode="gout">
 <div class="wrap">
-  <header>
-    <span class="tag">关节小剧场 · 7 幕</span>
-    <h1>尿酸变成<em>小针</em>，关节为什么这么痛</h1>
-    <p class="lede">走进大脚趾的关节看一看：尿酸从哪里来，怎样变成针一样的结晶，为什么会突然痛得走不了路，又该怎样把它赶走。</p>
-  </header>
+  <header id="epHeader"></header>
 
   <div class="stage">
-    <canvas id="cv" aria-label="卡通大脚趾关节剖面动画"></canvas>
+    <canvas id="cv" aria-label="科普动画"></canvas>
     <div class="bar"><i id="prog"></i></div>
   </div>
 
@@ -36,7 +32,7 @@
     </section>
   </div>
 
-  <footer>科普示意动画，比例和形象都经过卡通化处理，不能替代医生的诊断和建议。痛风发作或尿酸偏高，请到风湿免疫科或内分泌科就诊。</footer>
+  <footer id="epFooter"></footer>
 </div>
 
 <script id="video-meta" type="application/json">

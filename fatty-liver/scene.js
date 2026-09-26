@@ -1,4 +1,21 @@
-(() => {
+Anima.register("fatty-liver", {
+    "title": "肝里的油",
+    "tag": "肝脏小剧场 · 7 幕",
+    "headline": "【瘦】人也会得脂肪肝？",
+    "lede": "走进肝脏看一看：脂肪从哪里来，为什么体重正常的人也会囤油，脂肪肝怎样一步步变成肝硬化，以及怎样把它逆转回来。",
+    "summary": "瘦人也会得脂肪肝？肝里的油从哪来，怎样发展成肝硬化，又怎样逆转回来。",
+    "footer": "体检发现脂肪肝，请到消化内科或肝病科进一步评估。",
+    "canvasLabel": "卡通肝细胞动画",
+    "disease": "脂肪肝",
+    "organs": [
+      "liver"
+    ],
+    "categories": [
+      "metabolic",
+      "digestive"
+    ],
+    "color": "#f0945a"
+  }, () => {
   const CH = [
     { title: "健康的肝脏", fat: 0.05, sugar: 0.2, trucks: 1, lean: 0, inflame: 0, fibro: 0, heal: 0,
       text: "肝脏是身体的化工厂，由一个个肝细胞组成。它们把吃进来的糖和脂肪加工、储存，再用“小货车”把多余的脂肪运出去。健康的肝细胞里只有很少一点脂肪。",
@@ -31,7 +48,7 @@
   ];
   const DUR = 11; // 每幕秒数
 
-  const C = Object.assign(Anima.C, {
+  const C = Object.assign({}, Anima.C, {
     vessel: "#ffb3b3", lumen: "#fff4ec", sinus: "#f9c4c4",
     cell: "#ffc4a3", cellPale: "#ffe6d6", cellScar: "#e9a88f", nucleus: "#f59a7c",
     oil: "#fff0a0", oilEdge: "#e8c24a", truck: "#8fd3b6", scar: "#a9826f", stellate: "#b89cf0",
@@ -325,10 +342,10 @@
     hud();
   }
 
-  Anima.start({
+  return {
     chapters: CH, state: S, dur: DUR, accent: "#f0945a",
     titleCard: { lines: ["瘦人也会得", "脂肪肝？"], sub: "肝脏小剧场 · 7 幕" },
     sync(e) { W = e.W; H = e.H; time = e.time; cur = e.cur; },
     update, draw,
-  });
-})();
+  };
+});

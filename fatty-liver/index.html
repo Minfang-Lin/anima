@@ -9,16 +9,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="../shared/style.css">
 </head>
-<body>
+<body data-episode="fatty-liver">
 <div class="wrap">
-  <header>
-    <span class="tag">肝脏小剧场 · 7 幕</span>
-    <h1><em>瘦</em>人也会得脂肪肝？</h1>
-    <p class="lede">走进肝脏看一看：脂肪从哪里来，为什么体重正常的人也会囤油，脂肪肝怎样一步步变成肝硬化，以及怎样把它逆转回来。</p>
-  </header>
+  <header id="epHeader"></header>
 
   <div class="stage">
-    <canvas id="cv" aria-label="卡通肝细胞动画"></canvas>
+    <canvas id="cv" aria-label="科普动画"></canvas>
     <div class="bar"><i id="prog"></i></div>
   </div>
 
@@ -36,7 +32,7 @@
     </section>
   </div>
 
-  <footer>科普示意动画，比例和形象都经过卡通化处理，不能替代医生的诊断和建议。体检发现脂肪肝，请到消化内科或肝病科进一步评估。</footer>
+  <footer id="epFooter"></footer>
 </div>
 
 <script id="video-meta" type="application/json">

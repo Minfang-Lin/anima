@@ -1,4 +1,20 @@
-(() => {
+Anima.register("diabetes-vessels", {
+    "title": "糖与血管",
+    "tag": "血管小剧场 · 7 幕",
+    "headline": "多余的【糖】，如何一步步伤害血管",
+    "lede": "跟着血管里的红细胞小伙伴走一趟：看看血糖升高后，血管里发生了什么，以及我们可以怎样帮它们。",
+    "summary": "多余的糖怎样一步步伤害血管：糖化、内皮受伤、斑块和微血管病变。",
+    "footer": "",
+    "canvasLabel": "卡通血管纵切面动画",
+    "disease": "糖尿病",
+    "organs": [
+      "vessels"
+    ],
+    "categories": [
+      "metabolic"
+    ],
+    "color": "#ff7b7b"
+  }, () => {
   const CH = [
     { title: "健康的血管", glucose: 5.2, ages: 0, damage: 0, plaque: 0, micro: 0, heal: 0,
       text: "血管内壁铺着一层整整齐齐的内皮细胞，光滑又有弹性。红细胞开开心心地流过，血液里的葡萄糖（小方糖）不多不少，刚好够身体使用。",
@@ -32,7 +48,7 @@
   const DUR = 11; // 每幕秒数
 
   // 配色（在共用调色板上加本主题的颜色）
-  const C = Object.assign(Anima.C, {
+  const C = Object.assign({}, Anima.C, {
     tissue: "#ffe7e3", dot: "#ffd6cf", wall: "#ffb3b3", adv: "#ffcdc4",
     lumen: "#fff4ec", lumenSweet: "#fff0c2", endo: "#ffe0e6", endoHurt: "#d9c8cf",
     rbc: "#ff7b7b", rbcTired: "#e0897a", age: "#b07a4f",
@@ -392,10 +408,10 @@
     }
   }
 
-  Anima.start({
+  return {
     chapters: CH, state: S, dur: DUR, accent: C.rbc,
     titleCard: { lines: ["多余的糖，", "如何一步步伤害血管"], sub: "血管小剧场 · 7 幕" },
     sync(e) { W = e.W; H = e.H; time = e.time; cur = e.cur; },
     update, draw,
-  });
-})();
+  };
+});
