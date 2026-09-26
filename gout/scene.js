@@ -85,13 +85,13 @@ Anima.register("gout", {
     const vmax = Math.sqrt(1 - u * u) * 0.92;
     return { u, v: sign * (0.64 + rnd(seed + 2) * Math.max(0, vmax - 0.64)) };
   };
-  const jUrate = Array.from({ length: 40 }, (_, i) => ({ ...pocket(i * 7 + 500), ph: rnd(i + 900) * 6 }));
+  const jUrate = Array.from({ length: 40 }, (_, i) => Object.assign(pocket(i * 7 + 500), { ph: rnd(i + 900) * 6 }));
   // 结晶：一部分扎在软骨表面，一部分漂在口袋里
   const crystals = Array.from({ length: 34 }, (_, i) => {
     const r = rnd(i + 1200);
     if (r < 0.35) return { type: "L", a: (rnd(i + 1300) - 0.5) * 2.1, tilt: (rnd(i + 1400) - 0.5) * 0.8 };
     if (r < 0.6) return { type: "R", a: (rnd(i + 1300) - 0.5) * 1.2, tilt: (rnd(i + 1400) - 0.5) * 0.8 };
-    return { type: "P", ...pocket(i * 11 + 1500), rot: rnd(i + 1600) * 6 };
+    return Object.assign({ type: "P" }, pocket(i * 11 + 1500), { rot: rnd(i + 1600) * 6 });
   });
   const wbcs = Array.from({ length: 7 }, (_, i) => ({ k: i, ph: rnd(i + 1700) * 6 }));
   const cytos = [], bolts = [], urine = [];

@@ -1,7 +1,8 @@
 /* 展厅页：人体图、标签页、展签和小剧场列表 */
 .count { margin: 0; font: 15px/1.4 var(--round); color: var(--mint); }
 
-.tabs { display: flex; gap: 10px; }
+.tabs { display: flex; }
+.tabs > * + * { margin-left: 10px; }
 .tabs button {
   font: 18px/1 var(--round); color: var(--ink); background: var(--paper);
   border: 2.5px solid var(--ink); border-radius: 999px; padding: 9px 20px; cursor: pointer;
@@ -9,7 +10,7 @@
 }
 .tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); }
 
-.panel { display: grid; gap: 6px; }
+.panel { display: grid; grid-gap: 6px; gap: 6px; }
 .body { display: block; width: 100%; max-width: 480px; height: auto; margin: 0 auto; overflow: visible; }
 .hint { margin: 0; text-align: center; color: var(--soft); font-size: 13px; }
 
@@ -56,38 +57,41 @@
 .body .label:focus-visible { outline: none; }
 
 /* 小剧场卡片列表 */
-.ep-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.ep-list { list-style: none; margin: 0; padding: 0; display: grid; grid-gap: 10px; gap: 10px; }
 .ep-card {
-  width: 100%; text-align: left; display: flex; gap: 12px; align-items: center; cursor: pointer;
+  width: 100%; text-align: left; display: flex; align-items: center; cursor: pointer;
   background: var(--paper); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 18px;
   padding: 12px 14px; box-shadow: 4px 4px 0 var(--ink); font: inherit;
 }
 .ep-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
 .ep-dot { flex: none; width: 16px; height: 16px; border-radius: 50%; background: var(--ep, var(--coral)); border: 2px solid var(--ink); }
-.ep-body { display: grid; gap: 2px; min-width: 0; }
+.ep-card > * + * { margin-left: 12px; }
+.ep-body { display: grid; grid-gap: 2px; gap: 2px; min-width: 0; flex: 1 1 0%; }
 .ep-body b { font: 400 20px/1.3 var(--round); }
 .ep-body span { color: var(--soft); font-size: 13px; line-height: 1.5; }
-.ep-go { flex: none; margin-left: auto; font: 15px var(--round); color: var(--paper); background: var(--ep, var(--coral)); border: 2px solid var(--ink); border-radius: 999px; padding: 4px 10px; }
+.ep-go { flex: none; margin-left: 12px; font: 15px var(--round); color: var(--paper); background: var(--ep, var(--coral)); border: 2px solid var(--ink); border-radius: 999px; padding: 4px 10px; }
 .ep-planned {
-  display: flex; gap: 10px; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   border: 2px dashed #d9bcc4; border-radius: 16px; padding: 10px 14px; color: var(--soft);
 }
+.ep-planned > * + * { margin-left: 10px; }
 .ep-planned b { font: 400 17px var(--round); }
 .ep-planned span { font-size: 12px; background: #f5e9ec; border-radius: 999px; padding: 2px 10px; }
 
 /* 按病种 */
-.disease-list { display: grid; gap: 22px; }
-.disease { display: grid; gap: 8px; }
+.disease-list { display: grid; grid-gap: 22px; gap: 22px; }
+.disease { display: grid; grid-gap: 8px; gap: 8px; }
 .disease h2 { margin: 0; font: 400 24px/1.3 var(--round); }
 .disease > p { margin: 0; color: var(--soft); font-size: 14px; }
 
 /* 展签：从底部弹出 */
-.sheet { position: fixed; inset: 0; z-index: 10; display: flex; align-items: flex-end; justify-content: center; }
-.sheet-backdrop { position: absolute; inset: 0; background: rgba(91, 58, 74, .35); }
+.sheet { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 10; display: flex; align-items: flex-end; justify-content: center; }
+.sheet-backdrop { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(91, 58, 74, .35); }
 .sheet-card {
-  position: relative; width: min(560px, 100%); max-height: 80vh; overflow-y: auto;
+  position: relative; width: 100%; max-width: 560px; max-height: 80vh; overflow-y: auto;
   background: var(--ground); border: 3px solid var(--ink); border-bottom: 0; border-radius: 26px 26px 0 0;
-  padding: 20px 18px calc(22px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 12px;
+  padding: 20px 18px 22px;
+  padding: 20px 18px calc(22px + env(safe-area-inset-bottom, 0px)); display: grid; grid-gap: 12px; gap: 12px;
   animation: rise .25s ease-out;
 }
 @keyframes rise { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -103,8 +107,8 @@
   justify-self: start; font: 17px var(--round); color: var(--ink); background: var(--paper);
   border: 2.5px solid var(--ink); border-radius: 999px; padding: 6px 16px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
 }
-#episode { display: grid; gap: 22px; }
-.home { display: grid; gap: 18px; }
+#episode { display: grid; grid-gap: 22px; gap: 22px; }
+.home { display: grid; grid-gap: 18px; gap: 18px; }
 
 @media (prefers-reduced-motion: reduce) {
   .body .organ.on { animation: none; filter: drop-shadow(0 0 5px rgba(255, 190, 60, .9)); }
@@ -113,13 +117,13 @@
 
 /* 手机：展厅首页尽量一屏装下 */
 @media (max-width: 640px) {
-  .home { gap: 10px; }
+  .home { grid-gap: 10px; gap: 10px; }
   .count { font-size: 13px; }
   .tabs button { font-size: 15px; padding: 6px 14px; box-shadow: 2px 2px 0 var(--ink); }
   .body { max-height: calc(100vh - 230px); max-height: calc(100dvh - 230px); min-height: 360px; }
   .hint { display: none; }
   /* 返回按钮和标题放在同一行 */
-  #episode { gap: 10px; grid-template-columns: auto minmax(0, 1fr); column-gap: 10px; align-items: start; }
+  #episode { grid-gap: 10px; gap: 10px; grid-template-columns: auto minmax(0, 1fr); grid-column-gap: 10px; column-gap: 10px; align-items: start; }
   #episode > * { grid-column: 1 / -1; }
   #episode > .back { grid-column: 1; align-self: start; margin-top: 2px; }
   #episode > #epHeader { grid-column: 2; }

@@ -447,7 +447,7 @@ Anima.register("hypertension", {
     callout("silent", on("silent"), m0.x, m0.y, W * 0.5, above - H * 0.04, "常常没感觉：沉默的杀手");
 
     callout("measure", on("measure"), r.gz.x - r.gz.r * 0.7, r.gz.y, W * 0.42, H * 0.86, "定期量一量血压");
-    const l0 = near(0.28);
+    const l0 = near(0.45);
     callout("life", on("life"), l0.x, l0.y, W * 0.24, above - H * 0.04, "少盐多动睡好觉");
     const cp = r.cap0;
     callout("med", on("med") && !!cp, cp ? cp.x : 0, cp ? cp.y : 0, W * 0.72, above - H * 0.04, "遵医嘱，别停药");

@@ -80,7 +80,7 @@ Anima.register("insulin", {
     const bounce = i === 0 ? S.ex * Math.abs(Math.sin(time * 3)) * H * 0.015 : 0;
     const x = Math.min(W * h.fx, W - hw / 2 - 8), top = g.base - bh - bounce;
     const dw = hw * 0.32, dh = bh * 0.62, dx = x - hw * 0.2, dy = g.base - dh;
-    return { ...h, i, x, hw, bh, rh, top, dx, dy, dw, dh, lockX: dx + dw * 0.32, lockY: dy + dh * 0.5 };
+    return Object.assign({}, h, { i, x, hw, bh, rh, top, dx, dy, dw, dh, lockX: dx + dw * 0.32, lockY: dy + dh * 0.5 });
   }
 
   // ---------- 粒子 ----------
@@ -214,6 +214,13 @@ Anima.register("insulin", {
     return { x: x + w / 2, top: y, pipeX: px, faceY: y + h * 0.6 };
   }
 
+  // 上面两个角是圆的门（不用 roundRect 的数组半径，老浏览器也能画）
+  function doorPath(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r); ctx.lineTo(x + w - r, y); ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h); ctx.closePath();
+  }
   function drawHouse(g, hs) {
     const { x, hw, bh, rh, top, dx, dy, dw, dh, i } = hs;
     const base = C[hs.col];
@@ -234,7 +241,7 @@ Anima.register("insulin", {
     ctx.fillText(hs.name, x, top - rh * 0.3);
     ctx.textAlign = "left";
     // 门：门里亮着能量的光
-    rrect(dx - dw / 2, dy, dw, dh, [dw * 0.45, dw * 0.45, 0, 0]);
+    doorPath(dx - dw / 2, dy, dw, dh, dw * 0.45);
     ctx.fillStyle = C.inside; ctx.fill(); outline(2); ctx.stroke();
     if (open > 0.05) {
       ctx.save(); ctx.globalAlpha *= open;
@@ -242,7 +249,7 @@ Anima.register("insulin", {
       ctx.restore();
     }
     const pw = dw * (1 - 0.85 * open);
-    rrect(dx - dw / 2, dy, pw, dh, [dw * 0.45 * (pw / dw), dw * 0.45 * (pw / dw), 0, 0]);
+    doorPath(dx - dw / 2, dy, pw, dh, dw * 0.45 * (pw / dw));
     ctx.fillStyle = mix(base, C.rust, 0.3 + S.rust * 0.25); ctx.fill(); outline(2); ctx.stroke();
     if (S.rust > 0.05 && pw > dw * 0.3) {
       ctx.save(); ctx.globalAlpha *= S.rust * 0.8; ctx.fillStyle = "#9c4a24";
@@ -311,7 +318,7 @@ Anima.register("insulin", {
         ctx.restore();
       }
     }
-    return { ...hs, open, hasKey, lockX, lockY, keyPos, faceX: x + hw * 0.24, faceY: top + bh * 0.35 };
+    return Object.assign({}, hs, { open, hasKey, lockX, lockY, keyPos, faceX: x + hw * 0.24, faceY: top + bh * 0.35 });
   }
 
   // 运动的肌肉：头顶举着小哑铃
@@ -399,7 +406,7 @@ Anima.register("insulin", {
     const c1 = pick(cubes, nCube(), 0.3, 0.5);
     callout("pile", on("pile") && !!c1, c1 ? c1.x * W : 0, c1 ? yIn(c1.yn, cs) : 0, lx + W * 0.04, A, "糖进不去，堆在血里");
     callout("vessel", on("vessel"), W * 0.84, g.vb + g.wall * 0.5, rx + W * 0.06, A, "血管也跟着受伤");
-    callout("exercise", on("exercise") && !!db, db ? db.x + h0.hw * 0.3 : 0, db ? db.y : 0, lx + W * 0.06, A, "运动的肌肉自己开门");
+    callout("exercise", on("exercise") && !!db, db ? db.x + h0.hw * 0.3 : 0, db ? db.y : 0, lx + W * 0.06, g.narrow ? B : A, "运动的肌肉自己开门");
     callout("lighter", on("lighter"), h2.lockX, h2.lockY, rx, B2, "减重后，锁灵活多了");
     hud();
   }

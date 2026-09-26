@@ -445,7 +445,7 @@ Anima.register("alcohol-liver", {
     callout("adh", on("adh"), g.xA, r.wy + g.ws * 0.5, g.xA + W * 0.04, bot, "第一道工序：乙醇脱氢酶");
     const a0 = find((it) => it.type === "ald" && !it.leak && it.y > g.by - g.ir * 1.5 && it.x > g.xA + W * 0.04);
     callout("ald", on("ald") && !!a0, a0 ? a0.x : 0, a0 ? a0.y - g.ir : 0, W * 0.64, top, "酒精变成了乙醛");
-    callout("toxic", on("toxic") && !!a0, a0 ? a0.x : 0, a0 ? a0.y - g.ir : 0, W * 0.3, top, "乙醛：有毒，还会致癌");
+    callout("toxic", on("toxic") && !!a0, a0 ? a0.x : 0, a0 ? a0.y - g.ir : 0, W * 0.24, top, "乙醛：有毒、致癌");
     callout("aldh2", on("aldh2"), g.xB, r.wy + g.ws * 0.5, g.xB - W * 0.1, bot, "第二道工序：ALDH2");
     const c0 = find((it) => it.type === "acid" && it.x < g.xOut - W * 0.03);
     callout("acetic", on("acetic") && !!c0, c0 ? c0.x : 0, c0 ? c0.y - g.ir : 0, W * 0.8, top, "乙酸 → 水和二氧化碳");

@@ -1,8 +1,9 @@
 """把「身体小剧场」展厅（根目录 index.html + 所有已上线的小剧场）打包成
 小红书 Builder Hub「小工具」可以直接上传的一个 zip。
 
-小工具的限制：纯 HTML/CSS/JS、index.html 在 zip 根目录、总包 < 2MB、
-不能有任何网络请求（字体也要打包进去）、不能有内联 <script> 和 onclick= 这类内联事件。
+小工具的限制（见小红书《小工具容器能力清单》）：纯 HTML/CSS/JS、index.html 在 zip 根目录、
+总包 < 2MB、不能有任何网络请求（字体也要打包进去）、不能有内联 <script> 和 onclick= 这类内联事件，
+代码要兼容安卓 8.1 自带的 Chrome 61（JS 限 ES2017）。
 
 打包内容：
     index.html              展厅页面（去掉 Google Fonts，改为引用包内字体）
@@ -110,6 +111,25 @@ def check(files):
     return total, problems
 
 
+def check_compat(names):
+    """小工具要求兼容安卓 8.1 自带的 Chrome 61（ES2017），用 tools/check_compat.js 检查。"""
+    import subprocess
+    tmp = os.path.join(OUT, ".compat")
+    shutil.rmtree(tmp, ignore_errors=True)
+    paths = []
+    for n in names:
+        src = os.path.join(ROOT, n)
+        if not os.path.exists(src):  # 打包时生成的文件（如 fonts.css）
+            continue
+        paths.append(src)
+    try:
+        r = subprocess.run(["node", os.path.join(ROOT, "tools", "check_compat.js")] + paths, cwd=ROOT)
+    except FileNotFoundError:
+        raise SystemExit("没有找到 node，无法做 Chrome 61 兼容性检查。请先安装 Node.js，并在项目目录运行 npm install")
+    if r.returncode != 0:
+        raise SystemExit("兼容性检查没通过，请按上面的提示修改后再打包（如果提示找不到 acorn，先运行 npm install）")
+
+
 def build():
     html = page_html()
     missing = [t for t in topics() if f'src="{t}/scene.js"' not in html]
@@ -129,6 +149,7 @@ def build():
     total, problems = check(files)
     if problems:
         raise SystemExit("没有通过小工具的检查：\n  " + "\n  ".join(problems))
+    check_compat([n for n in files if n.endswith((".js", ".css"))])
 
     folder = os.path.join(OUT, "body-theater")
     shutil.rmtree(folder, ignore_errors=True)

@@ -24,13 +24,13 @@ body {
   padding-inline: 16px;
   padding-block: 28px 48px;
 }
-.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 22px; }
-header { display: grid; gap: 8px; }
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; grid-gap: 22px; gap: 22px; }
+header { display: grid; grid-gap: 8px; gap: 8px; }
 .tag {
   justify-self: start; font: 16px/1 var(--round); color: var(--paper); background: var(--mint);
   padding: 6px 14px; border-radius: 999px; border: 2.5px solid var(--ink);
 }
-h1 { font: 400 clamp(30px, 5.4vw, 50px)/1.2 var(--round); margin: 0; text-wrap: balance; letter-spacing: .02em; }
+h1 { font: 400 40px/1.2 var(--round); margin: 0; text-wrap: balance; letter-spacing: .02em; }
 h1 em { font-style: normal; color: var(--coral); }
 .lede { margin: 0; color: var(--soft); max-width: 62ch; }
 
@@ -42,14 +42,14 @@ canvas { cursor: pointer; display: block; width: 100%; height: auto; aspect-rati
 .bar { height: 8px; background: #ffd9d3; border-top: 3px solid var(--ink); }
 .bar i { display: block; height: 100%; width: 0; background: var(--mint); }
 
-.below { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 22px; align-items: start; }
+.below { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); grid-gap: 22px; gap: 22px; align-items: start; }
 @media (max-width: 760px) { .below { grid-template-columns: 1fr; } }
-ol.chapters button em { font-style: normal; }
+ol.chapters button em { font-style: normal; margin-left: 10px; }
 
 
-ol.chapters { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+ol.chapters { list-style: none; margin: 0; padding: 0; display: grid; grid-gap: 6px; gap: 6px; }
 ol.chapters button {
-  width: 100%; text-align: left; display: flex; gap: 10px; align-items: center;
+  width: 100%; text-align: left; display: flex; align-items: center;
   background: transparent; color: var(--soft); border: 2.5px solid transparent; border-radius: 16px;
   padding: 6px 10px; font: 17px/1.3 var(--round); cursor: pointer;
 }
@@ -63,7 +63,7 @@ ol.chapters button[aria-current="step"] span { background: var(--coral); color: 
 button:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
 
 .narr {
-  display: grid; gap: 12px; background: var(--paper); border-radius: 22px;
+  display: grid; grid-gap: 12px; gap: 12px; background: var(--paper); border-radius: 22px;
   border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 18px 22px;
 }
 .narr h2 { margin: 0; font: 400 26px/1.3 var(--round); }
@@ -72,7 +72,8 @@ button:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
   font-size: 14px; line-height: 1.6; background: #fff6da; border-radius: 14px;
   padding: 8px 12px; border: 2px dashed var(--sugar);
 }
-.controls { display: flex; gap: 10px; flex-wrap: wrap; }
+.controls { display: flex; flex-wrap: wrap; }
+.controls > * { margin: 0 10px 6px 0; }
 .controls button {
   background: var(--paper); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 999px;
   padding: 5px 16px; font: 17px var(--round); cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
@@ -82,29 +83,31 @@ button:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
 footer { color: var(--soft); font-size: 13px; }
 @media (prefers-reduced-motion: reduce) { .controls button:active { transform: none; } }
 
+@media (min-width: 900px) { h1 { font-size: 50px; } }
+
 /* 手机：尽量一屏装下，章节改成一排小圆点，收紧留白 */
 @media (max-width: 640px) {
   body { padding-block: 10px 16px; font-size: 14px; line-height: 1.65; }
-  .wrap { gap: 10px; }
-  header { gap: 4px; }
+  .wrap { grid-gap: 10px; gap: 10px; }
+  header { grid-gap: 4px; gap: 4px; }
   .tag { font-size: 13px; padding: 4px 10px; border-width: 2px; }
   h1 { font-size: 22px; }
   .lede { display: none; }
   .stage { border-radius: 18px; box-shadow: 4px 4px 0 var(--ink); }
   .bar { height: 6px; }
-  .below { gap: 10px; }
-  ol.chapters { display: flex; gap: 6px; overflow-x: auto; padding: 2px 4px 6px 2px; scrollbar-width: none; }
+  .below { grid-gap: 10px; gap: 10px; }
+  ol.chapters { display: flex; overflow-x: auto; padding: 2px 4px 6px 2px; scrollbar-width: none; }
   ol.chapters::-webkit-scrollbar { display: none; }
-  ol.chapters li { flex: none; }
+  ol.chapters li { flex: none; margin-right: 6px; }
   ol.chapters button { width: auto; padding: 0; border: 0; background: transparent; }
   ol.chapters button em { display: none; }
   ol.chapters button span { width: 34px; height: 34px; font-size: 16px; border: 2px solid transparent; }
   ol.chapters button[aria-current="step"] { background: transparent; border: 0; }
   ol.chapters button[aria-current="step"] span { border-color: var(--ink); }
-  .narr { gap: 8px; padding: 12px 14px; border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); }
+  .narr { grid-gap: 8px; gap: 8px; padding: 12px 14px; border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); }
   .narr h2 { font-size: 20px; }
   .fact { font-size: 12.5px; padding: 6px 10px; }
-  .controls { gap: 8px; }
+  .controls > * { margin: 0 8px 4px 0; }
   .controls button { font-size: 15px; padding: 4px 12px; }
   footer { font-size: 11px; line-height: 1.5; }
 }

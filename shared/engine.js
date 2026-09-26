@@ -145,7 +145,7 @@
     const lines = []; let line = "";
     for (const tk of tokens) {
       if (ctx.measureText(line + tk).width > maxW && line.trim() && !"，。、；：！？）》”".includes(tk)) {
-        lines.push(line); line = tk.trimStart();
+        lines.push(line); line = tk.replace(/^\s+/, "");
       } else line += tk;
     }
     if (line) lines.push(line);
@@ -162,6 +162,8 @@
   let playing = !reduce;
   let rafId = 0, last = 0;
   const $ = (id) => document.getElementById(id);
+  // 清空一个元素（Chrome 61 没有 replaceChildren）
+  const clear = (el) => { while (el.firstChild) el.removeChild(el.firstChild); };
 
   function register(id, meta, factory) { registry[id] = { id, meta, factory }; }
   // 每一集有几幕由它自己的章节数决定，不固定
@@ -169,7 +171,7 @@
     if (r.count == null) r.count = r.factory().chapters.length;
     return r.count;
   }
-  function episodes() { return Object.values(registry).map((r) => ({ id: r.id, ...r.meta, scenes: sceneCount(r) })); }
+  function episodes() { return Object.values(registry).map((r) => Object.assign({ id: r.id }, r.meta, { scenes: sceneCount(r) })); }
 
   function sync() { if (ep) ep.cfg.sync({ W, H, time, cur }); }
   function resize() {
@@ -236,7 +238,7 @@
   function renderHeader(meta, n) {
     const h = $("epHeader");
     if (h) {
-      h.replaceChildren();
+      clear(h);
       const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = `${meta.tag} · ${n} 幕`;
       const h1 = document.createElement("h1");
       // 标题里用【】包住的字会高亮
@@ -275,7 +277,7 @@
     r.count = ep.CH.length;
     renderHeader(r.meta, ep.CH.length);
     const list = $("chapters");
-    list.replaceChildren();
+    clear(list);
     ep.CH.forEach((c, i) => {
       const li = document.createElement("li");
       const b = document.createElement("button");

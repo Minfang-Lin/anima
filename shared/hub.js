@@ -4,7 +4,8 @@
   const SVG = "http://www.w3.org/2000/svg";
   const catalog = window.AnimaCatalog;
   const eps = Anima.episodes();
-  const byId = Object.fromEntries(eps.map((e) => [e.id, e]));
+  const byId = {};
+  eps.forEach((e) => { byId[e.id] = e; });
 
   // 人体图旁边的标签：organ 上的锚点 (ax, ay) → 标签位置 (lx, ly)，side 决定标签在左边还是右边
   const LABELS = [
@@ -95,7 +96,7 @@
     $("sheetTitle").textContent = organ.name;
     $("sheetFact").textContent = organ.fact;
     const list = $("sheetList");
-    list.replaceChildren();
+    while (list.firstChild) list.removeChild(list.firstChild);
     for (const e of epsFor(key, "organs")) list.appendChild(episodeItem(e));
     for (const name of organ.planned) list.appendChild(plannedItem(name));
     $("sheet").hidden = false;
