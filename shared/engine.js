@@ -119,24 +119,48 @@
     ctx.restore();
   }
 
+  // ---------- 画风 ----------
+  // 默认是卡通绘本风；meta.look === "textbook"（机制类集，见 shared/textbook.js）时，
+  // 胶囊、片头标题卡和录制视频的外框换成干净的教科书示意图样式。
+  const TB_SKIN = {
+    tb: true, font: SANS, w: "500 ", bold: "700 ", ink: "#2f3a55", soft: "#6c7893",
+    bg: "#eef1f6", shadow: "rgba(47,58,85,0.10)", line: "#aeb7c9", veil: "rgba(251,252,254,0.95)",
+    factBg: "#f3f6fb", factLine: "#b9c3d6",
+  };
+  const CARTOON_SKIN = {
+    tb: false, font: ROUND, w: "", bold: "", ink: C.ink, soft: C.soft,
+    bg: "#fff1ee", shadow: C.ink, line: C.ink, veil: "rgba(255,241,238,0.92)",
+    factBg: "#fff6da", factLine: C.sugar,
+  };
+  const skin = () => (ep && ep.meta && ep.meta.look === "textbook" ? TB_SKIN : CARTOON_SKIN);
+  // 描边：卡通风用粗深紫线，教科书风用细灰线
+  function edge(w) {
+    const k = skin();
+    if (!k.tb) { outline(w); return; }
+    ctx.strokeStyle = k.line; ctx.lineWidth = Math.max(1.2, w * 0.4); ctx.lineJoin = "round"; ctx.lineCap = "round";
+  }
+
   // 角落里的数值胶囊
   let leftPillEnd = 0; // 这一帧左上角胶囊的右边缘
   let pillRows = 1, pillRowsNow = 1; // 顶部胶囊占了几行（上一帧的结果，给标注避让用）
   function pill(x, y, label, value, color, alignRight) {
-    const fs = Math.max(12, W / 60) * UI;
-    ctx.font = `${fs}px ${ROUND}`;
+    const fs = Math.max(12, W / 60) * UI, k = skin();
+    const f1 = `${k.w}${fs}px ${k.font}`, f2 = `${k.bold}${fs * 1.4}px ${k.font}`;
+    ctx.font = f1;
     const t1 = ctx.measureText(label).width;
-    ctx.font = `${fs * 1.4}px ${ROUND}`;
+    ctx.font = f2;
     const t2 = ctx.measureText(value).width;
     const w = t1 + t2 + 34, h = fs * 1.4 + 14;
     let bx = alignRight ? x - w : x;
     // 窄屏上右边的胶囊和左边的挤在一起时，叠放到左边那个的下面
     if (alignRight && y < H / 2 && bx < leftPillEnd + 8) { bx = 14; y = y + h + 8; pillRowsNow = 2; }
     if (!alignRight && y < H / 2) leftPillEnd = Math.max(leftPillEnd, bx + w);
-    rrect(bx, y, w, h, h / 2); ctx.fillStyle = C.paper; ctx.fill(); outline(2.5); ctx.stroke();
+    rrect(bx, y, w, h, h / 2); ctx.fillStyle = C.paper; ctx.fill();
+    if (k.tb) { ctx.strokeStyle = "#5f6b82"; ctx.lineWidth = 1.2; } else outline(2.5);
+    ctx.stroke();
     ctx.textBaseline = "middle";
-    ctx.font = `${fs}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText(label, bx + 14, y + h / 2 + 1);
-    ctx.font = `${fs * 1.4}px ${ROUND}`; ctx.fillStyle = color; ctx.fillText(value, bx + 20 + t1, y + h / 2 + 1);
+    ctx.font = f1; ctx.fillStyle = k.soft; ctx.fillText(label, bx + 14, y + h / 2 + 1);
+    ctx.font = f2; ctx.fillStyle = color; ctx.fillText(value, bx + 20 + t1, y + h / 2 + 1);
   }
 
   // 按宽度换行：中文逐字断行，英文单词和数字（如 LDL-C、3.4）不拆开，标点不放在行首
@@ -305,64 +329,67 @@
   // ---------- 录制：舞台 + 片头 + 字幕卡 ----------
   function renderVideo() {
     const { CH, cfg, accent } = ep; // 片头副标题默认是“<tag> · N 幕”
-    const SW = LY.SW, SH = LY.SH, portrait = VH > VW, c = CH[cur];
+    const SW = LY.SW, SH = LY.SH, portrait = VH > VW, c = CH[cur], k = skin();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.fillStyle = "#fff1ee"; ctx.fillRect(0, 0, VW, VH);
-    ctx.fillStyle = "#ffdcd6";
-    for (let y = 11; y < VH; y += 22) for (let x = 11; x < VW; x += 22) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill(); }
-    ctx.fillStyle = C.ink; rrect(SX + 8, SY + 8, SW, SH, 36); ctx.fill();
+    ctx.fillStyle = k.bg; ctx.fillRect(0, 0, VW, VH);
+    if (!k.tb) {
+      ctx.fillStyle = "#ffdcd6";
+      for (let y = 11; y < VH; y += 22) for (let x = 11; x < VW; x += 22) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill(); }
+    }
+    ctx.fillStyle = k.shadow; rrect(SX + 8, SY + 8, SW, SH, 36); ctx.fill();
     ctx.save(); ctx.translate(SX, SY); rrect(0, 0, SW, SH, 36); ctx.clip(); ctx.scale(LY.K, LY.K);
     draw();
     const titleT = window.__TIMELINE ? window.__TIMELINE.intro : 2.5;
     const ta = time < titleT ? 1 : clamp(1 - (time - titleT), 0, 1);
     if (ta > 0) {
       ctx.globalAlpha = ta;
-      ctx.fillStyle = "rgba(255,241,238,0.92)"; ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = C.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = k.veil; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = k.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       const lines = portrait ? cfg.titleCard.lines : [cfg.titleCard.lines.join("")];
       const fs = portrait ? 62 : 72;
-      ctx.font = `${fs}px ${ROUND}`;
+      ctx.font = `${k.bold}${fs}px ${k.font}`;
       lines.forEach((ln, i) => ctx.fillText(ln, W / 2, H / 2 - 30 - (lines.length - 1 - i) * fs * 1.25));
-      ctx.font = `${fs * 0.47}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText(cfg.titleCard.sub || `${ep.meta.tag} · ${CH.length} 幕`, W / 2, H / 2 + 50);
+      ctx.font = `${k.w}${fs * 0.47}px ${k.font}`; ctx.fillStyle = k.soft; ctx.fillText(cfg.titleCard.sub || `${ep.meta.tag} · ${CH.length} 幕`, W / 2, H / 2 + 50);
       ctx.textAlign = "left"; ctx.globalAlpha = 1;
     }
     ctx.restore();
-    outline(4); rrect(SX, SY, SW, SH, 36); ctx.stroke();
+    edge(4); rrect(SX, SY, SW, SH, 36); ctx.stroke();
 
     ctx.textBaseline = "middle";
     const badgeAt = (x, y, fs) => {
-      ctx.font = `${fs}px ${ROUND}`;
+      ctx.font = `${k.bold}${fs}px ${k.font}`;
       const badge = `第 ${cur + 1} 幕`, bw = ctx.measureText(badge).width + fs * 1.1, bh = fs * 1.6;
-      rrect(x, y - bh / 2, bw, bh, bh / 2); ctx.fillStyle = accent; ctx.fill(); outline(3); ctx.stroke();
+      rrect(x, y - bh / 2, bw, bh, bh / 2); ctx.fillStyle = accent; ctx.fill();
+      if (!k.tb) { outline(3); ctx.stroke(); }
       ctx.fillStyle = C.paper; ctx.fillText(badge, x + fs * 0.55, y + 1);
       return bw;
     };
     if (!portrait) {
       const cy0 = SY + SH + 26, ch = VH - cy0 - 22;
-      ctx.fillStyle = C.ink; rrect(SX + 6, cy0 + 6, SW, ch, 28); ctx.fill();
-      ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 28); ctx.fill(); outline(4); ctx.stroke();
+      ctx.fillStyle = k.shadow; rrect(SX + 6, cy0 + 6, SW, ch, 28); ctx.fill();
+      ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 28); ctx.fill(); edge(4); ctx.stroke();
       const bw = badgeAt(SX + 26, cy0 + 43, 28);
-      ctx.fillStyle = C.ink; ctx.font = `36px ${ROUND}`; ctx.fillText(c.title, SX + 46 + bw, cy0 + 43);
-      ctx.font = `24px ${SANS}`;
+      ctx.fillStyle = k.ink; ctx.font = `${k.bold}36px ${k.font}`; ctx.fillText(c.title, SX + 46 + bw, cy0 + 43);
+      ctx.font = `24px ${SANS}`; ctx.fillStyle = k.ink;
       wrapText(c.text, SW - 56).slice(0, 3).forEach((ln, i) => ctx.fillText(ln, SX + 28, cy0 + 90 + i * 34));
       return;
     }
     const bw = badgeAt(SX, 78, 34);
-    ctx.fillStyle = C.ink; ctx.font = `50px ${ROUND}`;
+    ctx.fillStyle = k.ink; ctx.font = `${k.bold}50px ${k.font}`;
     ctx.fillText(c.title, SX + bw + 20, 80);
     const cy0 = SY + SH + 34, ch = VH - cy0 - 40;
-    ctx.fillStyle = C.ink; rrect(SX + 8, cy0 + 8, SW, ch, 32); ctx.fill();
-    ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 32); ctx.fill(); outline(4); ctx.stroke();
-    ctx.fillStyle = C.ink; ctx.font = `35px ${SANS}`;
+    ctx.fillStyle = k.shadow; rrect(SX + 8, cy0 + 8, SW, ch, 32); ctx.fill();
+    ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 32); ctx.fill(); edge(4); ctx.stroke();
+    ctx.fillStyle = k.ink; ctx.font = `35px ${SANS}`;
     wrapText(c.text, SW - 70).slice(0, 5).forEach((ln, i) => ctx.fillText(ln, SX + 35, cy0 + 52 + i * 52));
     // 数据条只有一行，放不下就把字缩小
     let ffs = 26;
     ctx.font = `${ffs}px ${SANS}`;
     while (ffs > 18 && ctx.measureText(c.fact).width > SW - 90) { ffs -= 1; ctx.font = `${ffs}px ${SANS}`; }
     const fy = cy0 + ch - 58;
-    rrect(SX + 28, fy - 26, SW - 56, 52, 18); ctx.fillStyle = "#fff6da"; ctx.fill();
-    ctx.strokeStyle = C.sugar; ctx.lineWidth = 2.5; ctx.setLineDash([8, 6]); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = C.ink; ctx.fillText(wrapText(c.fact, SW - 90)[0], SX + 45, fy + 1);
+    rrect(SX + 28, fy - 26, SW - 56, 52, 18); ctx.fillStyle = k.factBg; ctx.fill();
+    ctx.strokeStyle = k.factLine; ctx.lineWidth = k.tb ? 1.5 : 2.5; ctx.setLineDash([8, 6]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = k.ink; ctx.fillText(wrapText(c.fact, SW - 90)[0], SX + 45, fy + 1);
   }
 
   // 由 record.js 调用：每次推进一帧并画出来；有配音时每幕时长跟着 __TIMELINE 走
@@ -390,5 +417,7 @@
     outline, rrect, face, sweat, heart, bolt, dots, callout, pill,
     register, episodes, play, stop,
     get UI() { return UI; },
+    // 当前这一集的画风（"textbook" 或空），给 shared/textbook.js 等共用工具看
+    get look() { return (ep && ep.meta && ep.meta.look) || ""; },
   };
 })();
