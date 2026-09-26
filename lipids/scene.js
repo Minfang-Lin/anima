@@ -505,7 +505,7 @@ Anima.register("lipids", {
       if (it[1] === "lpa" && it[0] === "p") { // Lp(a) 图例：小颗粒 + 短尾巴
         particle(x + s * 0.3, y, s * 0.27, { kind: "lpa", tail: -0.1, wig: 0.2, tailK: 2.3 });
       } else legendIcon(it, x + s / 2, y, s);
-      txt(it[2].replace(/　/g, ""), x + s + fs * 0.35 + (it[1] === "lpa" ? fs * 0.6 : 0), y + 0.5, fs, K.ink, "left", 500);
+      txt(it[2].replace(/　/g, ""), x + s + fs * 0.35 + (it[1] === "lpa" ? fs * 1.3 : 0), y + 0.5, fs, K.ink, "left", 500);
     };
     if (nar()) {
       const y0 = h - Lg.h - 2;
@@ -525,7 +525,7 @@ Anima.register("lipids", {
     items.forEach((it, k) => put(it, x0 + fs * 0.6, y0 + fs * 1.9 + s * 0.5 + k * s * 1.08));
   }
   function legendLayout(i) {
-    const items = legendItems(i).map((it) => (it[1] === "lpa" ? [it[0], it[1], it[2] + "　"] : it)); // Lp(a) 图标带尾巴，多留一点位置
+    const items = legendItems(i).map((it) => (it[1] === "lpa" ? [it[0], it[1], it[2] + "　　"] : it)); // Lp(a) 图标带尾巴，多留一点位置
     return TB.legendLayout(items);
   }
   function areaFor(i) {
