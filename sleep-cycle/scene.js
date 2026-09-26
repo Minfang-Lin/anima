@@ -696,7 +696,9 @@ Anima.register("sleep-cycle", {
     const m = Math.round(curT * 12) * 5 + 23 * 60, hh = Math.floor(m / 60) % 24, mm = m % 60;
     pill(14, 12, "时间", `${hh}:${mm < 10 ? "0" : ""}${mm}`, K.accent, false);
     const p = CH[cur].pill;
-    pill(W - 14, 12, p[0], p[1], p[2], true);
+    // 第 1 幕光标扫过整夜，右上角跟着光标所在的阶段走
+    if (cur === 0 && curT > 0.15) { const st = STG[stageAt(curT)]; pill(W - 14, 12, p[0], st.name.replace(/ N\d$/, ""), st.col, true); }
+    else pill(W - 14, 12, p[0], p[1], p[2], true);
   }
 
   function draw() {
