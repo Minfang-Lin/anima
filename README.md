@@ -32,7 +32,8 @@ python3 build_xhs.py          # 输出 dist/xiaohongshu/body-theater.zip
 这个 zip 可以直接在小红书创作者中心 → Builder Hub →「小工具」里上传。打包脚本会按小工具的规则处理并检查，任何一条不满足都会停止打包：
 
 - `index.html` 在 zip 根目录，总包 < 2MB（现在 3 集约 125KB，每多一集大约多 20KB）
-- 不能有网络请求：去掉 Google Fonts，把站酷快乐体按用到的字裁剪后打包进去（OFL 许可证一起放在包里）
+- 不能有网络请求：去掉 Google Fonts，把站酷快乐体按用到的字裁剪后打包进去（OFL 许可证全文写在 `shared/fonts.css` 的注释里）
+- 只能有 html、css、js、json、图片（jpg/png/gif/svg/webp）和字体（woff/woff2）这几类文件
 - 不能有内联 `<script>` 和 `onclick=` 之类的内联事件：引擎、展厅脚本和每一集的动画都是单独的 .js 文件
 - 不能用 eval、iframe、fetch 等
 

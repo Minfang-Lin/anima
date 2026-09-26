@@ -6,7 +6,7 @@
 
 打包内容：
     index.html              展厅页面（去掉 Google Fonts，改为引用包内字体）
-    shared/                 引擎、样式、展厅脚本、目录、本地字体（站酷快乐体子集 + OFL 许可证）
+    shared/                 引擎、样式、展厅脚本、目录、本地字体（站酷快乐体子集，OFL 许可证写在 fonts.css 的注释里）
     <主题>/scene.js          每一集的动画
 
 新做好一集后，在根目录 index.html 里加一行 <script src="<主题>/scene.js">，
@@ -30,8 +30,16 @@ OUT = os.path.join(ROOT, "dist", "xiaohongshu")
 FONT = os.path.join(ROOT, "assets", "fonts", "ZCOOLKuaiLe-Regular.ttf")
 LICENSE = os.path.join(ROOT, "assets", "fonts", "OFL.txt")
 LIMIT = 2 * 1024 * 1024
+# 小工具只接受这些文件类型
+ALLOWED = (".html", ".css", ".js", ".json", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".woff", ".woff2")
 
-FONTS_CSS = """@font-face {
+FONTS_CSS = """/*
+站酷快乐体（ZCOOL KuaiLe），按本页用到的字裁剪。
+字体使用 SIL Open Font License 1.1，许可证全文见下方（小工具不接受 .txt 文件，所以写在这里）。
+
+{license}
+*/
+@font-face {
   font-family: "ZCOOL KuaiLe";
   src: url("fonts/zcool-kuaile.woff2") format("woff2");
   font-display: swap;
@@ -74,6 +82,9 @@ def font_subset(text):
 def check(files):
     """按小工具的规则检查，不合格就停止打包。"""
     problems = []
+    for name in files:
+        if not name.lower().endswith(ALLOWED):
+            problems.append(f"{name}: 小工具不支持这种文件类型")
     if "index.html" not in files:
         problems.append("zip 根目录没有 index.html")
     total = sum(len(b) for b in files.values())
@@ -109,9 +120,9 @@ def build():
             continue
         files[src] = open(os.path.join(ROOT, src), "rb").read()
     text = "".join(b.decode("utf-8") for b in files.values())
-    files["shared/fonts.css"] = FONTS_CSS.encode("utf-8")
+    license_text = read(LICENSE).replace("*/", "* /")
+    files["shared/fonts.css"] = FONTS_CSS.replace("{license}", license_text).encode("utf-8")
     files["shared/fonts/zcool-kuaile.woff2"] = font_subset(text)
-    files["shared/fonts/OFL.txt"] = open(LICENSE, "rb").read()
     total, problems = check(files)
     if problems:
         raise SystemExit("没有通过小工具的检查：\n  " + "\n  ".join(problems))
