@@ -104,7 +104,9 @@
     const fs = Math.max(12, W / 56) * UI;
     ctx.font = `${fs}px ${ROUND}`;
     const w = ctx.measureText(text).width + 22, bh = fs + 14;
-    const bx = clamp(lx - w / 2, 6, W - w - 6), by = clamp(ly < ty ? ly - bh : ly, 6, H - bh - 6);
+    // 顶部留给数值胶囊，标注不放进去
+    const top = Math.max(12, W / 60) * UI * 1.4 + 14 + 18;
+    const bx = clamp(lx - w / 2, 6, W - w - 6), by = clamp(ly < ty ? ly - bh : ly, top, H - bh - 6);
     outline(2);
     ctx.setLineDash([4, 4]);
     ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(clamp(lx, bx + 12, bx + w - 12), ly < ty ? by + bh : by); ctx.stroke();
@@ -118,6 +120,7 @@
   }
 
   // 角落里的数值胶囊
+  let leftPillEnd = 0; // 这一帧左上角胶囊的右边缘
   function pill(x, y, label, value, color, alignRight) {
     const fs = Math.max(12, W / 60) * UI;
     ctx.font = `${fs}px ${ROUND}`;
@@ -125,7 +128,10 @@
     ctx.font = `${fs * 1.4}px ${ROUND}`;
     const t2 = ctx.measureText(value).width;
     const w = t1 + t2 + 34, h = fs * 1.4 + 14;
-    const bx = alignRight ? x - w : x;
+    let bx = alignRight ? x - w : x;
+    // 窄屏上右边的胶囊和左边的挤在一起时，挪到画面右下角
+    if (alignRight && y < H / 2 && bx < leftPillEnd + 8) y = H - h - 12;
+    if (!alignRight && y < H / 2) leftPillEnd = Math.max(leftPillEnd, bx + w);
     rrect(bx, y, w, h, h / 2); ctx.fillStyle = C.paper; ctx.fill(); outline(2.5); ctx.stroke();
     ctx.textBaseline = "middle";
     ctx.font = `${fs}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText(label, bx + 14, y + h / 2 + 1);
@@ -181,7 +187,7 @@
     sync();
     ep.cfg.update(dt);
   }
-  function draw() { ctx.globalAlpha = 1; sync(); ep.cfg.draw(); }
+  function draw() { ctx.globalAlpha = 1; leftPillEnd = 0; sync(); ep.cfg.draw(); }
 
   function go(i) {
     if (!ep) return;
