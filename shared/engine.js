@@ -1,6 +1,17 @@
 // 科普动画共用引擎：绘本风画笔、章节切换、网页播放和逐帧录制。
 // 每个主题页面只需要提供章节数据、状态、update() 和 draw()，然后调用 Anima.start(...)。
 (() => {
+  // 老版本 iOS / 安卓 WebView 没有 roundRect，这里补一个简单版本
+  if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+      r = Math.max(0, Math.min(typeof r === "number" ? r : 0, Math.abs(w) / 2, Math.abs(h) / 2));
+      this.moveTo(x + r, y);
+      this.arcTo(x + w, y, x + w, y + h, r); this.arcTo(x + w, y + h, x, y + h, r);
+      this.arcTo(x, y + h, x, y, r); this.arcTo(x, y, x + w, y, r);
+      this.closePath();
+    };
+  }
+
   // 共用配色（主题可以往里加自己的颜色）
   const C = {
     ink: "#5b3a4a", paper: "#ffffff", soft: "#9a7885", mint: "#6cc9ae", coral: "#ff7b7b",
@@ -22,7 +33,7 @@
   };
   const LY = LAYOUTS[window.__RATIO] || LAYOUTS["16:9"];
   const { VW, VH, SX, SY } = LY;
-  const UI = REC ? LY.UI : 1;
+  let UI = REC ? LY.UI : 1;
 
   let W = 0, H = 0, time = 0, cur = 0;
   const labelAlpha = {};
@@ -141,8 +152,12 @@
     function resize() {
       if (REC) { W = LY.SW / LY.K; H = LY.SH / LY.K; cv.width = VW; cv.height = VH; }
       else {
+        // 手机等窄屏用接近方形的舞台（和竖版视频一致），标注字号也放大一些
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        W = cv.clientWidth; H = W * 9 / 16;
+        const narrow = cv.clientWidth < 640;
+        cv.style.aspectRatio = narrow ? "1000 / 820" : "16 / 9";
+        UI = narrow ? 1.25 : 1;
+        W = cv.clientWidth; H = W * (narrow ? 0.82 : 9 / 16);
         cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
@@ -179,9 +194,10 @@
       list.querySelectorAll("button").forEach((b, j) => { if (j === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });
       sync();
     }
-    document.getElementById("prev").onclick = () => go(cur - 1);
-    document.getElementById("next").onclick = () => go(cur + 1);
-    playBtn.onclick = () => { playing = !playing; playBtn.textContent = playing ? "暂停" : "播放"; };
+    document.getElementById("prev").addEventListener("click", () => go(cur - 1));
+    document.getElementById("next").addEventListener("click", () => go(cur + 1));
+    playBtn.addEventListener("click", () => { playing = !playing; playBtn.textContent = playing ? "暂停" : "播放"; });
+    cv.addEventListener("click", () => go(cur + 1)); // 点一下画面进入下一幕
     playBtn.textContent = playing ? "暂停" : "播放";
     addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") go(cur + 1);
@@ -278,7 +294,8 @@
   }
 
   window.Anima = {
-    ctx, C, ROUND, SANS, UI, rnd, lerp, clamp, mix,
+    ctx, C, ROUND, SANS, rnd, lerp, clamp, mix,
     outline, rrect, face, sweat, heart, bolt, dots, callout, pill, start,
+    get UI() { return UI; },
   };
 })();

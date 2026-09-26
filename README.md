@@ -10,22 +10,39 @@
 
 ## 运行
 
-- **只想看某一集**：打开 `standalone/<主题>.html`。它是一个完整的单文件，单独下载、双击就能在浏览器里打开，也可以直接发给别人。
-- **在项目里浏览**：下载整个项目（GitHub 上 Code → Download ZIP）并解压，再打开根目录的 `index.html`（目录页）。
+- **在电脑上浏览**：下载整个项目（GitHub 上 Code → Download ZIP）并解压，打开根目录的 `index.html`（目录页），或者某一集的 `<主题>/index.html`。
+- **只要某一集**：用 `dist/xiaohongshu/<主题>.zip`，解压后双击里面的 `index.html` 就能打开。
 
-键盘 ← / → 切换场景，空格暂停。
+每一集的页面要和 `shared/` 文件夹放在一起才能显示，只单独拿出一个 `index.html` 会是空白页。
 
-注意：`<主题>/index.html` 需要和 `shared/` 文件夹放在一起才能显示。只单独下载这一个文件，页面会是空白的，这时请改用 `standalone/` 里的文件。
+键盘 ← / → 切换场景，空格暂停；手机上点一下画面进入下一幕。手机等窄屏会自动换成接近方形的舞台，标注字号也更大。
 
-改完动画后，运行 `python3 bundle.py` 重新生成 `standalone/` 里的单文件版。
+## 发布到小红书「小工具」（Builder Hub）
+
+```bash
+pip install fonttools brotli
+python3 build_xhs.py          # 输出 dist/xiaohongshu/<主题>.zip
+```
+
+每个 zip 都可以直接在小红书创作者中心 → Builder Hub →「小工具」里上传。打包脚本会按小工具的规则处理并检查，任何一条不满足都会停止打包：
+
+- `index.html` 在 zip 根目录，总包 < 2MB（现在每集约 65KB）
+- 不能有网络请求：去掉 Google Fonts，把站酷快乐体按这一集用到的字裁剪后打包进去（OFL 许可证一起放在包里）
+- 不能有内联 `<script>` 和 `onclick=` 之类的内联事件：每集的动画在 `scene.js`，引擎在 `shared/engine.js`
+- 不能用 eval、iframe、fetch 等
+
+改了文案以后要重新运行 `build_xhs.py`，字体子集才会包含新出现的字。
 
 ## 项目结构
 
 - `shared/engine.js`：共用引擎。绘本风画笔（带表情的小脸、汗珠、爱心、闪电、对话框标注、数值胶囊）、章节切换、网页播放和逐帧录制都在这里。
 - `shared/style.css`：共用的页面样式。
-- `<主题>/index.html`：每一集只写自己的章节数据（`CH`）、画面状态（`S`）、`update()` 和 `draw()`，最后调用 `Anima.start(...)`。页面里的 `video-meta` 写着配音的片头引子、读法替换和用小调配乐的幕。
+- `<主题>/index.html`：每一集的页面文字，以及 `video-meta`（配音的片头引子、读法替换和用小调配乐的幕）。
+- `<主题>/scene.js`：每一集的动画，只写自己的章节数据（`CH`）、画面状态（`S`）、`update()` 和 `draw()`，最后调用 `Anima.start(...)`。
+- `assets/fonts/`：站酷快乐体原始字体和 OFL 许可证，打包小红书小工具时使用。
+- `build_xhs.py`：打包小红书小工具。
 
-新做一集时，复制一个现有主题的文件夹，改掉 `CH`、`video-meta` 和画面代码，再在根目录 `index.html` 里加一个入口。
+新做一集时，复制一个现有主题的文件夹，改掉 `scene.js` 里的 `CH` 和画面代码、`index.html` 里的文字和 `video-meta`，再在根目录 `index.html` 里加一个入口。
 
 ## 糖与血管：七幕分镜
 
@@ -65,7 +82,7 @@
 
 ## 如何修改
 
-- **文案 / 数据**：编辑 `<主题>/index.html` 里的 `CH` 数组，每一幕有 `title`、`text`、`fact`。
+- **文案 / 数据**：编辑 `<主题>/scene.js` 里的 `CH` 数组，每一幕有 `title`、`text`、`fact`。
 - **画面强度**：每一幕里和 `S` 同名的字段（比如糖与血管的 `glucose`、`plaque`，痛风的 `ua`、`crystals`、`inflame`）是目标值，动画会平滑过渡到这些值。
 - **节奏**：`DUR` 是网页播放时每一幕的秒数；带配音的视频按配音长度自动排。
 
