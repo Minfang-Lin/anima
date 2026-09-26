@@ -459,8 +459,8 @@ Anima.register("heart-attack", {
 
     const pc = r.person;
     const lx = pc ? pc.x / 2 : 0;
-    callout("call", on("call") && !!pc, pc ? pc.phone.x : 0, pc ? pc.phone.y : 0, lx, pc ? pc.phone.y + 1 : 0, "马上拨打 120");
-    callout("chest", on("chest") && !!pc, pc ? pc.chest.x : 0, pc ? pc.chest.y : 0, lx, pc ? pc.chest.y - H * 0.02 : 0, "胸口压榨样疼痛");
+    callout("call", on("call") && !!pc, pc ? pc.phone.x : 0, pc ? pc.phone.y : 0, lx, pc ? pc.phone.y - 1 : 0, "马上拨打 120");
+    callout("chest", on("chest") && !!pc, pc ? pc.chest.x : 0, pc ? pc.chest.y : 0, lx, pc ? pc.chest.y + H * 0.02 : 0, "胸口压榨样疼痛");
 
     const sp = r.stentPt;
     callout("stent", on("stent") && !!sp, sp ? sp.x : 0, sp ? sp.y : 0, g.px + W * 0.2, above - H * 0.02, "支架把血管撑开");

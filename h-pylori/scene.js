@@ -87,7 +87,7 @@ Anima.register("h-pylori", {
   function bug(x, y, r, ang, shield, mood = 0.8) {
     if (shield > 0.02) {
       ctx.save(); ctx.globalAlpha *= shield;
-      const sr = r * 2.7 * (1 + 0.05 * Math.sin(time * 3 + x));
+      const sr = r * (mood > 0.9 ? 2.7 : 2.1) * (1 + 0.05 * Math.sin(time * 3 + x));
       ctx.beginPath(); ctx.arc(x, y, sr, 0, 6.3); ctx.fillStyle = C.shield; ctx.fill();
       ctx.strokeStyle = C.shieldEdge; ctx.lineWidth = 2; ctx.setLineDash([5, 5]); ctx.lineDashOffset = -time * 10; ctx.stroke(); ctx.setLineDash([]);
       ctx.restore();
@@ -240,10 +240,11 @@ Anima.register("h-pylori", {
     }
 
     // 住在黏液里的细菌
-    const nb = Math.round(clamp(S.bugs, 0, 1) * ORDER.length), bugs = [];
+    const maxB = W / H < 1.5 ? 7 : ORDER.length;
+    const nb = Math.round(clamp(S.bugs, 0, 1) * maxB), bugs = [];
     for (let j = 0; j < nb; j++) {
       const p = bugPos(g, ORDER[j]);
-      if (S.ulcer > 0.1 && Math.abs(p.x - g.ux) < g.uw + g.br * 2) p.y = mTop(g, p.x) + g.br * 1.5;
+      if (S.ulcer > 0.1 && Math.abs(p.x - g.ux) < g.uw + g.br) continue;
       const wig = Math.sin(time * 2 + p.k) * g.br * 0.2;
       const h = bug(p.x + wig, p.y, g.br, p.ang + Math.sin(time * 1.5 + p.k) * 0.15, S.shield * 0.8, 0.8);
       bugs.push(Object.assign({}, p, h));
@@ -314,20 +315,20 @@ Anima.register("h-pylori", {
   }
   // 传播：共用碗筷 vs 分餐公筷
   function drawSpread() {
-    const k = cardBox(0.62, 0.46);
+    const k = cardBox(0.62, 0.42);
     ctx.save(); cardBg(k, S.spread);
     const fs = k.cw / 13, s = k.cw * 0.12, by = k.y + k.ch * 0.42;
     const lx = k.x + k.cw * 0.26, rx = k.x + k.cw * 0.74;
     // 左：几双筷子伸进同一个碗
     bowl(lx, by, s);
-    chopsticks(lx - s * 0.2, by, s, -2.4, C.chop); chopsticks(lx + s * 0.2, by, s, -0.7, C.chop); chopsticks(lx, by - s * 0.1, s, -1.57, C.chop);
+    chopsticks(lx - s * 0.2, by, s, 0.74, C.chop); chopsticks(lx + s * 0.2, by, s, 2.44, C.chop); chopsticks(lx, by - s * 0.05, s, 1.57, C.chop);
     for (let j = 0; j < 3; j++) {
       const t = (time * 0.7 + j / 3) % 1;
       ctx.beginPath(); ctx.arc(lx + (j - 1) * s * 0.45, by - s * 0.05 - Math.sin(t * Math.PI) * s * 0.5, s * 0.12, 0, 6.3); ctx.fillStyle = C.bug; ctx.fill(); outline(1.2); ctx.stroke();
     }
     // 右：公筷 + 小碗，打个勾
     bowl(rx - s * 0.5, by + s * 0.1, s * 0.6); bowl(rx + s * 0.6, by + s * 0.1, s * 0.6);
-    chopsticks(rx + s * 0.1, by - s * 0.1, s * 0.9, -1.2, "#6cc9ae");
+    chopsticks(rx - s * 0.5, by + s * 0.05, s * 0.9, 2.2, "#6cc9ae");
     ctx.strokeStyle = C.mint; ctx.lineWidth = 4; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(rx + s * 0.7, by - s * 0.9); ctx.lineTo(rx + s * 0.9, by - s * 0.65); ctx.lineTo(rx + s * 1.3, by - s * 1.15); ctx.stroke();
     ctx.fillStyle = C.ink; ctx.font = `${fs}px ${Anima.ROUND}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
@@ -405,8 +406,8 @@ Anima.register("h-pylori", {
     const c0 = r.cells.find((c) => c.x > W * 0.4);
     callout("cell", on("cell") && !!c0, c0 ? c0.x : 0, c0 ? c0.y + c0.h * 0.4 : 0, c0 ? c0.x + W * 0.08 : 0, bot, "胃黏膜细胞");
     const sw = r.swimmer;
-    callout("bug", on("bug") && !!sw && sw.a > 0.5, sw ? sw.hx : 0, sw ? sw.hy : 0, W * 0.2, upper - H * 0.1, "幽门螺杆菌");
-    callout("shield", on("shield") && !!sw && sw.a > 0.5, sw ? sw.x + sw.sr * 0.7 : 0, sw ? sw.y - sw.sr * 0.7 : 0, W * 0.7, upper - H * 0.1, "尿素酶造出的碱性护盾");
+    callout("bug", on("bug") && !!sw, sw ? sw.hx : 0, sw ? sw.hy : 0, W * 0.2, upper - H * 0.1, "幽门螺杆菌");
+    callout("shield", on("shield") && !!sw, sw ? sw.x + sw.sr * 0.7 : 0, sw ? sw.y - sw.sr * 0.7 : 0, W * 0.7, upper - H * 0.1, "尿素酶造出的碱性护盾");
     const st = r.bugs.find((b) => b.stuck && b.x > W * 0.55);
     callout("hide", on("hide") && !!st, st ? st.hx : 0, st ? st.hy : 0, st ? st.hx : 0, bot, "钻进黏液层，贴在细胞上");
     const b1 = r.bugs.find((b) => b.x < W * 0.35);

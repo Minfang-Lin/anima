@@ -35,7 +35,7 @@ Anima.register("insulin", {
     { title: "2 型糖尿病：糖堆在血里", glu: 9.5, keys: 0.45, rust: 1, open: 0.25, work: 0, tired: 1, fat: 1, ex: 0, heal: 0, harm: 1, meal: 0,
       gl: "空腹血糖", gs: "bad", pill: ["胰岛素", "不够用", "bad"],
       text: "钥匙越来越少，锁又不灵，葡萄糖进不了细胞，只好堆在血液里，这就是 2 型糖尿病。有人会口渴、尿多、没力气，也有很多人毫无感觉。确诊要抽血，通常还要复查一次。血糖长期偏高，会慢慢伤害全身的血管。",
-      fact: "空腹 ≥ 7.0、糖负荷后 2 小时 ≥ 11.1 mmol/L 或糖化血红蛋白 ≥ 6.5%",
+      fact: "诊断：空腹 ≥ 7.0、糖负荷后 2 小时 ≥ 11.1 mmol/L 或糖化血红蛋白 ≥ 6.5%",
       labels: ["pile", "vessel"] },
     { title: "擦掉锈，给工厂减负", glu: 5.9, keys: 1, rust: 0.35, open: 0.85, work: 0, tired: 0.2, fat: 0.3, ex: 1, heal: 1, harm: 0.4, meal: 0,
       gl: "空腹血糖", gs: "ok", pill: ["胰岛素", "负担减轻", "ok"],
