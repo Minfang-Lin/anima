@@ -76,7 +76,7 @@
     const n = document.createElement("small"); n.className = "ep-n"; n.textContent = `${e.scenes} 幕`;
     t.appendChild(n);
     const d = document.createElement("span"); d.textContent = e.summary;
-    const go = document.createElement("span"); go.className = "ep-go"; go.textContent = "进入 ▶";
+    const go = document.createElement("span"); go.className = "ep-go"; go.textContent = "了解 ▶";
     body.append(t, d);
     b.append(dot, body, go);
     b.addEventListener("click", () => { closeSheet(); location.hash = e.id; });
