@@ -138,11 +138,14 @@
     ctx.font = `${fs * 1.4}px ${ROUND}`; ctx.fillStyle = color; ctx.fillText(value, bx + 20 + t1, y + h / 2 + 1);
   }
 
+  // 按宽度换行：中文逐字断行，英文单词和数字（如 LDL-C、3.4）不拆开，标点不放在行首
   function wrapText(text, maxW) {
+    const tokens = text.match(/[A-Za-z0-9.\-()/%+<>=≥≤μ]+|./gu) || [];
     const lines = []; let line = "";
-    for (const ch of text) {
-      // 标点不放在行首
-      if (ctx.measureText(line + ch).width > maxW && line && !"，。、；：！？）》”".includes(ch)) { lines.push(line); line = ch; } else line += ch;
+    for (const tk of tokens) {
+      if (ctx.measureText(line + tk).width > maxW && line.trim() && !"，。、；：！？）》”".includes(tk)) {
+        lines.push(line); line = tk.trimStart();
+      } else line += tk;
     }
     if (line) lines.push(line);
     return lines;
@@ -338,7 +341,10 @@
     ctx.fillStyle = C.paper; rrect(SX, cy0, SW, ch, 32); ctx.fill(); outline(4); ctx.stroke();
     ctx.fillStyle = C.ink; ctx.font = `35px ${SANS}`;
     wrapText(c.text, SW - 70).slice(0, 5).forEach((ln, i) => ctx.fillText(ln, SX + 35, cy0 + 52 + i * 52));
-    ctx.font = `26px ${SANS}`;
+    // 数据条只有一行，放不下就把字缩小
+    let ffs = 26;
+    ctx.font = `${ffs}px ${SANS}`;
+    while (ffs > 18 && ctx.measureText(c.fact).width > SW - 90) { ffs -= 1; ctx.font = `${ffs}px ${SANS}`; }
     const fy = cy0 + ch - 58;
     rrect(SX + 28, fy - 26, SW - 56, 52, 18); ctx.fillStyle = "#fff6da"; ctx.fill();
     ctx.strokeStyle = C.sugar; ctx.lineWidth = 2.5; ctx.setLineDash([8, 6]); ctx.stroke(); ctx.setLineDash([]);
