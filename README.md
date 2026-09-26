@@ -1,12 +1,25 @@
-# 糖与血管：糖尿病如何影响血管
+# 身体小剧场：卡通治愈风医学科普动画
 
-一个卡通治愈风的科普动画：红细胞小伙伴带你看高血糖怎样一步步伤害血管。纯 HTML + Canvas，没有构建步骤。
+每一集用七个小场景讲一种常见病在身体里是怎样发生的。纯 HTML + Canvas，没有构建步骤。
+
+| 文件夹 | 主题 |
+|---|---|
+| `diabetes-vessels/` | 糖与血管：多余的糖如何一步步伤害血管 |
+| `gout/` | 痛风小针：尿酸结晶为什么让关节剧痛 |
 
 ## 运行
 
-直接用浏览器打开 `index.html` 即可。键盘 ← / → 切换场景，空格暂停。
+用浏览器打开根目录的 `index.html`（目录页），或者直接打开某一集的 `<主题>/index.html`。键盘 ← / → 切换场景，空格暂停。
 
-## 七幕分镜
+## 项目结构
+
+- `shared/engine.js`：共用引擎。绘本风画笔（带表情的小脸、汗珠、爱心、闪电、对话框标注、数值胶囊）、章节切换、网页播放和逐帧录制都在这里。
+- `shared/style.css`：共用的页面样式。
+- `<主题>/index.html`：每一集只写自己的章节数据（`CH`）、画面状态（`S`）、`update()` 和 `draw()`，最后调用 `Anima.start(...)`。页面里的 `video-meta` 写着配音的片头引子、读法替换和用小调配乐的幕。
+
+新做一集时，复制一个现有主题的文件夹，改掉 `CH`、`video-meta` 和画面代码，再在根目录 `index.html` 里加一个入口。
+
+## 糖与血管：七幕分镜
 
 | # | 场景 | 画面重点 | 关键数据 |
 |---|------|----------|----------|
@@ -18,15 +31,27 @@
 | 6 | 微血管病变 | 毛细血管基底膜增厚、渗漏，红细胞单行通过 | 眼、肾、神经三大并发症 |
 | 7 | 控制血糖 | 血糖回落，损伤进展放缓 | HbA1c < 7%，血压 < 130/80 mmHg |
 
+## 痛风小针：七幕分镜
+
+| # | 场景 | 画面重点 | 关键数据 |
+|---|------|----------|----------|
+| 1 | 健康的关节 | 大脚趾关节剖面：骨头、软骨、关节液，血液里少量尿酸 | 高尿酸血症：非同日两次空腹 > 420 μmol/L |
+| 2 | 尿酸从哪里来 | 高嘌呤食物、酒和甜饮料进入血液，肾脏把尿酸排出去 | 约 2/3 经肾脏、1/3 经肠道排出 |
+| 3 | 尿酸越积越多 | 肾脏排得慢，血液和关节液里的尿酸变多 | 常常没有症状，靠抽血发现 |
+| 4 | 结晶析出 | 针状尿酸盐结晶扎在软骨上、漂在关节液里 | 37℃ 时超过约 405 μmol/L 可能析出 |
+| 5 | 痛风发作 | 免疫细胞围攻结晶，关节红肿、疼痛闪电 | 24 小时内痛到顶峰，大脚趾最常见 |
+| 6 | 痛风石 | 白色痛风石，软骨变薄、骨头被侵蚀 | 也常见于耳廓、手指、肘部 |
+| 7 | 降尿酸 | 多喝水，尿酸回落，结晶变小溶解 | 目标 < 360 μmol/L，有痛风石 < 300 μmol/L |
+
 ## 如何修改
 
-- **文案 / 数据**：编辑 `index.html` 里的 `CH` 数组，每一幕有 `title`、`text`、`fact`。
-- **画面强度**：每一幕的 `glucose`、`ages`、`damage`、`plaque`、`micro` 是 0–1（血糖为 mmol/L）的目标值，动画会平滑过渡到这些值。
-- **节奏**：`DUR` 是每一幕的秒数。
+- **文案 / 数据**：编辑 `<主题>/index.html` 里的 `CH` 数组，每一幕有 `title`、`text`、`fact`。
+- **画面强度**：每一幕里和 `S` 同名的字段（比如糖与血管的 `glucose`、`plaque`，痛风的 `ua`、`crystals`、`inflame`）是目标值，动画会平滑过渡到这些值。
+- **节奏**：`DUR` 是网页播放时每一幕的秒数；带配音的视频按配音长度自动排。
 
 ## 导出成 MP4 视频
 
-`record.js` 会逐帧渲染动画，直接生成 30fps、约 77 秒的 MP4（带片头标题和每一幕的字幕卡，无声音）。支持两种比例：
+`record.js` 会逐帧渲染某一集动画，直接生成 30fps 的 MP4（带片头标题和每一幕的字幕卡，无声音）。支持两种比例：
 
 - **16:9 横版**（1920×1080）：适合 B 站、YouTube、课件投影
 - **3:4 竖版**（1080×1440）：适合小红书、视频号、手机观看。顶部是幕标题，下方是大字号旁白卡和数据条
@@ -38,16 +63,16 @@
 ```bash
 npm install
 npx playwright install chromium
-npm run record                   # 16:9，输出 diabetes-vessels.mp4
-npm run record -- --ratio 3:4    # 3:4，输出 diabetes-vessels-3x4.mp4
-node record.js 我的视频.mp4 --ratio 3:4   # 自己指定文件名
+node record.js gout                     # 16:9，输出 gout.mp4
+node record.js gout --ratio 3:4         # 3:4，输出 gout-3x4.mp4
+node record.js diabetes-vessels 我的视频.mp4   # 自己指定文件名
 ```
 
-如果 ffmpeg 不在 PATH 里，用 `FFMPEG=/path/to/ffmpeg npm run record` 指定。
+如果 ffmpeg 不在 PATH 里，用 `FFMPEG=/path/to/ffmpeg node record.js gout` 指定。
 
 ### 加上配音和背景音乐
 
-`make_audio.py` 会用离线的 Kokoro 中文语音模型把七幕旁白读出来（开头加一句引子），再用代码合成一段轻柔的八音盒背景音乐（没有版权问题），混成一条音轨。每一幕的时长会跟着配音长度自动调整，完整视频约 2 分 23 秒。
+`make_audio.py` 会用离线的 Kokoro 中文语音模型把七幕旁白读出来（开头加一句引子），再用代码合成一段轻柔的八音盒背景音乐（没有版权问题），混成一条音轨。每一幕的时长会跟着配音长度自动调整，一集大约 2 分半。
 
 ```bash
 pip install sherpa-onnx soundfile numpy
@@ -56,18 +81,18 @@ mkdir -p models && cd models
 curl -LO https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_1.tar.bz2
 tar xjf kokoro-multi-lang-v1_1.tar.bz2 && cd ..
 
-python3 make_audio.py                      # 生成 build/soundtrack.wav 和 build/timeline.json
-npm run record -- --audio                  # 16:9 带声音，输出 diabetes-vessels-voice.mp4
-npm run record -- --ratio 3:4 --audio      # 3:4 带声音，输出 diabetes-vessels-3x4-voice.mp4
+python3 make_audio.py gout                 # 生成 gout/build/soundtrack.wav 和 timeline.json
+node record.js gout --audio                # 16:9 带声音，输出 gout-voice.mp4
+node record.js gout --ratio 3:4 --audio    # 3:4 带声音，输出 gout-3x4-voice.mp4
 ```
 
 可以调整的地方：
 
-- **换声音**：`python3 make_audio.py --sid 20`（3–57 是女声，58–102 是男声）
+- **换声音**：`python3 make_audio.py gout --sid 20`（3–57 是女声，58–102 是男声）
 - **语速**：`--speed 1.0`（默认 0.95，稍慢一点更温柔）
 - **音乐音量**：`--music 0.1`（默认 0.16；有人说话时音乐会自动压低）
-- **读法**：`make_audio.py` 顶部的 `SPOKEN` 表可以改某些词的读法，比如把 "AGEs" 读成 "A G E S"
-- **伤感段落**：第 3–6 幕的背景音乐换成小调、琶音更稀疏，第 7 幕回到明亮的大调
+- **读法**：页面里 `video-meta` 的 `spoken` 可以改某些词的读法，比如把 "AGEs" 读成 "A G E S"
+- **伤感段落**：`video-meta` 的 `sad` 列出的幕（从 0 开始数）用小调、琶音更稀疏，其他幕是明亮的大调
 
 也可以只导出无声视频，在剪映 / Premiere 里自己配旁白和音乐。剪映的"文本朗读"能把字幕直接转成配音。
 

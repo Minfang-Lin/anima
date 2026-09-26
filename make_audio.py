@@ -1,16 +1,17 @@
 """生成视频的配音和背景音乐。
 
-1. 从 index.html 读出七幕旁白，用离线的 Kokoro 中文语音模型（sherpa-onnx）合成配音；
-2. 按配音长度排好每一幕的时长，写到 build/timeline.json，record.js 会按它来渲染画面；
+1. 从 <主题>/index.html 读出每一幕的旁白和 video-meta 配置（引子、读法、伤感段落），
+   用离线的 Kokoro 中文语音模型（sherpa-onnx）合成配音；
+2. 按配音长度排好每一幕的时长，写到 <主题>/build/timeline.json，record.js 会按它来渲染画面；
 3. 用代码合成一段轻柔的八音盒 + 铺底和弦背景音乐（无版权问题），配音响起时自动压低音量；
-4. 混成 build/soundtrack.wav。
+4. 混成 <主题>/build/soundtrack.wav。
 
 用法：
     pip install sherpa-onnx soundfile numpy
     # 下载并解压语音模型到 models/：
     # https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_1.tar.bz2
-    python3 make_audio.py                # 默认女声 sid=3
-    python3 make_audio.py --sid 60       # 换一个声音（3–57 女声，58–102 男声）
+    python3 make_audio.py diabetes-vessels            # 默认女声 sid=3
+    python3 make_audio.py gout --sid 60               # 换一个声音（3–57 女声，58–102 男声）
 """
 import argparse
 import json
@@ -22,26 +23,23 @@ import soundfile as sf
 
 SR = 44100
 ROOT = os.path.dirname(os.path.abspath(__file__))
-BUILD = os.path.join(ROOT, "build")
-
-INTRO = "多余的糖，是怎样一步步伤害血管的？跟着红细胞小伙伴，一起去血管里看看吧。"
-# 配音时的读法替换（画面字幕不变）
-SPOKEN = {"AGEs": "A G E S", "HbA1c": "糖化血红蛋白"}
 
 LEAD, GAP = 0.8, 1.4        # 每幕开始后多久开口、说完后留白多久
 TITLE_FADE = 1.0            # 片头标题淡出时长
 TAIL = 2.5                  # 最后一幕说完后多留几秒让音乐收尾
-SAD = {2, 3, 4, 5}          # 这几幕用小调走向（下标从 0 开始）
 
 
-def chapter_texts():
-    html = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
-    block = html[html.index("const CH = ["):html.index("const DUR")]
-    return re.findall(r'\btext: "([^"]+)"', block)
+def read_topic(topic):
+    """返回 (每幕旁白, video-meta 配置)。meta 里有 intro（片头引子）、spoken（配音读法替换）、sad（用小调的幕，从 0 开始）。"""
+    html = open(os.path.join(ROOT, topic, "index.html"), encoding="utf-8").read()
+    meta = json.loads(re.search(r'<script id="video-meta" type="application/json">(.*?)</script>', html, re.S).group(1))
+    start = html.index("const CH = [")
+    block = html[start:html.index("\n  ];", start)]
+    return re.findall(r'\btext: "([^"]+)"', block), meta
 
 
-def spoken(text):
-    for k, v in SPOKEN.items():
+def spoken(text, table):
+    for k, v in table.items():
         text = text.replace(k, v)
     return text
 
@@ -105,7 +103,7 @@ def pad(freqs, dur):
     return (x * env / len(freqs)).astype(np.float32)
 
 
-def make_music(total, chapter_starts):
+def make_music(total, chapter_starts, sad):
     bpm = 72
     bar = 4 * 60 / bpm
     out = np.zeros(int((total + 4) * SR), dtype=np.float32)
@@ -121,7 +119,7 @@ def make_music(total, chapter_starts):
     b = 0
     while b * bar < total:
         t0 = b * bar
-        prog = GENTLE_SAD if chapter_at(t0) in SAD else BRIGHT
+        prog = GENTLE_SAD if chapter_at(t0) in sad else BRIGHT
         name = prog[b % 4]
         notes = CHORDS[name]
         root = notes[0]
@@ -131,7 +129,7 @@ def make_music(total, chapter_starts):
         order = [tones[0], tones[2], tones[1], tones[2], tones[3], tones[2], tones[1], tones[2]]
         for k in range(8):
             vel = 0.55 if k % 2 else 0.8
-            if chapter_at(t0) in SAD and k % 2:
+            if chapter_at(t0) in sad and k % 2:
                 continue  # 伤感段落琶音稀疏一些
             add(music_box(order[k], 2.2) * vel * 0.35, t0 + k * bar / 8)
         add(pad([freq(n, 3 if NOTE[n] >= NOTE[root] else 4) for n in notes], bar + 0.9) * 0.22, t0)
@@ -156,19 +154,23 @@ def make_music(total, chapter_starts):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("topic", help="主题文件夹，比如 diabetes-vessels、gout")
     ap.add_argument("--model", default=os.environ.get("KOKORO_DIR", os.path.join(ROOT, "models", "kokoro-multi-lang-v1_1")))
     ap.add_argument("--sid", type=int, default=3, help="说话人编号：3–57 女声，58–102 男声")
     ap.add_argument("--speed", type=float, default=0.95)
     ap.add_argument("--music", type=float, default=0.16, help="背景音乐音量（0–1）")
     args = ap.parse_args()
 
-    texts = chapter_texts()
+    texts, meta = read_topic(args.topic)
+    table = meta.get("spoken", {})
+    sad = set(meta.get("sad", []))
+    build = os.path.join(ROOT, args.topic, "build")
     tts = make_tts(args.model)
-    intro = synth(tts, spoken(INTRO), args.sid, args.speed)
+    intro = synth(tts, spoken(meta["intro"], table), args.sid, args.speed)
     voices = []
     for i, t in enumerate(texts):
         print(f"配音 第 {i + 1} 幕…", flush=True)
-        voices.append(synth(tts, spoken(t), args.sid, args.speed))
+        voices.append(synth(tts, spoken(t, table), args.sid, args.speed))
 
     intro_len = 0.5 + len(intro) / SR + 0.4
     durs, starts, speech = [], [], []
@@ -189,19 +191,19 @@ def main():
         voice[i:i + len(v)] += v
     voice = voice[:int(total * SR)]
 
-    music = make_music(total, starts)
+    music = make_music(total, starts, sad)
     # 配音时把音乐压低（平滑的侧链）
     active = np.convolve((np.abs(voice) > 0.02).astype(np.float32), np.ones(SR // 2) / (SR // 2), mode="same")
     duck = 1 - 0.55 * np.clip(active * 3, 0, 1)
     mix = voice * 0.95 + music * args.music * duck
     mix = mix / max(1.0, np.abs(mix).max() / 0.97)
 
-    os.makedirs(BUILD, exist_ok=True)
+    os.makedirs(build, exist_ok=True)
     stereo = np.stack([mix, mix], axis=1)
-    sf.write(os.path.join(BUILD, "soundtrack.wav"), stereo, SR)
+    sf.write(os.path.join(build, "soundtrack.wav"), stereo, SR)
     json.dump({"intro": round(intro_len, 3), "durs": durs, "total": round(total, 3)},
-              open(os.path.join(BUILD, "timeline.json"), "w"), ensure_ascii=False, indent=1)
-    print(f"完成：build/soundtrack.wav（{total:.1f} 秒），build/timeline.json")
+              open(os.path.join(build, "timeline.json"), "w"), ensure_ascii=False, indent=1)
+    print(f"完成：{args.topic}/build/soundtrack.wav（{total:.1f} 秒），{args.topic}/build/timeline.json")
 
 
 if __name__ == "__main__":
