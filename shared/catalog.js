@@ -21,5 +21,6 @@ window.AnimaCatalog = {
     { id: "respiratory", name: "呼吸系统", desc: "每一次呼吸背后的事", planned: [] },
     { id: "kidney", name: "肾脏", desc: "身体的净水厂", planned: [] },
     { id: "bone", name: "骨骼关节", desc: "撑起身体的骨头和关节", planned: [] },
+    { id: "sleep", name: "睡眠", desc: "每晚三分之一的人生", planned: [] },
   ],
 };
