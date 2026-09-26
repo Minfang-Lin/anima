@@ -1,6 +1,6 @@
 Anima.register("fatty-liver", {
     "title": "肝里的油",
-    "tag": "肝脏小剧场 · 7 幕",
+    "tag": "肝脏小剧场",
     "headline": "【瘦】人也会得脂肪肝？",
     "lede": "走进肝脏看一看：脂肪从哪里来，为什么体重正常的人也会囤油，脂肪肝怎样一步步变成肝硬化，以及怎样把它逆转回来。",
     "summary": "瘦人也会得脂肪肝？肝里的油从哪来，怎样发展成肝硬化，又怎样逆转回来。",
@@ -344,7 +344,7 @@ Anima.register("fatty-liver", {
 
   return {
     chapters: CH, state: S, dur: DUR, accent: "#f0945a",
-    titleCard: { lines: ["瘦人也会得", "脂肪肝？"], sub: "肝脏小剧场 · 7 幕" },
+    titleCard: { lines: ["瘦人也会得", "脂肪肝？"] },
     sync(e) { W = e.W; H = e.H; time = e.time; cur = e.cur; },
     update, draw,
   };

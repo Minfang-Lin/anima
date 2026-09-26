@@ -1,6 +1,6 @@
 Anima.register("gout", {
     "title": "痛风小针",
-    "tag": "关节小剧场 · 7 幕",
+    "tag": "关节小剧场",
     "headline": "尿酸变成【小针】，关节为什么这么痛",
     "lede": "走进大脚趾的关节看一看：尿酸从哪里来，怎样变成针一样的结晶，为什么会突然痛得走不了路，又该怎样把它赶走。",
     "summary": "尿酸变成针状结晶，关节为什么会突然红肿剧痛，又该怎样把尿酸降下来。",
@@ -430,7 +430,7 @@ Anima.register("gout", {
 
   return {
     chapters: CH, state: S, dur: DUR, accent: "#5aaad8",
-    titleCard: { lines: ["尿酸变成小针，", "关节为什么这么痛"], sub: "关节小剧场 · 7 幕" },
+    titleCard: { lines: ["尿酸变成小针，", "关节为什么这么痛"] },
     sync(e) { W = e.W; H = e.H; time = e.time; cur = e.cur; },
     update, draw,
   };

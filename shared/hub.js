@@ -73,7 +73,7 @@
     const body = document.createElement("span"); body.className = "ep-body";
     const t = document.createElement("b"); t.textContent = e.title;
     const d = document.createElement("span"); d.textContent = e.summary;
-    const go = document.createElement("span"); go.className = "ep-go"; go.textContent = "开演 ▶";
+    const go = document.createElement("span"); go.className = "ep-go"; go.textContent = `${e.scenes} 幕 ▶`;
     body.append(t, d);
     b.append(dot, body, go);
     b.addEventListener("click", () => { closeSheet(); location.hash = e.id; });

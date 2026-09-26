@@ -1,6 +1,6 @@
 Anima.register("diabetes-vessels", {
     "title": "糖与血管",
-    "tag": "血管小剧场 · 7 幕",
+    "tag": "血管小剧场",
     "headline": "多余的【糖】，如何一步步伤害血管",
     "lede": "跟着血管里的红细胞小伙伴走一趟：看看血糖升高后，血管里发生了什么，以及我们可以怎样帮它们。",
     "summary": "多余的糖怎样一步步伤害血管：糖化、内皮受伤、斑块和微血管病变。",
@@ -410,7 +410,7 @@ Anima.register("diabetes-vessels", {
 
   return {
     chapters: CH, state: S, dur: DUR, accent: C.rbc,
-    titleCard: { lines: ["多余的糖，", "如何一步步伤害血管"], sub: "血管小剧场 · 7 幕" },
+    titleCard: { lines: ["多余的糖，", "如何一步步伤害血管"] },
     sync(e) { W = e.W; H = e.H; time = e.time; cur = e.cur; },
     update, draw,
   };

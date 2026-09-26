@@ -1,6 +1,6 @@
 Anima.register("lipids", {
     "title": "血脂小船",
-    "tag": "血脂小剧场 · 7 幕",
+    "tag": "血脂小剧场",
     "headline": "化验单上的【血脂】，到底在说什么？",
     "lede": "胆固醇不是坏东西，它要坐“脂蛋白小船”才能在血液里旅行。认识 LDL、HDL、载脂蛋白和 Lp(a)，看懂自己的血脂化验单。",
     "summary": "认识 LDL、HDL、载脂蛋白和 Lp(a)：HDL 不是越高越好，Lp(a) 一生至少查一次。",
@@ -365,7 +365,7 @@ Anima.register("lipids", {
 
   return {
     chapters: CH, state: S, dur: DUR, accent: "#9b7fe0",
-    titleCard: { lines: ["化验单上的血脂，", "到底在说什么？"], sub: "血脂小剧场 · 7 幕" },
+    titleCard: { lines: ["化验单上的血脂，", "到底在说什么？"] },
     sync(e) { W = e.W; H = e.H; time = e.time; cur = e.cur; },
     update, draw,
   };

@@ -163,7 +163,12 @@
   const $ = (id) => document.getElementById(id);
 
   function register(id, meta, factory) { registry[id] = { id, meta, factory }; }
-  function episodes() { return Object.values(registry).map((r) => ({ id: r.id, ...r.meta })); }
+  // 每一集有几幕由它自己的章节数决定，不固定
+  function sceneCount(r) {
+    if (r.count == null) r.count = r.factory().chapters.length;
+    return r.count;
+  }
+  function episodes() { return Object.values(registry).map((r) => ({ id: r.id, ...r.meta, scenes: sceneCount(r) })); }
 
   function sync() { if (ep) ep.cfg.sync({ W, H, time, cur }); }
   function resize() {
@@ -223,11 +228,11 @@
   }
 
   // 用 meta 填写页头（标签、标题、简介）和页脚
-  function renderHeader(meta) {
+  function renderHeader(meta, n) {
     const h = $("epHeader");
     if (h) {
       h.replaceChildren();
-      const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = meta.tag;
+      const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = `${meta.tag} · ${n} 幕`;
       const h1 = document.createElement("h1");
       // 标题里用【】包住的字会高亮
       for (const [k, part] of meta.headline.split(/【|】/).entries()) {
@@ -262,7 +267,8 @@
     for (const k of Object.keys(labelAlpha)) delete labelAlpha[k];
     time = 0; cur = 0;
     bindUI();
-    renderHeader(r.meta);
+    r.count = ep.CH.length;
+    renderHeader(r.meta, ep.CH.length);
     const list = $("chapters");
     list.replaceChildren();
     ep.CH.forEach((c, i) => {
@@ -290,7 +296,7 @@
 
   // ---------- 录制：舞台 + 片头 + 字幕卡 ----------
   function renderVideo() {
-    const { CH, cfg, accent } = ep;
+    const { CH, cfg, accent } = ep; // 片头副标题默认是“<tag> · N 幕”
     const SW = LY.SW, SH = LY.SH, portrait = VH > VW, c = CH[cur];
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = "#fff1ee"; ctx.fillRect(0, 0, VW, VH);
@@ -309,7 +315,7 @@
       const fs = portrait ? 62 : 72;
       ctx.font = `${fs}px ${ROUND}`;
       lines.forEach((ln, i) => ctx.fillText(ln, W / 2, H / 2 - 30 - (lines.length - 1 - i) * fs * 1.25));
-      ctx.font = `${fs * 0.47}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText(cfg.titleCard.sub, W / 2, H / 2 + 50);
+      ctx.font = `${fs * 0.47}px ${ROUND}`; ctx.fillStyle = C.soft; ctx.fillText(cfg.titleCard.sub || `${ep.meta.tag} · ${CH.length} 幕`, W / 2, H / 2 + 50);
       ctx.textAlign = "left"; ctx.globalAlpha = 1;
     }
     ctx.restore();
