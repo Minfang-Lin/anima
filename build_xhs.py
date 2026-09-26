@@ -14,7 +14,8 @@
 
 用法：
     pip install fonttools brotli
-    python3 build_xhs.py        # 输出 dist/xiaohongshu/body-theater.zip
+    python3 build_xhs.py                  # 输出 dist/xiaohongshu/body-theater.zip
+    python3 build_xhs.py --only-listed    # 只打包已经加进展厅的集（有新集还在制作时用）
 """
 import io
 import os
@@ -112,7 +113,9 @@ def check(files):
 def build():
     html = page_html()
     missing = [t for t in topics() if f'src="{t}/scene.js"' not in html]
-    if missing:
+    if missing and "--only-listed" in sys.argv:
+        print("还没加进展厅、这次不打包：" + "、".join(missing))
+    elif missing:
         raise SystemExit("这些小剧场还没加进展厅，请在根目录 index.html 里加上 <script src=\"<主题>/scene.js\">：" + "、".join(missing))
     files = {"index.html": html.encode("utf-8")}
     for src in re.findall(r'<(?:script src|link rel="stylesheet" href)="([^"]+)"', html):

@@ -281,7 +281,8 @@
       const b = document.createElement("button");
       b.type = "button"; b.id = "ch" + i;
       const num = document.createElement("span"); num.textContent = i + 1;
-      b.append(num, document.createTextNode(c.title));
+      const name = document.createElement("em"); name.textContent = c.title;
+      b.append(num, name);
       b.addEventListener("click", () => go(i));
       li.appendChild(b); list.appendChild(li);
     });
