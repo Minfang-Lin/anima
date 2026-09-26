@@ -326,7 +326,7 @@
     ctx.beginPath(); ctx.ellipse(cx + u * 0.035, top + u * 0.29, u * 0.04, u * 0.028, 0, 0, 6.3); ctx.fillStyle = "#f59a7c"; ctx.fill(); outline(1.2); ctx.stroke();
     ctx.beginPath(); ctx.arc(cx, top + u * 0.1, u * 0.075, 0, 6.3); ctx.fillStyle = "#ffe0cc"; ctx.fill(); outline(2); ctx.stroke();
     face(cx, top + u * 0.11, u * 0.06, 0.6);
-    const fs = Math.max(11, W / 70) * Anima.UI;
+    const fs = Math.min(Math.max(11, W / 70) * Anima.UI, k.cw / 9.5);
     ctx.fillStyle = C.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.font = `${fs}px ${Anima.ROUND}`; ctx.fillText("BMI 21 · 体重正常", cx, k.y + k.ch - fs * 0.9);
     ctx.textAlign = "left";
