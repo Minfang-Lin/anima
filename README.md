@@ -9,6 +9,16 @@
 | `fatty-liver/` | 肝里的油：瘦人也会得脂肪肝 |
 | `lipids/` | 血脂小船：LDL、HDL、载脂蛋白和 Lp(a) |
 | `osteoporosis/` | 骨头的存款：骨量减少和骨质疏松 |
+| `insulin/` | 糖的钥匙：胰岛素与 2 型糖尿病 |
+| `hypertension/` | 血管里的压力：高血压 |
+| `heart-attack/` | 心脏的血管堵了：心肌梗死 |
+| `stroke/` | 大脑的抢救时间：中风 |
+| `ckd/` | 肾脏的筛子：慢性肾病 |
+| `smoking-lungs/` | 肺里的烟：吸烟与慢阻肺、肺癌 |
+| `alcohol-liver/` | 酒精进了肝：酒精性肝病 |
+| `h-pylori/` | 胃里的小螺旋：幽门螺杆菌 |
+
+所有集用到的医学数字和标准汇总在 `docs/医学数据核对清单.md`，发布前请逐条核对。
 
 ## 运行
 
@@ -36,7 +46,7 @@ python3 build_xhs.py --only-listed    # 有新集还在制作时，只打包已�
 
 - 代码要兼容安卓 8.1 自带的 Chrome 61（小红书《小工具容器能力清单》的要求）：JS 只能用 ES2017，CSS 不用 flex 的 gap、inset、min()/clamp() 等新写法。`tools/check_compat.js` 会逐个检查，打包前需要先 `npm install`（装 acorn）
 
-- `index.html` 在 zip 根目录，总包 < 2MB（现在 5 集约 160KB，每多一集大约多 20KB）
+- `index.html` 在 zip 根目录，总包 < 2MB（现在 13 集约 260KB，每多一集大约多 20KB）
 - 不能有网络请求：去掉 Google Fonts，把站酷快乐体按用到的字裁剪后打包进去（OFL 许可证全文写在 `shared/fonts.css` 的注释里）
 - 只能有 html、css、js、json、图片（jpg/png/gif/svg/webp）和字体（woff/woff2）这几类文件
 - 不能有内联 `<script>` 和 `onclick=` 之类的内联事件：引擎、展厅脚本和每一集的动画都是单独的 .js 文件

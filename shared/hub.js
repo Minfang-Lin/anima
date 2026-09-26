@@ -162,7 +162,7 @@
   const planned = new Set();
   for (const o of Object.values(catalog.organs)) o.planned.forEach((n) => planned.add(n));
   for (const c of catalog.categories) c.planned.forEach((n) => planned.add(n));
-  $("count").textContent = `已开演 ${eps.length} 集 · 筹备中 ${planned.size} 集 · 持续更新`;
+  $("count").textContent = planned.size ? `已开演 ${eps.length} 集 · 筹备中 ${planned.size} 集 · 持续更新` : `已开演 ${eps.length} 集 · 持续更新`;
 
   setupBody();
   setupDiseases();
