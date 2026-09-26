@@ -26,7 +26,21 @@
 //   his    组胺      三角形         橙  #ee7a36
 // 受体（嵌在细胞膜里、顶上有和分子同形的槽口）：
 //   aden 腺苷受体（浅紫）、gaba GABA 受体（浅蓝）、orx 食欲素受体（浅绿）、mel 褪黑素受体（浅金）、his 组胺受体（浅橙）
-// 可用但还没分配给分子的形状：pentagon 五边形、star 五角星、capsule 胶囊（药物常用）、Y（抗体 / 胰岛素受体一类）。
+// 各集在自己的 scene.js 里登记的图标（同一种分子在别的集出现时，照这里的形状和颜色画，最好直接复制那段 register）：
+//   glu    葡萄糖        空心六元环 glucoseRing   青    #1ea5b8   （insulin）
+//   ins    胰岛素        大小两球相连 insulinDimer 洋红  #cc4f9f   （insulin；受体 insr 用 Y 形，浅洋红）
+//   glut4  GLUT4 转运体  跨膜双柱孔道 glutPore     浅青绿 #7fcdc2  （insulin）
+//   abeta  β-淀粉样蛋白  五边形                   橄榄绿 #8f9a2c  （sleep-cycle）
+//   gh     生长激素      五角星                   珊瑚粉 #ef6f8e  （sleep-cycle）
+//   aqp4   水通道 AQP4   沙漏形孔道 channel       青    #23aebf   （sleep-cycle）
+//   pacFocus / pvcFocus 房性 / 室性异位起搏点  五角星  青 #1c9fb0 / 品红 #c93d8a （premature-beats）
+//   chol   胆固醇        三环 + 侧链 lp_sterol    黄    #eec233   （lipids）
+//   tg     甘油三酯      “E”形 lp_tg              橄榄绿 #99b541  （lipids）
+//   apob   ApoB-100      月牙带 lp_crescent       品红  #c24d8c   （lipids；LDL 受体槽口同形，浅品红）
+//   apoa1  ApoA-I        条纹短棒 lp_helix        青    #2fb2d6   （lipids）
+//   apoa   apo(a)        三叶环 lp_kringle        深青绿 #139c86  （lipids）
+//   statin 降脂药（他汀类） 胶囊 capsule          靛蓝  #5d6fc0   （lipids）
+// 可用但还没分配给分子的形状：capsule 胶囊（药物常用，已给他汀类）、Y（抗体 / 受体一类）。
 // 新分子：在下面的 MOLECULES 表里加一行 { shape, color: [亮, 中, 深] 或一个中色, label }，
 // 或者在集里调用 Anima.textbook.register("key", { shape: "pentagon", color: "#d0457a", label: "血清素" })。
 // 登记之后请把它补进上面这张词典，后面的集就照着用。

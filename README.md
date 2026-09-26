@@ -79,6 +79,12 @@ python3 build_xhs.py --only-listed    # 有新集还在制作时，只打包已�
 3. 如果这一集原来在 `shared/catalog.js` 的“筹备中”列表里，把它删掉。
 4. 运行 `python3 build_xhs.py` 重新打包。
 
+### 两种画风
+
+- **卡通风**（默认）：粉色背景、圆润角色、小脸表情。讲器官和疾病过程的集用这个。
+- **教科书示意图风**（机制类）：白底、带光泽的分子和受体图标、细描边、图例，没有卡通脸。讲神经递质、受体、分子、电生理、药物机制的集用这个。现在用的有：`sleep-drive`、`sleep-cycle`、`insulin`、`premature-beats`、`lipids`。
+  做法：`meta` 里加 `"look": "textbook"`，单集 `index.html` 在 `engine.js` 之后加载 `../shared/textbook.js`，画面用 `shared/textbook.js` 里的工具（用法和全系列统一的分子图标词典写在这个文件开头），照 `sleep-drive/scene.js` 的结构写。
+
 ## 糖与血管：分镜
 
 | # | 场景 | 画面重点 | 关键数据 |

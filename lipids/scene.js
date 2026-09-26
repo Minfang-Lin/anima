@@ -913,6 +913,7 @@ Anima.register("lipids", {
     // 血里还漂着的 LDL（越来越少）和 Lp(a)（基本不变）
     const nFree = Math.round(6 - 4 * prog);
     let lpaPick = null, ldlPick = null;
+    ctx.save(); ctx.beginPath(); ctx.rect(M.x, M.y, M.w, M.h); ctx.clip();
     for (let i = 0; i < 6; i++) {
       const a = clamp(nFree - i, 0, 1);
       const x = M.x + ((rnd(i + 950) + time * 0.018) % 1) * M.w, y = M.y + (yMem - M.y) * (0.2 + rnd(i + 960) * 0.3);
@@ -925,6 +926,7 @@ Anima.register("lipids", {
       const Lq = particle(x, y, ir * 1.3, { kind: "lpa", tail: 0.15 + Math.sin(time * 0.6 + i) * 0.2, tailK: 2.4, rot: 0.3 });
       if (i === 1) lpaPick = Lq.mid || [x, y];
     }
+    ctx.restore();
     // 右侧：斑块变稳定（纤维帽变厚、脂质核心变小）
     let plaqueP = null;
     if (!n) {
