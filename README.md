@@ -37,6 +37,8 @@ python3 build_xhs.py          # 输出 dist/xiaohongshu/body-theater.zip
 - 不能有内联 `<script>` 和 `onclick=` 之类的内联事件：引擎、展厅脚本和每一集的动画都是单独的 .js 文件
 - 不能用 eval、iframe、fetch 等
 
+小工具图标在 `assets/icon/`：`icon.svg` 是源文件，`icon-1024.png` 和 `icon-512.png` 可直接上传。
+
 改了文案或新增一集以后，重新运行 `build_xhs.py`，字体子集会自动包含新出现的字。
 
 ## 项目结构

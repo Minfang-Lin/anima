@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <pattern id="dots" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="24" cy="24" r="4" fill="#ffd9d2"/>
+    </pattern>
+    <radialGradient id="spot" cx="50%" cy="60%" r="50%">
+      <stop offset="0" stop-color="#fff6c9" stop-opacity="1"/>
+      <stop offset="1" stop-color="#fff6c9" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- 背景 -->
+  <rect width="1024" height="1024" fill="#fff1ee"/>
+  <rect width="1024" height="1024" fill="url(#dots)"/>
+  <!-- 聚光灯 -->
+  <ellipse cx="512" cy="600" rx="400" ry="360" fill="url(#spot)"/>
+  <!-- 舞台地板 -->
+  <path d="M-20 842 Q512 792 1044 842 L1044 1044 L-20 1044 Z" fill="#f6b98f" stroke="#5b3a4a" stroke-width="16" stroke-linejoin="round"/>
+  <path d="M120 900 Q512 866 904 900" fill="none" stroke="#e59b72" stroke-width="10" stroke-linecap="round"/>
+  <path d="M60 962 Q512 928 964 962" fill="none" stroke="#e59b72" stroke-width="10" stroke-linecap="round"/>
+  <!-- 舞台上的影子 -->
+  <ellipse cx="512" cy="836" rx="200" ry="30" fill="#e59b72" opacity=".7"/>
+
+  <!-- 红细胞小伙伴 -->
+  <g stroke="#5b3a4a" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 挥手的小手 -->
+    <path d="M300 560 Q232 500 250 420" fill="none" stroke-width="30"/>
+    <path d="M300 560 Q232 500 250 420" fill="none" stroke="#ff7b7b" stroke-width="14"/>
+    <circle cx="250" cy="410" r="30" fill="#ff7b7b" stroke-width="14"/>
+    <path d="M724 560 Q792 500 774 420" fill="none" stroke-width="30"/>
+    <path d="M724 560 Q792 500 774 420" fill="none" stroke="#ff7b7b" stroke-width="14"/>
+    <circle cx="774" cy="410" r="30" fill="#ff7b7b" stroke-width="14"/>
+    <!-- 身体 -->
+    <ellipse cx="512" cy="610" rx="236" ry="200" fill="#ff7b7b" stroke-width="18"/>
+    <!-- 中间凹下去的一圈（红细胞的样子） -->
+    <ellipse cx="512" cy="640" rx="132" ry="92" fill="#f25f6b" stroke="none" opacity=".45"/>
+    <!-- 高光 -->
+    <ellipse cx="400" cy="500" rx="58" ry="30" fill="#ffffff" stroke="none" opacity=".6" transform="rotate(-24 400 500)"/>
+  </g>
+  <!-- 脸 -->
+  <g>
+    <ellipse cx="442" cy="600" rx="20" ry="26" fill="#5b3a4a"/>
+    <ellipse cx="582" cy="600" rx="20" ry="26" fill="#5b3a4a"/>
+    <circle cx="449" cy="590" r="7" fill="#ffffff"/>
+    <circle cx="589" cy="590" r="7" fill="#ffffff"/>
+    <ellipse cx="398" cy="652" rx="34" ry="18" fill="#ffb3c1"/>
+    <ellipse cx="626" cy="652" rx="34" ry="18" fill="#ffb3c1"/>
+    <path d="M478 654 Q512 690 546 654" fill="none" stroke="#5b3a4a" stroke-width="14" stroke-linecap="round"/>
+  </g>
+  <!-- 小爱心和星星 -->
+  <path d="M790 380 C760 356 766 330 782 330 C790 330 794 338 794 342 C794 338 798 330 806 330 C822 330 828 356 794 380 Z" fill="#ff9fb0" stroke="#5b3a4a" stroke-width="10" stroke-linejoin="round" transform="translate(-100 -60)"/>
+  <path d="M300 300 L310 326 L336 330 L316 346 L322 372 L300 358 L278 372 L284 346 L264 330 L290 326 Z" fill="#ffc94d" stroke="#5b3a4a" stroke-width="9" stroke-linejoin="round"/>
+
+  <!-- 幕布：左右两侧 -->
+  <g stroke="#5b3a4a" stroke-width="16" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M-20 120 L190 120 Q170 420 230 640 Q160 700 150 860 L-20 860 Z" fill="#b8405a"/>
+    <path d="M1044 120 L834 120 Q854 420 794 640 Q864 700 874 860 L1044 860 Z" fill="#b8405a"/>
+  </g>
+  <g fill="none" stroke="#963047" stroke-width="10" stroke-linecap="round">
+    <path d="M60 160 Q70 480 60 820"/>
+    <path d="M130 160 Q140 440 150 640"/>
+    <path d="M964 160 Q954 480 964 820"/>
+    <path d="M894 160 Q884 440 874 640"/>
+  </g>
+  <!-- 束幕的金色绳子 -->
+  <g stroke="#5b3a4a" stroke-width="10">
+    <rect x="148" y="622" width="96" height="30" rx="15" fill="#ffc94d" transform="rotate(-12 196 637)"/>
+    <rect x="780" y="622" width="96" height="30" rx="15" fill="#ffc94d" transform="rotate(12 828 637)"/>
+  </g>
+  <!-- 顶部帷幔 -->
+  <path d="M-20 -20 L1044 -20 L1044 150 Q990 210 936 150 Q882 210 828 150 Q774 210 720 150 Q666 210 612 150 Q558 210 504 150 Q450 210 396 150 Q342 210 288 150 Q234 210 180 150 Q126 210 72 150 Q18 210 -20 160 Z" fill="#b8405a" stroke="#5b3a4a" stroke-width="16" stroke-linejoin="round"/>
+  <path d="M-20 70 L1044 70" stroke="#ffc94d" stroke-width="22"/>
+  <path d="M-20 70 L1044 70" stroke="#5b3a4a" stroke-width="4" stroke-dasharray="2 30" stroke-linecap="round"/>
+</svg>
