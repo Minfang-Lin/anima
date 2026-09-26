@@ -60,6 +60,8 @@ def topics():
 
 def page_html():
     html = read(os.path.join(ROOT, "index.html"))
+    # 标记小红书容器，让 CSS 给顶部的浮动按钮让出位置（见 shared/style.css 末尾）
+    html = html.replace('<html lang="zh-CN">', '<html lang="zh-CN" class="xhs">', 1)
     html = re.sub(r'\s*<link rel="preconnect"[^>]*>', "", html)
     html = re.sub(r'\s*<link rel="stylesheet" href="https://fonts\.googleapis\.com[^>]*>', "", html)
     html = html.replace('<link rel="stylesheet" href="shared/style.css">',

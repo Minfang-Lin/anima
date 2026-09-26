@@ -24,6 +24,7 @@ const JS_APIS = [
   [/\bqueueMicrotask\b/, "queueMicrotask（Chrome 71）"],
 ];
 const CSS_RULES = [
+  [/(^|[;{\s])(padding|margin)-(inline|block)(-start|-end)?\s*:/, "padding/margin-inline/block（Chrome 87），请写 top/right/bottom/left"],
   [/(^|[;{\s])inset\s*:/, "inset（Chrome 87），请写 top/right/bottom/left"],
   [/:\s*[^;{}]*\b(min|max|clamp)\(/, "CSS 的 min()/max()/clamp()（Chrome 79）"],
   [/:(is|where|has)\(/, ":is()/:where()/:has() 选择器"],

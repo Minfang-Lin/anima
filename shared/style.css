@@ -21,8 +21,7 @@ body {
   background-size: 22px 22px;
   color: var(--ink);
   font: 15px/1.8 var(--sans);
-  padding-inline: 16px;
-  padding-block: 28px 48px;
+  padding: 28px 16px 48px;
 }
 .wrap { max-width: 1080px; margin: 0 auto; display: grid; grid-gap: 22px; gap: 22px; }
 header { display: grid; grid-gap: 8px; gap: 8px; }
@@ -88,7 +87,7 @@ footer { color: var(--soft); font-size: 13px; }
 
 /* 手机：尽量一屏装下，章节改成一排小圆点，收紧留白 */
 @media (max-width: 640px) {
-  body { padding-block: 10px 16px; font-size: 14px; line-height: 1.65; }
+  body { padding-top: 10px; padding-bottom: 16px; font-size: 14px; line-height: 1.65; }
   .wrap { grid-gap: 10px; gap: 10px; }
   header { grid-gap: 4px; gap: 4px; }
   .tag { font-size: 13px; padding: 4px 10px; border-width: 2px; }
@@ -112,3 +111,7 @@ footer { color: var(--soft); font-size: 13px; }
   .controls button { font-size: 15px; padding: 4px 12px; }
   footer { font-size: 11px; line-height: 1.5; }
 }
+
+/* 小红书小工具：容器在页面左上、右上各浮着一个圆形按钮（返回、分享），还压着状态栏。
+   打包时 <html> 会加上 class="xhs"，把整页往下让出这块区域，放在最后以覆盖上面的手机规则。 */
+.xhs body { padding-top: 92px; }
