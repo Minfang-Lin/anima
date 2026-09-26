@@ -11,7 +11,7 @@ window.AnimaCatalog = {
     pancreas: { name: "胰腺", fact: "胰腺里的胰岛只占胰腺的 1% 到 2%，却管着全身的血糖。", planned: ["胰岛素与 2 型糖尿病"] },
     kidney: { name: "肾脏", fact: "两个肾脏每天要过滤约 180 升血液，最后只留下 1 到 2 升尿。", planned: ["慢性肾病"] },
     vessels: { name: "血管", fact: "全身的血管连起来将近 10 万公里，能绕地球两圈多。", planned: ["高血压"] },
-    bone: { name: "骨骼", fact: "成年人有 206 块骨头，骨头一直在悄悄更新，大约 10 年全身骨骼就换一遍。", planned: ["骨质疏松"] },
+    bone: { name: "骨骼", fact: "成年人有 206 块骨头，骨头一直在悄悄更新，大约 10 年全身骨骼就换一遍。", planned: [] },
     joint: { name: "脚趾关节", fact: "大脚趾关节离心脏最远、温度偏低，是痛风最常找上门的地方。", planned: [] },
   },
   categories: [
@@ -20,6 +20,6 @@ window.AnimaCatalog = {
     { id: "digestive", name: "消化系统", desc: "肝、胃、肠道里的事", planned: ["喝酒与肝", "幽门螺杆菌与胃"] },
     { id: "respiratory", name: "呼吸系统", desc: "每一次呼吸背后的事", planned: ["吸烟怎样伤害肺"] },
     { id: "kidney", name: "肾脏", desc: "身体的净水厂", planned: ["慢性肾病"] },
-    { id: "bone", name: "骨骼关节", desc: "撑起身体的骨头和关节", planned: ["骨质疏松"] },
+    { id: "bone", name: "骨骼关节", desc: "撑起身体的骨头和关节", planned: [] },
   ],
 };
