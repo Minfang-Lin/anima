@@ -113,8 +113,8 @@ Anima.register("sleep-cycle", {
     ctx.font = `${fs}px ${ROUND}`; ctx.textBaseline = "middle";
     const labW = ctx.measureText("快速眼动").width + fs * 1.3;
     const narrow = Anima.UI > 1;
-    const titleH = narrow ? fs * 0.6 : fs * 1.9, ticksH = fs * 1.7;
-    const px = c.x + labW, pw = c.w - labW - fs * 1.4;
+    const titleH = narrow ? fs * 0.6 : fs * 2.5, ticksH = fs * 1.7;
+    const px = c.x + labW + fs * 1.4, pw = c.w - labW - fs * 2.8;
     const py = c.y + titleH + fs * 0.5, ph0 = c.h - titleH - ticksH - fs * 0.9;
     const X = (t) => px + (t / 8) * pw, Y = (l) => py + (l / 3) * ph0;
 
@@ -260,7 +260,7 @@ Anima.register("sleep-cycle", {
       }
       ctx.restore();
       // 右边的出口箭头：废物跟着水流走
-      const ax = z.x + z.w + W * 0.005, ay = z.y + z.h * 0.5, as = z.h * 0.12;
+      const ax = z.x + z.w + W * 0.025, ay = z.y + z.h * 0.5, as = z.h * 0.12;
       ctx.save(); ctx.globalAlpha *= S.clean;
       ctx.beginPath(); ctx.moveTo(ax - as, ay - as * 0.45); ctx.lineTo(ax, ay - as * 0.45); ctx.lineTo(ax, ay - as); ctx.lineTo(ax + as, ay);
       ctx.lineTo(ax, ay + as); ctx.lineTo(ax, ay + as * 0.45); ctx.lineTo(ax - as, ay + as * 0.45); ctx.closePath();
@@ -361,7 +361,7 @@ Anima.register("sleep-cycle", {
         ctx.beginPath(); ctx.arc(bx, by, br, 0, 6.3); ctx.fillStyle = "rgba(255,255,255,0.92)"; ctx.fill(); outline(1.8); ctx.stroke();
         dreamIcon(n.i, bx, by, br * 0.6);
         ctx.restore();
-        if (n.i === 1) dreamPt = { x: bx, y: by - br };
+        if (n.i === 0) dreamPt = { x: n.x - n.r * 0.95, y: n.y - n.r * 0.2 };
       }
     }
     return { ns, csfPt, wastePt, dreamPt, drainPt };
@@ -606,23 +606,24 @@ Anima.register("sleep-cycle", {
     const lab = CH[cur].labels, on = (k) => lab.indexOf(k) >= 0;
     const X = map.X, Y = map.Y, c = L.card;
     const mapHigh = Y(0) + map.fs * 0.2; // 路线图里“清醒”那一行，比较空
+    const cbh = Math.max(12, W / 56) * Anima.UI + 14, belowMap = L.yb + cbh + 2; // 路线图正下方放一个标注
     callout("cycle", on("cycle"), X(1.1), Y(3), X(2.9), mapHigh, "一圈约 90 分钟");
     const n1 = z.ns[1];
-    callout("neuron", on("neuron"), n1.x + n1.r * 0.7, n1.y + n1.r * 0.3, n1.x + W * 0.12, n1.y + n1.r * 0.9, "神经元整夜都在忙");
+    callout("neuron", on("neuron"), n1.x + n1.r * 0.7, n1.y + n1.r * 0.3, n1.x + W * 0.16, belowMap, "神经元整夜都在忙");
     callout("light", on("light"), map.moon.x, map.moon.y, map.moon.x + W * 0.22, mapHigh, "浅睡：一点动静就醒");
     const sp = eeg.spk;
     callout("spindle", on("spindle") && !!sp, sp ? sp.x : 0, sp ? sp.y : 0, sp ? sp.x : 0, L.eeg.y - H * 0.03, "纺锤波");
-    callout("slow", on("slow"), eeg.mid.x, eeg.mid.y, eeg.mid.x + W * 0.2, L.eeg.y - H * 0.04, "又大又慢的慢波");
-    callout("gh", on("gh"), bedInfo.patch.x, bedInfo.patch.y, bedInfo.patch.x + W * 0.03, L.yb + H * 0.02, "生长激素：修补身体");
+    callout("slow", on("slow"), eeg.mid.x, eeg.mid.y, W * 0.72, belowMap, "又大又慢的慢波");
+    callout("gh", on("gh"), bedInfo.patch.x, bedInfo.patch.y, bedInfo.patch.x + W * 0.03, belowMap, "生长激素：修补身体");
     callout("early", on("early"), X(1.2), Y(3), X(3.6), mapHigh, "前半夜深睡最多");
     const cp = z.csfPt;
-    callout("csf", on("csf") && !!cp, cp ? cp.x : 0, cp ? cp.y : 0, cp ? cp.x + W * 0.12 : 0, L.yb + H * 0.01, "脑脊液冲走废物");
+    callout("csf", on("csf") && !!cp, cp ? cp.x : 0, cp ? cp.y : 0, cp ? cp.x + W * 0.12 : 0, belowMap, "脑脊液冲走废物");
     const wp = z.drainPt;
     callout("waste", on("waste") && !!wp, wp ? wp.x : 0, wp ? wp.y : 0, wp ? wp.x : 0, L.eeg.y + L.eeg.h * 0.15, "代谢废物被冲走");
     const dp = z.dreamPt;
-    callout("dream", on("dream") && !!dp, dp ? dp.x : 0, dp ? dp.y : 0, (L.zone.x + L.zone.w * 0.5), L.yb - H * 0.005, "梦大多在这时发生");
-    callout("eyes", on("eyes"), bedInfo.eyes.x, bedInfo.eyes.y, bedInfo.eyes.x + W * 0.08, L.bot - H * 0.01, "眼珠快转，身体放松");
-    callout("late", on("late"), X(6.4), Y(1), X(4.6), mapHigh, "后半夜快速眼动更多");
+    callout("dream", on("dream") && !!dp, dp ? dp.x : 0, dp ? dp.y : 0, W * 0.62, belowMap, "生动的梦多在这时");
+    callout("eyes", on("eyes"), bedInfo.eyes.x, bedInfo.eyes.y, bedInfo.eyes.x + W * 0.1, belowMap, "眼珠快速转动");
+    callout("late", on("late"), X(6.4), Y(1), X(3.4), mapHigh, "后半夜快速眼动更多");
     callout("rest", on("rest"), X(7.8), Y(0.5), X(4.4), mapHigh, "每晚睡够 7 小时以上");
     void room; void c;
     hud();
