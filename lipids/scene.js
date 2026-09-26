@@ -40,7 +40,7 @@ Anima.register("lipids", {
     { title: "特别说说 Lp(a)", ldlc: 2.6, ldl: 0.55, hdl: 0.6, enter: 0.5, plaque: 0.8, apob: 0, sleepy: 0, pickup: 0.4, lpa: 1, heal: 0, card: 0,
       pill: ["Lp(a)", "90 mg/dL", "bad"],
       text: "还要特别说说 Lp(a)，也叫脂蛋白小 a。它像一艘 LDL 小船多挂了一条带钩的小尾巴，更容易粘在血管壁上，还会促进血栓和炎症，也和主动脉瓣钙化有关。Lp(a) 主要由基因决定，饮食和运动几乎改变不了它，而且很多人其他血脂指标都正常。",
-      fact: "建议一生至少查一次 Lp(a)；常以 50 mg/dL（约 105 nmol/L）作为明显升高的界值",
+      fact: "建议一生至少查一次 Lp(a)；常以 50 mg/dL（或 125 nmol/L）作为明显升高的界值",
       labels: ["lpa", "hook"] },
     { title: "怎么管好血脂", ldlc: 1.8, ldl: 0.3, hdl: 0.6, enter: 0.1, plaque: 0.55, apob: 0, sleepy: 0, pickup: 1, lpa: 1, heal: 1, card: 0,
       pill: ["Lp(a)", "90 mg/dL", "bad"],
