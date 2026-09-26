@@ -503,7 +503,7 @@ Anima.register("sleep-cycle", {
       const a = clamp(p * 10, 0, 1) * clamp((1 - p) * 8, 0, 1) * clamp(S.waste * 1.4 + 0.25, 0, 1);
       mol("abeta", x, y, ir * 0.62, a, Math.sin(time * 0.8 + i) * 0.4);
       const dd = Math.abs(x - wbx) + Math.abs(y - wby) * 2;
-      if (p > 0.12 && p < 0.9 && a > 0.6 && (!pick || dd < pick.d)) pick = { x, y, d: dd };
+      if (p > 0.12 && p < 0.9 && a > 0.6 && Math.abs(y - wby) > LF() * 1.4 && (!pick || dd < pick.d)) pick = { x, y, d: dd };
     }
     // 水流方向的小箭头：动脉旁向下，细胞间隙里向右（流向静脉），静脉旁向上
     const chev = (x, y, ang, sz, a) => {

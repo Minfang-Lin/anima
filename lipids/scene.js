@@ -505,7 +505,7 @@ Anima.register("lipids", {
       if (it[1] === "lpa" && it[0] === "p") { // Lp(a) 图例：小颗粒 + 短尾巴
         particle(x + s * 0.3, y, s * 0.27, { kind: "lpa", tail: -0.1, wig: 0.2, tailK: 2.3 });
       } else legendIcon(it, x + s / 2, y, s);
-      txt(it[2].replace(/　/g, ""), x + s + fs * 0.35 + (it[1] === "lpa" ? fs * 1.9 : 0), y + 0.5, fs, K.ink, "left", 500);
+      txt(it[2].replace(/　/g, ""), x + s + fs * 0.35 + (it[1] === "lpa" ? fs * 0.6 : 0), y + 0.5, fs, K.ink, "left", 500);
     };
     if (nar()) {
       const y0 = h - Lg.h - 2;
@@ -525,7 +525,7 @@ Anima.register("lipids", {
     items.forEach((it, k) => put(it, x0 + fs * 0.6, y0 + fs * 1.9 + s * 0.5 + k * s * 1.08));
   }
   function legendLayout(i) {
-    const items = legendItems(i).map((it) => (it[1] === "lpa" ? [it[0], it[1], it[2] + "　　"] : it)); // Lp(a) 图标带尾巴，多留一点位置
+    const items = legendItems(i).map((it) => (it[1] === "lpa" ? [it[0], it[1], it[2] + "　"] : it)); // Lp(a) 图标带尾巴，多留一点位置
     return TB.legendLayout(items);
   }
   function areaFor(i) {
@@ -628,7 +628,6 @@ Anima.register("lipids", {
       particle(p[0], p[1] + Math.sin(time * 1.2 + k) * 1.5, p[2], { kind: p[3] });
       txt(p[4], p[0], n ? p[1] + p[2] + fs * 0.75 : A.y + A.h * 0.34 + pos[0][2] + fs * 1.2, fs, K.ink, "center", 700);
     });
-    if (!n) txt("大  →  小", (pos[0][0] + pos[2][0]) / 2, A.y + A.h * 0.34 + pos[0][2] + fs * 2.6, fs, K.soft, "center", 500);
     const L = pos[1], Hd = pos[2];
     if (n) {
       tag("ldl", on("ldl") && T < 6, L[0] - L[2] * 0.6, L[1], A.x + A.w * 0.4, A.y + LF() * 0.9, "LDL：把胆固醇送到全身", LP.apob[1]);
@@ -765,7 +764,7 @@ Anima.register("lipids", {
     const sy = (r1 + r2) / 2;
     txt("≠", bx + bw * 0.3, sy, fs * 1.4, K.soft, "center", 700);
     const pk = pick || along(sp, 0.5);
-    tag("sleepy", on("sleepy"), pk[0], pk[1], n ? A.x + A.w * 0.4 : A.x + A.w * 0.61, n ? A.y + A.h * 0.94 : A.y + A.h * 0.78, "HDL-C 高 ≠ 小船更卖力", LP.apoa1[1]);
+    tag("sleepy", on("sleepy"), pk[0], pk[1], n ? A.x + A.w * 0.4 : A.x + A.w * 0.585, n ? A.y + A.h * 0.94 : A.y + A.h * 0.6, "HDL-C 高 ≠ 小船更卖力", LP.apoa1[1]);
   }
 
   // 第 5 幕：数 ApoB——每个 LDL 颗粒一个 ApoB
@@ -780,7 +779,7 @@ Anima.register("lipids", {
       ctx.fillStyle = LP.plasma; ctx.beginPath(); ctx.roundRect(P.x, P.y, P.w, P.h, 10); ctx.fill(); ctx.strokeStyle = K.card; ctx.lineWidth = 1; ctx.stroke();
       txt(pi ? "小而密的 LDL" : "大颗粒 LDL", P.x + fs * 0.7, P.y + fs * 1.0, fs, K.ink, "left", 700);
       const ih = P.h - capH - fs * 1.8, iy = P.y + fs * 1.8;
-      const big = n ? Math.min(P.w * 0.15, ih * 0.16) : Math.min(P.w * 0.16, ih * 0.19);
+      const big = n ? Math.min(P.w * 0.135, ih * 0.15) : Math.min(P.w * 0.16, ih * 0.19);
       const pts = pi ? [[0.14, 0.3], [0.38, 0.24], [0.62, 0.3], [0.86, 0.25], [0.16, 0.74], [0.4, 0.68], [0.64, 0.76], [0.87, 0.7]] : [[0.27, 0.28], [0.73, 0.3], [0.3, 0.74], [0.72, 0.72]];
       const pr = pi ? big * 0.6 : big, N = pts.length;
       const cnt = clamp((T - 1.2) / 0.55, 0, N);
@@ -797,7 +796,7 @@ Anima.register("lipids", {
       });
       // HDL：没有 ApoB，不算在内
       (pi ? [[0.27, 0.5], [0.76, 0.52]] : [[0.5, 0.5], [0.08, 0.52]]).forEach((q) => particle(P.x + P.w * q[0], iy + ih * q[1], big * 0.3, { kind: "hdl", a: 0.85 }));
-      const c = Math.floor(cnt + 0.0001);
+      const c = Math.min(N, Math.ceil(cnt - 0.001));
       txt(`ApoB = ${c}`, P.x + P.w / 2, P.y + P.h - capH * 0.55, fs * (n ? 1.3 : 1.5), LP.apob[2], "center", 700);
     });
     if (!n) txt("两管血的 LDL-C 差不多，颗粒数却不一样", A.x + pw + gap / 2, A.y + A.h - LF() * 0.6, fs, K.soft, "center", 500);
@@ -810,19 +809,19 @@ Anima.register("lipids", {
   // 第 6 幕：Lp(a) 的结构（LDL + 二硫键 + apo(a) 长链）；粘在血管壁上招来血小板
   function scene5(A, Lg, live, T) {
     const n = nar(), on = onOf(5, live), fs = SF();
-    const r = n ? Math.min(A.h * 0.16, A.w * 0.1) : Math.min(A.h * 0.17, A.w * 0.09);
-    const cx = A.x + (n ? A.w * 0.13 : r + 12), cy = A.y + A.h * (n ? 0.25 : 0.52);
-    if (!n) txt("Lp(a) 结构示意", A.x + A.w * 0.24, cy - r - fs * 3.2, fs, K.ink, "center", 700);
-    const L = particle(cx, cy, r, { kind: "lpa", detail: !n, tail: -0.3, wig: 0.7, tailK: n ? 2.9 : 3.3 });
+    const r = n ? Math.min(A.h * 0.16, A.w * 0.1) : Math.min(A.h * 0.21, A.w * 0.1);
+    const cx = A.x + (n ? A.w * 0.13 : r + 14), cy = A.y + A.h * (n ? 0.25 : 0.5);
+    if (!n) txt("Lp(a) 结构示意", cx, cy - r - fs * 1.6, fs, K.ink, "center", 700);
+    const L = particle(cx, cy, r, { kind: "lpa", detail: !n, tail: -0.3, wig: 0.7, tailK: n ? 2.9 : 2.85 });
     if (!n) {
       txt("LDL 颗粒", cx, cy + r + fs * 1.2, fs, K.soft, "center", 500);
       txt("二硫键", L.att[0] + fs * 0.2, L.att[1] + fs * 1.7, fs, "#8a6d0c", "left", 500);
-      txt("apo(a)：一串 kringle 环", L.end[0] + r * 0.2, L.end[1] + r * 0.5, fs, LP.apoa[2], "right", 500);
+      txt("apo(a)：一串 kringle 环", L.end[0] + r * 0.25, L.end[1] + r * 0.75, fs, LP.apoa[2], "right", 500);
     }
     // 右侧 / 下方：血管壁
     const R = n ? { x: A.x, y: A.y + A.h * 0.5, w: A.w, h: A.h * 0.5 } : { x: A.x + A.w * 0.53, y: A.y + A.h * 0.02, w: A.w * 0.47, h: A.h - Lg.bh - 22 };
     const V = vessel(R, { lum: 0.5, iel: 0.84, amp: (R.h * 0.34) * 0.3 * S.plaque * 2, px: R.x + R.w * 0.55, sig: R.w * 0.2, cap: 0.4 });
-    const pr = Math.max(4, Math.min(IR() * 0.8, (V.yE0 - R.y) * 0.16));
+    const pr = Math.max(4, Math.min(IR() * (n ? 0.8 : 1.05), (V.yE0 - R.y) * 0.16));
     txt("血管腔", R.x + 6, R.y + fs * 0.8, fs, K.soft, "left", 500);
     // 血里漂着的 LDL 和 Lp(a)
     for (let i = 0; i < 3; i++) {
@@ -840,9 +839,9 @@ Anima.register("lipids", {
         const x0 = x - pr * 3 + rnd(j + 600 + k * 10) * pr * 6, y0 = yb - 2 - rnd(j + 620 + k * 10) * pr * 2.4;
         ctx.beginPath(); ctx.moveTo(x0 - pr * 2 * cl, y0 + pr * 0.6); ctx.quadraticCurveTo(x0, y0 - pr * 0.8 - Math.sin(time + j) * 1.5, x0 + pr * 2 * cl, y0 + pr * 0.3); ctx.stroke();
       }
-      for (let j = 0; j < 4 + k * 4; j++) {
+      for (let j = 0; j < 5 + k * 5; j++) {
         const px = x - pr * 2.8 + rnd(j + 700 + k * 20) * pr * 5.6, py = V.yE(px) - pr * (0.35 + rnd(j + 720 + k * 20) * 1.6 * cl);
-        platelet(px, py + Math.sin(time * 1.3 + j) * 0.6, pr * 0.55, rnd(j + 740) * 3);
+        platelet(px, py + Math.sin(time * 1.3 + j) * 0.6, pr * 0.6, rnd(j + 740) * 3);
       }
       const L2 = particle(x + pr * 0.8, yb - pr * 1.05, pr, { kind: "lpa", tail: Math.PI - 0.05, wig: 0.25, tailK: 2.3, rot: 0.2 });
       if (k === 1) stuck = { x: x - pr * 1.5, y: yb - pr * 0.6 };
@@ -923,8 +922,8 @@ Anima.register("lipids", {
     }
     for (let i = 0; i < 2; i++) {
       const x = M.x + M.w * (0.25 + i * 0.45) + Math.sin(time * 0.4 + i) * M.w * 0.05, y = M.y + (yMem - M.y) * (0.34 + i * 0.12) + Math.cos(time * 0.5 + i) * 3;
-      particle(x, y, ir * 1.3, { kind: "lpa", tail: 0.15 + Math.sin(time * 0.6 + i) * 0.2, tailK: 2.4, rot: 0.3 });
-      if (i === 1) lpaPick = [x, y];
+      const Lq = particle(x, y, ir * 1.3, { kind: "lpa", tail: 0.15 + Math.sin(time * 0.6 + i) * 0.2, tailK: 2.4, rot: 0.3 });
+      if (i === 1) lpaPick = Lq.mid || [x, y];
     }
     // 右侧：斑块变稳定（纤维帽变厚、脂质核心变小）
     let plaqueP = null;
@@ -940,7 +939,7 @@ Anima.register("lipids", {
     const pf = plaqueP || ldlPick || [M.x + M.w * 0.3, M.y + M.h * 0.2];
     const lp = lpaPick;
     tag("fewer", on("fewer") && (n ? T < 6.5 : true), pf[0], pf[1], n ? A.x + A.w * 0.5 : A.x + A.w * 0.835, A.y + LF() * (n ? 0.9 : 0.7), "LDL 小船少了，斑块更稳定", LP.ok);
-    tag("lpaStay", on("lpaStay") && (n ? T >= 6.5 : true), lp[0], lp[1] - ir, n ? A.x + A.w * 0.5 : M.x + M.w * 0.45, A.y + LF() * (n ? 0.9 : 0.7), "Lp(a) 变化不大，其他指标要管得更严", LP.apoa[1]);
+    tag("lpaStay", on("lpaStay") && (n ? T >= 6.5 : true), lp[0], lp[1], n ? A.x + A.w * 0.5 : M.x + M.w * 0.45, A.y + LF() * (n ? 0.9 : 0.7), "Lp(a) 变化不大，其他指标要管得更严", LP.apoa[1]);
   }
 
   function drawScene(i, live, T) {
