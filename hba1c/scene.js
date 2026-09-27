@@ -19,40 +19,40 @@ Anima.register("hba1c", {
   }, () => {
   const CH = [
     { title: "指尖血糖：只是一张快照", a1c: 6.8, gl: 0.5, harm: 0,
-      as: "warn", pill: ["指尖血糖", "", "ok"],
+      as: "warn", pill: ["指尖血糖", "", "ok"], pn: ["指尖血糖", ""],
       text: "扎一下手指测的血糖，就像给血糖拍了一张照片，只反映扎针的那一刻。刚吃完饭、刚运动完、心里一紧张，数字都会差不少。想知道这几个月血糖控制得怎么样，一张照片不够，得翻一翻账本，这本账就是糖化血红蛋白。",
       fact: "指尖血糖看“这一刻”，糖化血红蛋白（HbA1c）看“这几个月”",
       labels: ["snap", "ledger"] },
     { title: "糖会自己粘上血红蛋白", a1c: 7.4, gl: 1, harm: 0,
-      as: "warn", pill: ["粘上以后", "不会掉", "warn"],
+      as: "warn", pill: ["粘上以后", "不会掉", "warn"], pn: ["粘上", "不会掉"],
       text: "红细胞里装满了血红蛋白，它由四条链抱成一团，负责运送氧气。血里的葡萄糖会进到红细胞里，不用任何酶帮忙，自己慢慢粘到血红蛋白上。刚挨上时还能松开，时间一长就粘牢了，再也掉不下来。血糖越高，粘上的就越多。",
       fact: "糖化血红蛋白 = 粘了糖的血红蛋白，占全部血红蛋白的百分比",
       labels: ["hb", "stick", "firm"] },
     { title: "红细胞活约 120 天", a1c: 7.2, gl: 0.6, harm: 0,
-      as: "warn", pill: ["红细胞寿命", "约 120 天", "ok"],
+      as: "warn", pill: ["红细胞寿命", "约 120 天", "ok"], pn: ["寿命", "约120天"],
       text: "一个红细胞大约能活120天。它在骨髓里出生，在血管里一圈圈地转，身上粘的糖越攒越多，老了就被脾脏回收。血里新老红细胞同时都有，所以糖化血红蛋白反映的是近两三个月的平均血糖，其中最近一个月的分量最重。",
       fact: "最近约 1 个月的血糖，大约占了结果的一半",
       labels: ["born", "weight"] },
     { title: "数字怎么看", a1c: 6.5, gl: 0.5, harm: 0,
-      as: "warn", pill: ["控制目标", "多数 < 7%", "ok"],
+      as: "warn", pill: ["控制目标", "多数 < 7%", "ok"], pn: ["目标", "<7%"],
       text: "糖化血红蛋白用百分比表示。没有糖尿病的人，一般低于约6%。达到6.5%或以上，可以作为诊断糖尿病的标准之一，但要在标准化的实验室检测。多数成年糖尿病患者的控制目标是低于7%；老人、容易低血糖的人可以适当放宽，具体听医生的。",
       fact: "我国 2020 版指南已把 HbA1c ≥ 6.5% 纳入糖尿病诊断标准",
       labels: ["norm", "dx", "goal"] },
     { title: "长期偏高：糖也粘在血管上", a1c: 8.8, gl: 1, harm: 1,
-      as: "bad", pill: ["并发症风险", "升高", "bad"],
+      as: "bad", pill: ["并发症风险", "升高", "bad"], pn: ["风险", "升高"],
       text: "糖不只粘在血红蛋白上。血管壁、眼睛、肾脏和神经里的蛋白，也会被慢慢糖化，变硬变脆，还会堆出糖化终产物。糖化血红蛋白长期偏高，说明全身都泡在高糖里，眼底、肾脏和神经里的小血管往往最先受累，心脑血管的风险也会升高。",
       fact: "把糖化血红蛋白降下来，并发症的风险也会跟着下降",
       labels: ["wall", "age", "organ"] },
     { title: "账本也会记错", a1c: 7.0, gl: 0.6, harm: 0,
-      as: "warn", pill: ["结果", "可能不准", "warn"],
+      as: "warn", pill: ["结果", "可能不准", "warn"], pn: ["结果", "会失准"],
       text: "有些情况会让这本账不准：贫血、失血、输血、怀孕、某些血红蛋白病和肾病，都可能让结果偏高或偏低。它只看平均数，看不出血糖忽高忽低，也看不出有没有低血糖。所以还要配合指尖血糖或动态血糖监测，看看一天里有多少时间在目标范围内。",
       fact: "目标范围内时间（TIR）：多数人目标 > 70%，具体以医生建议为准",
       labels: ["same", "low", "life"] },
     { title: "按时对账，慢慢降下来", a1c: 6.8, gl: 0.4, harm: 0,
-      as: "ok", pill: ["复查", "约每 3 个月", "ok"],
+      as: "ok", pill: ["复查", "约每 3 个月", "ok"], pn: ["复查", "每3个月"],
       text: "糖尿病患者一般每三个月查一次糖化血红蛋白，达标又稳定以后，可以半年查一次。吃饭定时定量、坚持运动、按时用药，数字会一点一点降下来。不过它不是全部，血压、血脂和体重也要一起管好，定期找医生对一对账。",
       fact: "一般每 3 个月查一次；达标且稳定后，可每 6 个月查一次",
-      labels: ["every3", "half", "more"] },
+      labels: ["every3", "half"] },
   ];
   const DUR = 12;
 
@@ -228,14 +228,15 @@ Anima.register("hba1c", {
   const snapNow = (T) => SNAPS[Math.floor(Math.max(0, T - 0.4) / 1.8) % SNAPS.length];
   // 第 4 幕：刻度尺上的游标
   const pointer = (T) => 6.4 - 1.1 * Math.cos(T * 0.55);
-  function a1cCol(v) { return v < 6.5 ? K.ok : v < 7 ? K.warn : v < 8 ? "#e0773a" : K.red; }
+  function a1cCol(v) { return v < 6 ? K.ok : v < 7 ? K.warn : v < 8 ? "#e0773a" : K.red; }
   function pills() {
     const c = CH[cur], p = c.pill;
     const st = (s) => (s === "ok" ? K.ok : s === "warn" ? K.warn : K.red);
-    let v = S.a1c, lc = st(c.as), rv = p[1], rc = st(p[2]);
+    const nn = nar();
+    let v = S.a1c, lc = st(c.as), rl = nn ? c.pn[0] : p[0], rv = nn ? c.pn[1] : p[1], rc = st(p[2]);
     if (cur === 3) { v = pointer(lt); lc = a1cCol(v); }
-    if (cur === 0) { const sn = snapNow(lt), g = dayG(sn[0]); rv = g.toFixed(1) + " mmol/L"; rc = g > 7.8 ? K.warn : K.ok; }
-    return { lv: v.toFixed(1) + "%", lc, rl: p[0], rv, rc };
+    if (cur === 0) { const sn = snapNow(lt), g = dayG(sn[0]); rv = g.toFixed(1) + (nn ? "" : " mmol/L"); rc = g > 7.8 ? K.warn : K.ok; }
+    return { lv: v.toFixed(1) + "%", lc, rl, rv, rc };
   }
   function contentTop() {
     const fs = Math.max(12, W / 60) * Anima.UI, h = fs * 1.4 + 14, P = pills();
@@ -268,8 +269,8 @@ Anima.register("hba1c", {
     const { A, Lg, n } = g;
     const r1 = n ? { x: A.x, y: A.y, w: A.w, h: A.h * 0.56 } : { x: A.x, y: A.y + A.h * 0.04, w: A.w * 0.56, h: A.h * 0.9 };
     const r2 = n ? { x: A.x, y: A.y + A.h * 0.6, w: A.w, h: A.h * 0.4 } : { x: A.x + A.w * 0.6, y: A.y + A.h * 0.04, w: A.w * 0.4, h: A.h * 0.94 - Lg.bh - 14 };
-    const C = frame(r1, { x0: 0, x1: 24, y0: 3, y1: 12.5, title: n ? "" : "一天的血糖（mmol/L）",
-      yt: [[4, "4"], [6, "6"], [8, "8"], [10, "10"], [12, "12"]],
+    const C = frame(r1, { x0: 0, x1: 24, y0: 3, y1: n ? 13.5 : 12.5, title: n ? "" : "一天的血糖（mmol/L）",
+      yt: n ? [[4, "4"], [8, "8"], [12, "12"]] : [[4, "4"], [6, "6"], [8, "8"], [10, "10"], [12, "12"]],
       xt: [[0, "0点", "left"], [6, "6点"], [12, "12点"], [18, "18点"], [24, "24点", "right"]] });
     const lw = Math.max(2, H * 0.0065);
     // 曲线下方淡淡的面积
@@ -279,11 +280,13 @@ Anima.register("hba1c", {
     plot(C, dayG, 0, 24, K.day, lw);
     // 曲线上的小字：饭后、运动后、紧张
     const fs = C.fs * 0.95;
-    [[8.2, "早饭"], [13.1, "午饭"], [19.3, "晚饭"]].forEach((m) => txt(m[1], C.X(m[0]), C.Y(dayG(m[0])) - fs * 1.4, fs, K.soft, "center", 500));
-    txt("紧张", C.X(10.2), C.Y(dayG(10.2)) - fs * 1.1, fs, K.soft, "center", 500);
-    txt("运动", C.X(16.2), C.Y(dayG(16.2)) + fs * 1.2, fs, K.soft, "center", 500);
     // 快照：竖着的一条亮光 + 闪光点 + 读数
     const sn = snapNow(T), sh = sn[0], sv = dayG(sh), sx = C.X(sh), sy = C.Y(sv);
+    if (!n) {
+      [[8.2, "早饭"], [13.1, "午饭"], [19.3, "晚饭"]].forEach((m) => { if (Math.abs(m[0] - sh) > 0.5) txt(m[1], C.X(m[0]), C.Y(dayG(m[0])) - fs * 1.4, fs, K.soft, "center", 500); });
+      if (Math.abs(10.2 - sh) > 0.5) txt("紧张", C.X(10.2), C.Y(dayG(10.2)) - fs * 1.1, fs, K.soft, "center", 500);
+      txt("运动", C.X(16.2), C.Y(dayG(16.2)) + fs * 1.2, fs, K.soft, "center", 500);
+    }
     const ph = (Math.max(0, T - 0.4) / 1.8) % 1, flash = clamp(1 - ph * 3, 0, 1);
     ctx.fillStyle = rgba(K.snap, 0.18 + 0.25 * flash); ctx.fillRect(sx - lw * 2.2, C.py, lw * 4.4, C.ph);
     const gg = ctx.createRadialGradient(sx, sy, 0, sx, sy, lw * 9);
@@ -323,8 +326,8 @@ Anima.register("hba1c", {
     txt("平均", ax + aw / 2, ay + C2.fs * 0.82, C2.fs, K.avg, "center", 700);
     ctx.restore();
     const on = (k) => live && T > 0.6 && CH[0].labels.indexOf(k) >= 0;
-    put(g, "snap", on("snap"), sx, sy - lw * 2.4, n ? A.x + A.w * 0.5 : C.X(12), C.py + C.fs * 0.6, "指尖血糖：只拍下这一刻", "#d98200");
-    put(g, "ledger", on("ledger") && avgA > 0.5, C2.X(-20), C2.Y(8.2), n ? A.x + A.w * 0.5 : C2.X(-45), n ? C2.py + C2.fs * 0.2 : C2.Y(11.6), "糖化血红蛋白：看近几个月的平均", K.avg);
+    put(g, "snap", on("snap"), sx, sy - lw * 2.4, n ? C.X(15) : C.X(12), C.py + C.fs * 0.6, "指尖血糖：只拍下这一刻", "#d98200");
+    put(g, "ledger", on("ledger") && avgA > 0.5, C2.X(-20), C2.Y(8.2), n ? A.x + A.w * 0.5 : C2.X(-45), n ? C2.py + C2.fs * 0.2 : C2.Y(11.6), n ? "糖化血红蛋白：看平均" : "糖化血红蛋白：看近几个月的平均", K.avg);
   }
 
   // ---- 第 2 幕：红细胞里的血红蛋白，葡萄糖自己粘上 ----
@@ -420,13 +423,14 @@ Anima.register("hba1c", {
       res.push({ x, y, u, firm });
     });
     ctx.restore();
-    txt("放大：一个血红蛋白", zc.x, zc.y + Rz + SF() * 0.95, SF(), K.soft, "center", 500);
+    if (!n) txt("放大：一个血红蛋白", zc.x, zc.y + Rz + SF() * 0.95, SF(), K.soft, "center", 500);
     const on = (k) => live && T > 0.6 && CH[1].labels.indexOf(k) >= 0;
     const R0 = res[0], R1 = res[1];
     put(g, "hb", on("hb"), pk.x - pr * 0.7, pk.y - pr * 0.7, n ? A.x + A.w * 0.26 : rc.x, n ? A.y : rc.y - Rr - LF() * 1.4, n ? "装满血红蛋白" : "红细胞里装满血红蛋白", K.hb[1]);
     const lx = n ? A.x + A.w * 0.72 : Math.min(zc.x + Rz + A.w * 0.12, W - Lg.bw - 40);
-    put(g, "stick", on("stick") && R0.u > 0.9, R0.x, R0.y, n ? A.x + A.w * 0.72 : lx, n ? A.y : zc.y - Rz * 0.62, "不用酶，糖自己粘上", K.glu[1]);
-    put(g, "firm", on("firm") && R0.firm > 0.5, R1.u > 0.9 ? R1.x : R0.x, R1.u > 0.9 ? R1.y : R0.y, n ? A.x + A.w * 0.5 : lx, n ? A.y + A.h : zc.y - Rz * 0.1, "粘牢了，就不再掉下来", K.glu[2]);
+    // 窄屏上两个标注轮流出现在同一个位置
+    put(g, "stick", on("stick") && R0.u > 0.9 && !(n && R0.firm > 0.5), R0.x, R0.y, n ? A.x + A.w * 0.72 : lx, n ? A.y : zc.y - Rz * 0.62, "不用酶，糖自己粘上", K.glu[1]);
+    put(g, "firm", on("firm") && R0.firm > 0.5, R1.u > 0.9 ? R1.x : R0.x, R1.u > 0.9 ? R1.y : R0.y, n ? A.x + A.w * 0.7 : lx, n ? A.y : zc.y - Rz * 0.1, "粘牢了，就不再掉下来", K.glu[2]);
   }
 
   // ---- 第 3 幕：红细胞传送带（约 120 天）+ 各时段的分量 ----
@@ -434,7 +438,7 @@ Anima.register("hba1c", {
     const { A, Lg, n } = g;
     const x0 = A.x + A.w * (n ? 0.06 : 0.07), x1 = A.x + A.w * (n ? 0.94 : 0.76), span = x1 - x0;
     const X = (d) => x1 - d / 120 * span;
-    const yC = A.y + A.h * (n ? 0.24 : 0.25), yAx = A.y + A.h * (n ? 0.47 : 0.46), yB = A.y + A.h * (n ? 0.97 : 0.95);
+    const yC = A.y + A.h * (n ? 0.27 : 0.25), yAx = A.y + A.h * (n ? 0.47 : 0.46), yB = A.y + A.h * (n ? 0.97 : 0.95);
     const rr = Math.min(span / 16, A.h * 0.1, IR() * 1.4);
     // 血流的淡色带
     const bg = ctx.createLinearGradient(0, yC - rr * 2.4, 0, yC + rr * 2.4);
@@ -461,8 +465,10 @@ Anima.register("hba1c", {
       if (age > 70 && age < 110 && (!old || age > old.age)) old = { x, y, age };
     }
     const fs = SF();
-    txt("骨髓：新生", x1 + rr * (n ? -0.2 : 1.9), yC - rr * 2.2 - fs * 0.7, fs, K.soft, n ? "right" : "left", 500);
-    txt("约 120 天：被脾脏回收", x0 - rr * (n ? 0.5 : 1.2), yC + rr * 2.2 + fs * 0.8, fs, K.soft, "left", 500);
+    if (!n) {
+      txt("骨髓：新生", x1 + rr * 1.9, yC - rr * 2.2 - fs * 0.7, fs, K.soft, "left", 500);
+      txt("约 120 天：被脾脏回收", x0 - rr * 1.2, yC + rr * 2.2 + fs * 0.8, fs, K.soft, "left", 500);
+    }
     if (!n) {
       // 右侧骨髓的小图：出生点
       const bx = x1 + rr * 2.8, gg = ctx.createRadialGradient(bx, yC, 0, bx, yC, rr * 1.4);
@@ -472,7 +478,7 @@ Anima.register("hba1c", {
     // 时间轴
     ctx.strokeStyle = K.line; ctx.lineWidth = 1.3;
     ctx.beginPath(); ctx.moveTo(x0, yAx); ctx.lineTo(x1, yAx); ctx.stroke();
-    [[0, "今天"], [30, "1 个月前"], [60, "2 个月前"], [90, "3 个月前"], [120, "120 天"]].forEach((tk, k) => {
+    [[0, n ? "今天：新生" : "今天"], [30, "1 个月前"], [60, "2 个月前"], [90, "3 个月前"], [120, n ? "约 120 天：回收" : "120 天"]].forEach((tk, k) => {
       ctx.beginPath(); ctx.moveTo(X(tk[0]), yAx - 3); ctx.lineTo(X(tk[0]), yAx + 3); ctx.stroke();
       if (!(n && (k === 1 || k === 3))) txt(tk[1], X(tk[0]), yAx + fs * 0.95, fs * 0.92, K.soft, k === 0 ? "right" : k === 4 ? "left" : "center", 500);
     });
@@ -522,9 +528,9 @@ Anima.register("hba1c", {
     for (let p = 4; p <= 10; p++) {
       ctx.strokeStyle = K.line; ctx.beginPath(); ctx.moveTo(X(p), by + bh); ctx.lineTo(X(p), by + bh + 4); ctx.stroke();
       txt(p + "%", X(p), by + bh + fs * 1.05, fs, K.ink, p === 4 ? "left" : p === 10 ? "right" : "center", 700);
-      if (p >= 5 && p <= 9) txt("≈" + ((28.7 * p - 46.7) / 18).toFixed(1), X(p), by + bh + fs * 2.4, fs * 0.88, K.soft, "center", 500);
+      if (p >= (n ? 6 : 5) && p <= 9) txt("≈" + ((28.7 * p - 46.7) / 18).toFixed(1), X(p), by + bh + fs * 2.4, fs * 0.88, K.soft, "center", 500);
     }
-    txt(n ? "≈平均血糖" : "≈ 平均血糖 mmol/L", X(4), by + bh + fs * 2.4, fs * 0.88, K.soft, "left", 500);
+    txt(n ? "≈平均血糖" : "≈ 平均血糖（mmol/L）", X(4), by + bh + fs * 2.4, fs * 0.88, K.soft, "left", 500);
     // 6%、6.5%、7% 三条线
     const lw = Math.max(1.5, H * 0.004);
     ctx.setLineDash([2, 3]); ctx.strokeStyle = K.soft; ctx.lineWidth = lw * 0.8;
@@ -535,16 +541,18 @@ Anima.register("hba1c", {
     ctx.beginPath(); ctx.moveTo(X(7), by - bh * 0.7); ctx.lineTo(X(7), by + bh * 1.5); ctx.stroke(); ctx.setLineDash([]);
     // 可放宽：从 7% 往右的虚线箭头
     const ay = by + bh + fs * 3.7;
-    arrow([[X(7), ay], [X(7.5), ay], [X(8), ay]], K.ok, Math.max(2, lw), 0.75, "go");
-    txt(n ? "个体化，可放宽" : "老人、易低血糖者：可适当放宽", X(8) + fs * 0.6, ay, fs * 0.9, "#23784a", "left", 500);
+    if (!n) {
+      arrow([[X(7), ay], [X(7.5), ay], [X(8), ay]], K.ok, Math.max(2, lw), 0.75, "go");
+      txt("老人、易低血糖者：可适当放宽", X(8) + fs * 0.6, ay, fs * 0.9, "#23784a", "left", 500);
+    }
     // 游标
     const px = X(v), py = by - bh * 0.15;
     ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - bh * 0.5, py - bh * 0.8); ctx.lineTo(px + bh * 0.5, py - bh * 0.8); ctx.closePath();
     ctx.fillStyle = a1cCol(v); ctx.fill(); ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1.2; ctx.stroke();
     // 100 个血红蛋白里，有几个粘了糖
-    const gy0 = ay + fs * 1.6, gh = A.y + A.h - gy0 - fs * 1.6;
-    const cols = n ? 10 : 20, rows = 100 / cols;
-    const cell = Math.min((gh - fs * 1.8) / rows, (n ? A.w * 0.5 : A.w * 0.46) / cols), gx0 = n ? A.x + A.w * 0.04 : A.x + A.w * 0.05;
+    const gy0 = n ? ay + fs * 1.6 : ay + fs * 1.6, gh = A.y + A.h - gy0 - (n ? 2 : fs * 1.6);
+    const cols = 20, rows = 100 / cols;
+    const cell = Math.min((gh - fs * 1.5) / rows, (n ? A.w * 0.92 : A.w * 0.56) / cols), gx0 = n ? A.x + (A.w - cell * cols) / 2 : A.x + A.w * 0.05;
     const kGly = Math.round(v);
     txt("100 个血红蛋白里，约 " + kGly + " 个粘了糖", gx0, gy0 + fs * 0.4, fs, K.ink, "left", 700);
     const gy1 = gy0 + fs * 1.4;
@@ -561,8 +569,8 @@ Anima.register("hba1c", {
     const tyU = by - bh * 0.8 - LF() * 1.6;
     put(g, "norm", on("norm"), X(5.2), by + bh * 0.5, n ? A.x + A.w * 0.24 : X(5.0), tyU, n ? "一般人：约 6% 以下" : "没有糖尿病：一般低于约 6%", "#3d9a60");
     put(g, "dx", on("dx"), X(6.5), by - bh * 0.7, n ? A.x + A.w * 0.72 : X(7.6), tyU, n ? "≥ 6.5%：诊断标准之一" : "≥ 6.5%：可作诊断糖尿病的标准之一", K.ink);
-    const gx = n ? A.x + A.w * 0.76 : A.x + A.w * 0.6;
-    put(g, "goal", on("goal"), X(7), by + bh * 1.5, gx, gy0 + gh * (n ? 0.45 : 0.3), n ? "多数糖友目标 < 7%" : "多数成年糖友目标 < 7%，因人而异", K.ok);
+    const gx = n ? A.x + A.w * 0.72 : X(8.7);
+    put(g, "goal", on("goal"), X(7), by + bh * 1.5, gx, n ? ay + fs * 0.3 : ay + LF() * 2.2, n ? "多数糖友目标 < 7%" : "多数成年糖友目标 < 7%，因人而异", K.ok);
   }
 
   // ---- 第 5 幕：血管壁的蛋白也被糖化 ----
@@ -623,7 +631,7 @@ Anima.register("hba1c", {
     const oy0 = wB + A.h * 0.05, oh = A.y + A.h - oy0, ox0 = A.x, ow = n ? A.w : A.w - Lg.bw - 18;
     const cw = ow / 3, org = [];
     ["眼底", "肾脏", "神经"].forEach((nm, k) => {
-      const x = ox0 + cw * k + cw / 2, y = oy0 + oh * 0.45, s = Math.min(cw * 0.26, oh * 0.32);
+      const x = ox0 + cw * k + cw / 2, y = oy0 + oh * (n ? 0.5 : 0.45), s = Math.min(cw * 0.26, oh * (n ? 0.28 : 0.32));
       const warn = 0.5 + 0.5 * Math.sin(time * 1.6 + k);
       const gl = ctx.createRadialGradient(x, y, 0, x, y, s * 1.9);
       gl.addColorStop(0, rgba(K.fire, 0.18 + 0.12 * warn)); gl.addColorStop(1, rgba(K.fire, 0));
@@ -640,7 +648,7 @@ Anima.register("hba1c", {
     const ap = ageP || { x: W * 0.6, y: vB + wallH * 0.5 };
     put(g, "age", on("age") && !!ageP, ap.x, ap.y, n ? A.x + A.w * 0.7 : ap.x + A.w * 0.08, n ? vT + vH * 0.5 : vT + vH * 0.3, "粘久了，变成糖化终产物", K.age[1]);
     const o1 = org[1];
-    put(g, "organ", on("organ"), o1.x + o1.s * 0.8, o1.y - o1.s * 0.6, n ? A.x + A.w * 0.5 : o1.x + cw * 0.55, oy0 + LF() * 0.2, "小血管最先受累", "#d98200");
+    put(g, "organ", on("organ"), o1.x + o1.s * 0.8, o1.y - o1.s * 0.6, n ? o1.x + cw * 0.62 : o1.x + cw * 0.55, n ? oy0 - LF() * 0.4 : oy0 + LF() * 0.2, "小血管最先受累", "#d98200");
   }
   function fundus(x, y, s) {
     ctx.beginPath(); ctx.arc(x, y, s, 0, TAU);
@@ -710,7 +718,7 @@ Anima.register("hba1c", {
       yt: [[3.9, "3.9"], [10, "10.0"]], xt: [[0, "0点", "left"], [12, "12点"], [24, "24点", "right"]] });
     // 目标范围 3.9～10.0 mmol/L
     ctx.fillStyle = K.band; ctx.fillRect(C.px, C.Y(10), C.pw, C.Y(3.9) - C.Y(10));
-    txt("目标范围", C.px + C.pw - C.fs * 0.4, C.Y(10) + C.fs * 0.85, C.fs, "#3f8a62", "right", 700);
+    txt("目标范围", C.px + C.fs * 0.4, C.Y(10) + C.fs * 0.85, C.fs, "#3f8a62", "left", 700);
     const reveal = clamp(T / 3.5, 0, 1), lw = Math.max(2, H * 0.006);
     ctx.save(); ctx.beginPath(); ctx.rect(C.px, C.py - lw * 3, C.pw * reveal + 1, C.ph + lw * 6); ctx.clip();
     // 低于 3.9 的那一截标蓝
@@ -737,34 +745,47 @@ Anima.register("hba1c", {
     ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(r2.x, r2.y, r2.w, r2.h, 10); ctx.fill();
     ctx.strokeStyle = K.card; ctx.lineWidth = 1; ctx.stroke();
     const rows = [["寿命正常 约 120 天", 1, "结果可靠", K.soft], ["寿命变短", 0.55, "可能偏低", K.low], ["寿命变长", 1.3, "可能偏高", K.swing]];
-    const top = r2.y + (n ? fs * 0.9 : fs * 2.4), rh = (r2.h - (top - r2.y) - fs * (n ? 2.6 : 3.4)) / 3;
-    if (!n) txt("红细胞活多久，账就记多久", r2.x + fs * 0.8, r2.y + fs * 1.2, fs * 0.95, K.ink, "left", 700);
-    const barX = lx + (n ? lwid * 0.3 : lwid * 0.02), full = (n ? lwid * 0.36 : lwid * 0.62) / 1.3;
     let lifeP = null;
+    if (n) {
+      // 窄屏：三列并排，每列 = 名字 / 寿命条 / 结果
+      const cw = r2.w / 3, rr = Math.min(fs * 0.62, r2.h * 0.1), full = cw * 0.5 / 1.3;
+      rows.forEach((rw, k) => {
+        const cx = r2.x + cw * k + cw / 2, y1 = r2.y + Math.max(fs * 0.9, r2.h * 0.2), y2 = r2.y + r2.h * 0.45, y3 = r2.y + r2.h * 0.68;
+        txt(rw[0].replace(" 约 120 天", ""), cx, y1, fs * 0.88, K.ink, "center", 500);
+        const bx = cx - full * 0.65, bw = full * rw[1] * ease(clamp((T - 0.8 - k * 0.5) / 1, 0, 1));
+        ctx.fillStyle = rgba(K.rbc[1], 0.22); ctx.beginPath(); ctx.roundRect(bx, y2 - rr * 0.6, Math.max(rr, bw), rr * 1.2, rr * 0.6); ctx.fill();
+        rbcSide(bx + Math.max(rr, bw), y2, rr, 1);
+        txt(rw[2], cx, y3, fs * 0.9, rw[3], "center", 700);
+      });
+      txt("贫血、失血、输血、怀孕、血红蛋白病、肾病等", r2.x + r2.w / 2, r2.y + r2.h - fs * 0.75, fs * 0.82, K.soft, "center", 500);
+    } else {
+    const top = r2.y + fs * 2.4, rh = (r2.h - (top - r2.y) - fs * 3.4) / 3;
+    txt("红细胞活多久，账就记多久", r2.x + fs * 0.8, r2.y + fs * 1.2, fs * 0.95, K.ink, "left", 700);
+    const barX = lx + lwid * 0.02, full = lwid * 0.62 / 1.3;
     rows.forEach((rw, k) => {
       const y = top + rh * k + rh * 0.5, rr = Math.min(rh * 0.2, fs * 0.8);
-      if (n) txt(rw[0].replace(" 约 120 天", ""), lx, y, fs * 0.9, K.ink, "left", 500);
-      else txt(rw[0], barX, y - rh * 0.28, fs * 0.9, K.ink, "left", 500);
-      const by = n ? y : y + rh * 0.12, bw = full * rw[1] * ease(clamp((T - 0.8 - k * 0.5) / 1, 0, 1));
+      txt(rw[0], barX, y - rh * 0.28, fs * 0.9, K.ink, "left", 500);
+      const by = y + rh * 0.12, bw = full * rw[1] * ease(clamp((T - 0.8 - k * 0.5) / 1, 0, 1));
       ctx.fillStyle = rgba(K.rbc[1], 0.22); ctx.beginPath(); ctx.roundRect(barX, by - rr * 0.6, Math.max(rr, bw), rr * 1.2, rr * 0.6); ctx.fill();
       rbcSide(barX + Math.max(rr, bw), by, rr, 1);
       txt(rw[2], barX + full * 1.3 + rr * 2.4, by, fs * 0.92, rw[3], "left", 700);
       if (k === 1) lifeP = { x: barX + bw * 0.5, y: by };
     });
-    txt(n ? "贫血、失血、输血、怀孕、血红蛋白病、肾病等" : "贫血 · 失血 · 输血 · 怀孕 · 血红蛋白病 · 肾病……", r2.x + r2.w / 2, r2.y + r2.h - fs * (n ? 1.0 : 1.3), fs * (n ? 0.85 : 0.88), K.soft, "center", 500);
+    txt("贫血 · 失血 · 输血 · 怀孕 · 血红蛋白病 · 肾病……", r2.x + r2.w / 2, r2.y + r2.h - fs * 1.3, fs * 0.88, K.soft, "center", 500);
+    }
     const on = (k) => live && T > 0.6 && CH[5].labels.indexOf(k) >= 0;
     put(g, "same", on("same") && avA > 0.5, C.X(9), C.Y(swingG(9)), n ? A.x + A.w * 0.3 : C.X(6.5), C.py + C.fs * 0.3, "一个平稳，一个忽高忽低", K.swing);
     put(g, "low", on("low") && reveal > 0.95, C.X(lowH), C.Y(lowV), n ? A.x + A.w * 0.72 : C.X(lowH) + A.w * 0.03, C.Y(3.9) + C.fs * 2.6, "低血糖也藏在平均数里", K.low);
     const cy = r2.y + r2.h - fs * (n ? 1.0 : 1.3);
-    put(g, "life", on("life"), r2.x + r2.w * (n ? 0.3 : 0.4), cy + fs * 0.5, n ? A.x + A.w * 0.5 : r2.x + r2.w * 0.36, n ? r2.y - LF() * 0.2 : r2.y + r2.h + LF() * 1.5, "这些情况会让账不准", K.soft);
+    if (!n) put(g, "life", on("life"), r2.x + r2.w * (n ? 0.3 : 0.4), cy + fs * 0.5, n ? A.x + A.w * 0.5 : r2.x + r2.w * 0.36, n ? r2.y - LF() * 0.2 : r2.y + r2.h + LF() * 1.5, "这些情况会让账不准", K.soft);
   }
 
   // ---- 第 7 幕：每 3 个月对一次账 ----
   const PTS = [[0, 8.4], [3, 7.7], [6, 7.2], [9, 6.9], [12, 6.8], [18, 6.7]];
   function scene6(g, live, T) {
     const { A, Lg, n } = g;
-    const r1 = n ? { x: A.x, y: A.y, w: A.w, h: A.h * 0.64 } : { x: A.x, y: A.y + A.h * 0.02, w: A.w * 0.62, h: A.h * 0.96 };
-    const C = frame(r1, { x0: 0, x1: 18.8, y0: 6, y1: 9, title: n ? "" : "每次复查的糖化血红蛋白（%）",
+    const r1 = n ? { x: A.x, y: A.y, w: A.w, h: A.h * 0.6 } : { x: A.x, y: A.y + A.h * 0.02, w: A.w * 0.62, h: A.h * 0.96 };
+    const C = frame(r1, { x0: 0, x1: 18.8, y0: 6, y1: 9.3, title: n ? "" : "每次复查的糖化血红蛋白（%）",
       yt: [[6, "6"], [7, "7"], [8, "8"], [9, ""]],
       xt: [[0, "开始", "left"], [3, "3 月"], [6, "6 月"], [9, "9 月"], [12, "1 年"], [18, "1 年半"]] });
     const lw = Math.max(2, H * 0.006);
@@ -776,7 +797,7 @@ Anima.register("hba1c", {
     gg.addColorStop(0, rgba(K.ok, 0.16)); gg.addColorStop(1, rgba(K.ok, 0.02));
     ctx.fillStyle = gg; ctx.fillRect(C.px, C.Y(7), C.pw, C.Y(6) - C.Y(7));
     plot(C, () => 7, 0, 18.8, K.ok, lw, [lw * 2.4, lw * 1.6], 2);
-    txt("目标 < 7%", C.px + C.pw - C.fs * 0.3, C.Y(7) - C.fs * 0.8, C.fs, "#23784a", "right", 700);
+    txt("目标 < 7%", C.px + C.fs * 0.4, C.Y(7) + C.fs * 0.9, C.fs, "#23784a", "left", 700);
     // 一次次复查的点，依次出现
     const shown = clamp(T / 1.3, 0, PTS.length);
     ctx.strokeStyle = K.hb[1]; ctx.lineWidth = lw; ctx.lineJoin = "round";
@@ -795,23 +816,24 @@ Anima.register("hba1c", {
       ctx.save(); ctx.globalAlpha *= a;
       ctx.beginPath(); ctx.arc(x, y, rr, 0, TAU); ctx.fillStyle = p[1] < 7 ? K.ok : K.hb[1]; ctx.fill();
       ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1.5; ctx.stroke();
-      txt(p[1].toFixed(1), x, y - rr - C.fs * 0.8, C.fs, K.ink, "center", 700);
+      txt(p[1].toFixed(1), x, p[1] < 7 ? y + rr + C.fs * 0.85 : y - rr - C.fs * 0.8, C.fs, K.ink, "center", 700);
       ctx.restore();
       last = { x, y, i };
     });
     // 右：能做什么，还要看什么
-    const r2 = n ? { x: A.x, y: A.y + A.h * 0.68, w: A.w, h: A.h * 0.32 } : { x: A.x + A.w * 0.66, y: A.y + A.h * 0.02, w: A.w * 0.34, h: A.h * 0.96 - Lg.bh - 14 };
+    const r2 = n ? { x: A.x, y: A.y + A.h * 0.62, w: A.w, h: A.h * 0.38 } : { x: A.x + A.w * 0.66, y: A.y + A.h * 0.02, w: A.w * 0.34, h: A.h * 0.96 - Lg.bh - 14 };
     const fs = SF();
     const DO = [["定时定量吃饭", "bowl"], ["坚持运动", "shoe"], ["按时用药", "clock"]], MORE = ["血压", "血脂", "体重"];
     const tiles = [];
     if (n) {
       const cw = r2.w / 3;
       DO.forEach((d, k) => {
-        const x = r2.x + cw * k + cw / 2, y = r2.y + r2.h * 0.34, s = Math.min(cw * 0.2, r2.h * 0.24);
+        const s = Math.min(cw * 0.2, r2.h * 0.2), x = r2.x + cw * k + cw / 2, y = r2.y + Math.max(s * 1.25, r2.h * 0.3);
         badge(d[1], x, y, s, k, T);
-        txt(d[0], x, y + s * 1.25 + fs * 0.5, fs * 0.9, K.ink, "center", 500);
+        txt(d[0], x, y + s * 1.2 + fs * 0.55, fs * 0.9, K.ink, "center", 500);
         tiles.push({ x, y, s });
       });
+      txt("还要管好：血压、血脂、体重", r2.x + r2.w / 2, r2.y + r2.h - fs * 0.6, fs * 0.92, K.ink, "center", 700);
     } else {
       ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.roundRect(r2.x, r2.y, r2.w, r2.h, 10); ctx.fill();
       ctx.strokeStyle = K.card; ctx.lineWidth = 1; ctx.stroke();
@@ -828,7 +850,7 @@ Anima.register("hba1c", {
       txt("还要一起管好", r2.x + fs * 0.8, my + fs * 1.1, fs * 0.95, K.ink, "left", 700);
       const cw = (r2.w - fs * 1.6) / 3;
       MORE.forEach((m, k) => {
-        const x = r2.x + fs * 0.8 + cw * k + cw / 2, y = my + fs * 1.8 + (r2.y + r2.h - my - fs * 1.8) * 0.5;
+        const x = r2.x + fs * 0.8 + cw * k + cw / 2, y = my + fs * 2.9;
         ctx.fillStyle = "#f1f5fb"; ctx.beginPath(); ctx.roundRect(x - cw * 0.42, y - fs * 0.85, cw * 0.84, fs * 1.7, fs * 0.85); ctx.fill();
         ctx.strokeStyle = "#c9d3e4"; ctx.stroke();
         txt(m, x, y + 0.5, fs, K.ink, "center", 500);
@@ -836,10 +858,8 @@ Anima.register("hba1c", {
     }
     const on = (k) => live && T > 0.6 && CH[6].labels.indexOf(k) >= 0;
     const p3 = { x: C.X(3), y: C.Y(7.7) };
-    put(g, "every3", on("every3") && shown > 2, p3.x, p3.y, n ? A.x + A.w * 0.3 : C.X(5.2), C.py + C.fs * 0.4, "约每 3 个月查一次", K.hb[1]);
-    put(g, "half", on("half") && shown > 5.5, C.X(15.5), C.Y(6.25), n ? A.x + A.w * 0.72 : C.X(14), C.Y(8.4), "达标稳定后：半年一次", K.ok);
-    // 宽屏右边的卡片里已经写了“还要一起管好”，只在窄屏用标注补上
-    if (n) put(g, "more", on("more"), tiles[1].x, tiles[1].y - tiles[1].s, A.x + A.w * 0.5, r2.y - LF() * 0.3, "血压、血脂、体重也要管好", K.soft);
+    put(g, "every3", on("every3") && shown > 2, p3.x, p3.y, n ? A.x + A.w * 0.42 : C.X(6.5), n ? C.Y(8.7) : C.Y(8.3), "约每 3 个月查一次", K.hb[1]);
+    put(g, "half", on("half") && shown > 5.5, C.X(18), C.Y(6.7), n ? A.x + A.w * 0.72 : C.X(14), C.Y(8.4), "达标稳定后：半年一次", K.ok);
   }
   // 小圆徽章里的简笔图标
   function badge(kind, x, y, s, k, T) {

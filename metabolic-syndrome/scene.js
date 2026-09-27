@@ -35,12 +35,12 @@ Anima.register("metabolic-syndrome", {
       fact: "空腹血糖 ≥ 6.1 或糖负荷后 2 小时 ≥ 7.8 mmol/L，算一项",
       labels: ["resist", "more", "sugar"] },
     { title: "血脂跟着乱了", waist: 96, glu: 6.4, sbp: 138, dbp: 88, tg: 2.2, hdl: 0.95, fat: 1, ir: 1, ins: 1.8, steat: 1, stiff: 0.5,
-      pill: ["甘油三酯", "2.2 mmol/L", "bad"], pillN: ["甘油三酯", "2.2", "bad"],
+      pill: ["甘油三酯", "2.2 mmol/L", "bad"], pillN: ["甘油三酯 mmol/L", "2.2", "bad"],
       text: "大量游离脂肪酸经门静脉直接涌进肝脏，肝脏把它们重新做成甘油三酯：一部分堆在肝里，成了脂肪肝；一部分装进VLDL小船送进血液。于是甘油三酯升高，HDL-C降低，小而密的LDL变多，更容易钻进血管壁。",
       fact: "空腹甘油三酯 ≥ 1.70 或 HDL-C < 1.04 mmol/L，各算一项",
       labels: ["portal", "nafld", "vldl"] },
     { title: "血压升高，血管受伤", waist: 96, glu: 6.4, sbp: 138, dbp: 88, tg: 2.2, hdl: 0.95, fat: 1, ir: 1, ins: 1.8, steat: 1, stiff: 1,
-      pill: ["血压", "138/88 mmHg", "bad"],
+      pill: ["血压", "138/88 mmHg", "bad"], pillN: ["血压 mmHg", "138/88", "bad"],
       text: "胰岛素长期偏高，会让肾脏多留钠、多留水，让交感神经一直处在兴奋状态，血管内皮也变得不够舒张，血压就升高了。高血糖、血脂异常、高血压凑在一起，一起损伤血管，心梗、中风的风险就一层层叠加上去。",
       fact: "血压 ≥ 130/85 mmHg，或已确诊高血压并在治疗，算一项",
       labels: ["bp", "risk"] },
@@ -122,6 +122,7 @@ Anima.register("metabolic-syndrome", {
   }
   const cyc = (P, off) => (((time / P + (off || 0)) % 1) + 1) % 1;
   const lerp = (a, b, t) => a + (b - a) * t;
+  const tallA = (A) => nar() && A.h > A.w * 0.7;
   const onOf = (i, live) => (k) => live && CH[i].labels.indexOf(k) >= 0;
 
   // =================== 通用结构 ===================
@@ -134,7 +135,7 @@ Anima.register("metabolic-syndrome", {
     const core = kind === "vldl" ? ["#f3f6d2", "#cfdc7c"] : kind === "sdl" ? ["#fff0b8", "#e7bf3c"] : kind === "hdl" ? ["#fffbe6", "#f7e6a6"] : ["#fff7da", "#f6dc8a"];
     ctx.beginPath(); ctx.arc(0, 0, rc, 0, TAU); ctx.fillStyle = glossy(0, 0, rc, core[0], core[1]); ctx.fill();
     if (kind === "vldl" && r > 11) {
-      for (let i = 0; i < 4; i++) { const an = i * 1.7 + 0.4, d = rc * (i ? 0.5 : 0); mol("tg", Math.cos(an) * d, Math.sin(an) * d, rc * 0.28, 0.95, an); }
+      for (let i = 0; i < 4; i++) { const an = i * TAU / 4 + 0.6, d = rc * 0.45; mol("tg", Math.cos(an) * d, Math.sin(an) * d, rc * 0.2, 0.9, 0); }
     }
     const hr = Math.max(1.1, r * 0.1), nh = Math.max(8, Math.floor(TAU * (r - hr) / (hr * 2.3)));
     ctx.beginPath();
@@ -304,7 +305,7 @@ Anima.register("metabolic-syndrome", {
       [["m", "glu", "葡萄糖"], ["m", "ins", "胰岛素"], ["m", "insr", "胰岛素受体"], ["m", "glut4", "GLUT4 转运体"], ["minus", "", "信号减弱"]],
       [["m", "ffa", "游离脂肪酸"], ["m", "tg", "甘油三酯"], ["p", "vldl", "VLDL"], ["p", "sdl", "小而密 LDL"], ["p", "hdl", "HDL"]],
       [["m", "na", "钠离子"], ["drop", "", "水"], ["nod", "", "一氧化氮（舒张血管）"], ["bolt", "", "交感神经兴奋"], ["p", "sdl", "小而密 LDL"]],
-      [["m", "adipo", "脂联素"], ["m", "ffa", "游离脂肪酸"], ["band", "#d7efdc", "达标范围"]],
+      [["m", "adipo", "脂联素"], ["m", "ffa", "游离脂肪酸"], ["band", "#d7efdc", "达标范围"], ["band", "#fbe6d6", "超出范围"]],
     ][i];
     if (!n) return L;
     return [
@@ -313,7 +314,7 @@ Anima.register("metabolic-syndrome", {
       [["m", "glu", "葡萄糖"], ["m", "ins", "胰岛素"], ["m", "insr", "受体"], ["minus", "", "信号减弱"]],
       [["m", "ffa", "脂肪酸"], ["p", "vldl", "VLDL"], ["p", "sdl", "小而密LDL"], ["p", "hdl", "HDL"]],
       [["m", "na", "钠"], ["drop", "", "水"], ["nod", "", "一氧化氮"], ["bolt", "", "交感兴奋"]],
-      [["m", "adipo", "脂联素"], ["m", "ffa", "脂肪酸"], ["band", "#d7efdc", "达标范围"]],
+      [["band", "#d7efdc", "达标范围"], ["band", "#fbe6d6", "超出范围"]],
     ][i];
   }
   function legendIcon(it, x, y, s) {
@@ -325,7 +326,7 @@ Anima.register("metabolic-syndrome", {
     else if (k === "nod") noMol(x, y, s * 0.3);
     else if (k === "tape") tapeIcon(x, y, s * 0.42);
     else if (k === "gauge") gaugeIcon(x, y - s * 0.08, s * 0.38);
-    else if (k === "band") { ctx.fillStyle = it[1]; ctx.beginPath(); ctx.roundRect(x - s * 0.45, y - s * 0.25, s * 0.9, s * 0.5, s * 0.25); ctx.fill(); ctx.strokeStyle = "#9fd0aa"; ctx.lineWidth = 1; ctx.stroke(); }
+    else if (k === "band") { ctx.fillStyle = it[1]; ctx.beginPath(); ctx.roundRect(x - s * 0.45, y - s * 0.25, s * 0.9, s * 0.5, s * 0.25); ctx.fill(); ctx.strokeStyle = shade(it[1], "#000000", 0.2); ctx.lineWidth = 1; ctx.stroke(); }
     else TB.legendIcon(it, x, y, s);
   }
   function legend(Lg) {
@@ -350,7 +351,8 @@ Anima.register("metabolic-syndrome", {
   }
 
   // 顶部胶囊在窄屏上可能叠成两行：照引擎 pill() 的算法量一下，内容从胶囊下面开始
-  const waistStr = () => `${S.waist.toFixed(0)} cm`;
+  const waistNow = () => (cur === 5 ? lerp(CH[4].waist, CH[5].waist, ease(clamp((lt - 0.8) / 5, 0, 1))) : S.waist);
+  const waistStr = () => `${waistNow().toFixed(0)} cm`;
   const pillOf = (i) => (nar() && CH[i].pillN ? CH[i].pillN : CH[i].pill);
   function contentTop() {
     const fs = Math.max(12, W / 60) * Anima.UI, h = fs * 1.4 + 14, p = pillOf(cur);
@@ -459,7 +461,7 @@ Anima.register("metabolic-syndrome", {
   function scene0(A, Lg, live, T) {
     const n = nar(), on = onOf(0, live), fs = SF();
     const bw = A.w * (n ? 0.34 : 0.33);
-    const s = Math.min(A.h * 1.02, bw * 1.9);
+    const s = Math.min(A.h * 0.98, bw * (n ? 1.9 : 1.7));
     const Bd = body(A.x + bw * 0.5, A.y + A.h * 0.5 + s * 0.01, s, T);
     // 5 项标准
     const px = A.x + bw + A.w * (n ? 0.02 : 0.05);
@@ -486,7 +488,7 @@ Anima.register("metabolic-syndrome", {
         txt(c.name, tx, y, fs, K.ink, "left", 700);
       } else {
         txt(c.name, tx, y, fs, K.ink, "left", 700);
-        txt(c.wide, tx + fs * 5.6, y, fs, K.soft, "left", 500);
+        txt(c.wide, tx + fs * 6.4, y, fs, K.soft, "left", 500);
       }
       check(P.x + P.w - fs * 1.3, y, fs * 0.62, C2.hot, lit);
       if (k === 2) lit3 = lit;
@@ -508,9 +510,8 @@ Anima.register("metabolic-syndrome", {
     ctx.save(); ctx.globalAlpha *= 0.35 + 0.65 * lit3;
     txt(n ? "具备 3 项或以上 → 代谢综合征" : "具备 3 项或以上，即可诊断代谢综合征", P.x + P.w / 2, fy, fs * (n ? 1 : 1.1), "#b4541c", "center", 700);
     ctx.restore();
-    const ta = n ? T < 7 : true, tb = n ? T >= 7 : true;
-    put(A, Lg, "root", on("root") && ta, Bd.belly[0], Bd.belly[1], n ? A.x + A.w * 0.3 : A.x + bw * 0.5, n ? A.y + A.h - LF() : A.y + A.h - LF() * 0.9, "共同的根：肚子里的脂肪", C2.hot);
-    put(A, Lg, "three", on("three") && tb, P.x + P.w * 0.5, fy - fs * 0.6, n ? P.x + P.w * 0.5 : P.x + P.w * 0.62, n ? A.y + A.h - LF() * 2.6 : P.y + P.h - footH - LF() * 1.2, "5 项里占 3 项就算", "#b4541c");
+    put(A, Lg, "root", on("root"), Bd.belly[0], Bd.belly[1], n ? A.x + bw * 0.45 : A.x + bw * 0.3, A.y + A.h - LF() * 0.9, n ? "根：肚子里的脂肪" : "共同的根：肚子里的脂肪", C2.hot);
+    put(A, Lg, "three", on("three") && !n, P.x + P.w * 0.5, fy + fs * 0.7, n ? A.x + A.w * 0.3 : P.x + P.w * 0.4, n ? A.y + LF() * 0.9 : P.y + P.h + LF() * 1.6, "不必 5 项都有，占 3 项就算", "#b4541c");
   }
 
   // =================== 第 2 幕：腹部横断面 + 放大的内脏脂肪细胞 ===================
@@ -566,14 +567,15 @@ Anima.register("metabolic-syndrome", {
 
   function scene1(A, Lg, live, T) {
     const n = nar(), on = onOf(1, live), fs = SF();
-    const cw = A.w * (n ? 0.5 : 0.42);
-    const rx = Math.min(cw * 0.47, A.h * 0.62), ry = rx * 0.72;
-    const cx = A.x + cw * 0.5, cy = A.y + A.h * (n ? 0.46 : 0.46);
+    const tall = tallA(A);
+    const cw = A.w * (tall ? 0.72 : n ? 0.5 : 0.42);
+    const rx = Math.min(cw * 0.47, A.h * (tall ? 0.3 : 0.62)), ry = rx * 0.72;
+    const cx = A.x + cw * 0.5, cy = tall ? A.y + LF() * 2.2 + ry : A.y + A.h * 0.46;
     const X = crossSection(cx, cy, rx, ry);
-    if (!n) cap("腹部横断面（示意）", cx, cy + ry + fs * 1.3, K.soft);
+    if (!n) cap("腹部横断面（示意）", cx - rx * 0.55, cy + ry + fs * 1.3, K.soft);
     // 放大的内脏脂肪细胞
-    const zx = A.x + A.w * (n ? 0.76 : 0.66), zy = A.y + A.h * (n ? 0.44 : 0.42);
-    const zr = Math.min(A.h * (n ? 0.23 : 0.24), A.w * (n ? 0.15 : 0.11)) * (0.85 + 0.2 * S.fat);
+    const zx = A.x + A.w * (tall ? 0.58 : n ? 0.72 : 0.66), zy = tall ? A.y + A.h * 0.74 : A.y + A.h * (n ? 0.5 : 0.42);
+    const zr = (tall ? Math.min(A.h * 0.15, A.w * 0.17) : Math.min(A.h * (n ? 0.19 : 0.24), A.w * (n ? 0.12 : 0.11))) * (0.85 + 0.2 * S.fat);
     const L = X.lump;
     ctx.save(); ctx.strokeStyle = rgba(K.leader, 0.7); ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
     ctx.beginPath(); ctx.arc(L[0], L[1], L[2] * 1.5, 0, TAU); ctx.stroke();
@@ -601,8 +603,8 @@ Anima.register("metabolic-syndrome", {
     }
     const t1 = n ? T < 4.5 : true, t2 = n ? T >= 4.5 && T < 9 : true, t3 = n ? T >= 9 : true;
     put(A, Lg, "sub", on("sub") && t1, X.subTop[0] - rx * 0.3, X.subTop[1] - ry * 0.02, n ? A.x + A.w * 0.3 : cx - rx * 0.35, A.y + LF() * 0.9, "皮下脂肪：捏得起来的一层", C2.fat[2]);
-    put(A, Lg, "visc", on("visc") && t2, L[0], L[1], n ? A.x + A.w * 0.3 : cx + rx * 0.45, n ? A.y + LF() * 0.9 : A.y + A.h - LF() * 0.8, "内脏脂肪：裹在肠子、肝脏周围", "#b4541c");
-    put(A, Lg, "release", on("release") && t3, mF[0], mF[1], n ? A.x + A.w * 0.55 : zx + zr * 0.2, n ? A.y + LF() * 0.9 : A.y + A.h - LF() * 0.8, n ? "脂肪酸、炎症因子多，脂联素少" : "不停往血里放脂肪酸和炎症因子", C2.ffa[2]);
+    put(A, Lg, "visc", on("visc") && t2, L[0], L[1], n ? A.x + A.w * 0.3 : cx + rx * 0.45, n ? A.y + LF() * 0.9 : cy + ry + LF() * 1.4, "内脏脂肪：裹在肠子、肝脏周围", "#b4541c");
+    put(A, Lg, "release", on("release") && t3, mF[0], mF[1], n ? A.x + A.w * 0.55 : zx + zr * 1.3, n ? A.y + LF() * 0.9 : zy + zr * 1.2, n ? "脂肪酸、炎症因子多，脂联素少" : "不停往血里放脂肪酸和炎症因子", C2.ffa[2]);
     if (n) {
       txt("脂肪酸↑", mF[0] + ir * 0.5, mF[1] - ir * 1.6, fs * 0.9, C2.ffa[2], "center", 700);
       txt("炎症因子↑", mC[0], mC[1] + ir * 1.8, fs * 0.9, C2.cyto[2], "center", 700);
@@ -660,9 +662,18 @@ Anima.register("metabolic-syndrome", {
     ctx.beginPath(); ctx.roundRect(x0, ym, mw, cB - ym, Math.min(14, mw * 0.06)); ctx.fillStyle = cg; ctx.fill();
     ctx.strokeStyle = K.memEdge; ctx.lineWidth = 1; ctx.stroke();
     bilayer(x0 - mt * 0.2, x1 + mt * 0.2, ym, mt);
+    // 肌原纤维
+    const myT = ym + Hi * 0.74, myB = cB - Hi * 0.06, mh = myB - myT;
+    if (mh > 6) {
+      ctx.save(); ctx.beginPath(); ctx.rect(x0 + mt * 0.6, myT, mw * 0.66, mh); ctx.clip();
+      ctx.fillStyle = "#fae4e6"; ctx.beginPath(); ctx.roundRect(x0 + mt * 0.6, myT, mw - mt * 1.2, mh, mh * 0.3); ctx.fill();
+      const Ls = Math.max(20, mw / 8);
+      for (let k = 0; k < 12; k++) { const zx = x0 + k * Ls; ctx.fillStyle = "#f0c3c8"; ctx.fillRect(zx + Ls * 0.22, myT + mh * 0.1, Ls * 0.56, mh * 0.8); ctx.strokeStyle = "#cf96a0"; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(zx, myT); ctx.lineTo(zx, myB); ctx.stroke(); }
+      ctx.restore();
+    }
     txt("肌肉细胞", x0 + mw * 0.84, cB - fs * 0.9, fs, "#a0606b", "center", 700);
     const RX = [0.2, 0.62], GX = [0.4, 0.84];
-    const vY = ym + Hi * 0.45, vr = Math.max(8, ir * 0.95);
+    const vY = ym + Hi * 0.42, vr = Math.max(8, ir * 0.95);
     const rg = Math.max(5, ir * 0.5), ri = Math.max(5.5, ir * 0.56);
     // 信号箭头 + ⊖
     let minusPt = null;
@@ -671,7 +682,7 @@ Anima.register("metabolic-syndrome", {
       const pts = [[x + Ry * 0.2, ym + Ry * 0.9], [(x + gx) / 2, vY + Hi * 0.12], [gx - vr * 1.3, vY]];
       const sp = arrow(pts, C2.ins[1], Math.max(2, ir * 0.18), 0.35 + 0.65 * (1 - S.ir * 0.6), "go");
       flow(sp, C2.ins[1], 2, Math.max(1.6, ir * 0.13), 1 - S.ir * 0.7, 0.3);
-      const m = along(sp, 0.5);
+      const m = along(sp, 0.42);
       minusSign(m[0], m[1], Math.max(6, ir * 0.42), S.ir);
       if (j === 0) minusPt = m;
       // 干扰信号的脂肪酸和炎症因子
@@ -703,7 +714,7 @@ Anima.register("metabolic-syndrome", {
     // 肝细胞：胰岛素本该让它少放糖（⊣），抵抗时照样往血里放
     const lcx = (lc[0] + lc[1]) / 2, lrx = (lc[1] - lc[0]) * 0.44;
     const lB = n ? cB : Math.min(cB, H - Lg.bh - 24 - fs * 1.2);
-    const lry = Math.min((lB - cT) * 0.4, lrx * 1.1), lcy = cT + (lB - cT) * 0.52;
+    const lry = Math.min((lB - cT) * 0.42, lrx * 1.1), lcy = cT + (lB - cT) * 0.5;
     hepato(lcx, lcy, lrx, lry, 0.25, 0.2);
     txt("肝细胞", lcx + lrx * 0.3, Math.min(lcy + lry + fs * 1.0, lB + fs * 0.6), fs, C2.hep[2], "center", 700);
     const inA = [[lcx - lrx * 0.55, vB + 2], [lcx - lrx * 0.5, lcy - lry * 0.85]];
@@ -711,6 +722,7 @@ Anima.register("metabolic-syndrome", {
     minusSign(lcx - lrx * 0.52, (vB + lcy - lry * 0.85) / 2, Math.max(6, ir * 0.4), S.ir);
     const outA = arrow([[lcx + lrx * 0.3, lcy - lry * 0.55], [lcx + lrx * 0.35, vB + ir * 0.5]], C2.glu[1], Math.max(2, ir * 0.17), 0.85, "go");
     stream(outA, "glu", 3, rg, 1, 2.4);
+    if (!n) txt("照样放糖", lcx + lrx * 0.42 + fs * 0.4, (vB + lcy - lry * 0.55) / 2, fs * 0.9, C2.glu[2], "left", 700);
     // 血管里：糖和胰岛素都偏多
     const nG = Math.round(clamp((S.glu - 4) * 6, 4, 22)), nI = Math.round(clamp(S.ins * 6, 3, 14));
     for (let i = 0; i < 3; i++) { const x = ((rnd(i + 300) + time * 0.04) % 1.2 - 0.1) * W; rbc(x, yIn(rnd(i + 320) * 1.4 - 0.7, ir * 0.6), Math.max(7, ir * 0.95)); }
@@ -766,8 +778,8 @@ Anima.register("metabolic-syndrome", {
       if (p[0] === "vldl" && k === 0) vPick = [x, y];
     });
     // 左下：内脏脂肪细胞
-    const ar = n ? Math.min(A.w * 0.1, A.h * 0.15) : Math.min(A.w * 0.075, A.h * 0.15);
-    const ax = A.x + ar * 1.25, ay = A.y + A.h - ar * 1.3 - fs * 1.2;
+    const ar = n ? Math.min(A.w * 0.1, A.h * 0.15) : Math.min(A.w * 0.1, A.h * 0.19);
+    const ax = A.x + ar * 1.25, ay = A.y + A.h - ar * (n ? 1.3 : 1.6) - fs * 1.2;
     adipocyte(ax, ay, ar, 0.7 * S.fat);
     cap("内脏脂肪", ax, ay + ar + fs * 0.95, C2.fat[2]);
     // 中间：肝细胞
@@ -804,11 +816,11 @@ Anima.register("metabolic-syndrome", {
     }
     const dp = H0.drops.length ? H0.drops[0] : [lcx, lcy, 4];
     const t1 = n ? T < 4.5 : true, t2 = n ? T >= 4.5 && T < 9 : true, t3 = n ? T >= 9 : true;
-    const vp2 = along(vs, 0.3);
-    put(A, Lg, "portal", on("portal") && t1, vp2[0], vp2[1], n ? A.x + A.w * 0.33 : A.x + A.w * 0.14, n ? A.y + A.h - LF() * 0.9 : A.y + A.h * 0.28, n ? "脂肪酸经门静脉涌进肝脏" : "游离脂肪酸经门静脉涌进肝脏", C2.ffa[2]);
-    put(A, Lg, "nafld", on("nafld") && t2, dp[0], dp[1], n ? A.x + A.w * 0.33 : lcx, n ? A.y + A.h - LF() * 0.9 : A.y + A.h - LF() * 0.8, "脂肪堆在肝里：脂肪肝", C2.fat[2]);
+    const vp2 = along(vs, 0.3), tall = tallA(A), tY = tall ? A.y + LF() * 0.9 : A.y + A.h - LF() * 0.9;
+    put(A, Lg, "portal", on("portal") && t1, vp2[0], vp2[1], n ? A.x + A.w * 0.33 : A.x + A.w * 0.14, n ? tY : A.y + A.h * 0.28, n ? "脂肪酸经门静脉涌进肝脏" : "游离脂肪酸经门静脉涌进肝脏", C2.ffa[2]);
+    put(A, Lg, "nafld", on("nafld") && t2, dp[0], dp[1], n ? A.x + A.w * 0.33 : lcx + lrx * 0.3, n ? tY : lcy + lry + LF() * 1.3, "脂肪堆在肝里：脂肪肝", C2.fat[2]);
     const vq = vOut || vPick;
-    put(A, Lg, "vldl", on("vldl") && t3, vq[0], vq[1], n ? A.x + A.w * 0.5 : Bp.x + Bp.w * 0.2, n ? A.y + A.h - LF() * 0.9 : A.y + LF() * 0.8, "多产 VLDL，甘油三酯升高", C2.tgc[2]);
+    put(A, Lg, "vldl", on("vldl") && t3, vq[0], vq[1], n ? A.x + A.w * 0.4 : Bp.x + Bp.w * 0.62, n ? tY : A.y + LF() * 0.8, "多产 VLDL，甘油三酯升高", C2.tgc[2]);
   }
 
   // =================== 第 5 幕：血压 + 风险叠加 ===================
@@ -867,12 +879,13 @@ Anima.register("metabolic-syndrome", {
     for (let x = P.x + 6 + cw * 0.5; x < P.x + P.w - 8; x += cw * 0.9) {
       ctx.beginPath(); ctx.ellipse(x, my + mh * 0.5, cw * 0.4, Math.min(mh * 0.28, cw * 0.1), 0, 0, TAU); ctx.fillStyle = glossy(x, my + mh * 0.5, cw * 0.4, C2.smc[0], C2.smc[1]); ctx.fill(); ctx.strokeStyle = rgba(C2.smc[2], 0.6); ctx.stroke();
     }
-    const s = Math.max(3, Math.min(ir * 0.38, mh * 0.2));
+    const s = Math.max(4, Math.min(ir * 0.5, mh * 0.26));
     for (let i = 0; i < 4; i++) {
       const t = cyc(2.4, i / 4), x = P.x + P.w * (0.15 + i * 0.22);
       noMol(x, lerp(ey + eh, my + mh * 0.5, t), s, (i < 1 ? 1 : 1 - 0.8 * S.ir) * Math.sin(t * Math.PI));
     }
     minusSign(P.x + P.w * 0.84, ey + eh * 0.5, Math.max(6, ir * 0.4), S.ir);
+    if (P.w > 150) txt("一氧化氮变少", P.x + P.w * 0.84, my + mh * 0.62, fs * 0.85, "#3b6f99", "center", 500);
     return [P.x + P.w, (P.y + P.h + top) / 2];
   }
 
@@ -947,10 +960,13 @@ Anima.register("metabolic-syndrome", {
     });
     // 风险叠加：三块积木一块块摞起来
     const sy = Rw.y + Rw.h + (n ? fs * 0.6 : fs * 0.5), items = [["高血糖", C2.glu], ["血脂异常", C2.tgc], ["高血压", ["#fde6d6", C2.hot, "#a9481a"]]];
-    const bh = fs * 1.7, gapx = fs * 0.5;
     TB.font(fs, 700);
-    const ws = items.map((it) => ctx.measureText(it[0]).width + fs * 1.2);
-    const plusW = fs * 1.1;
+    const tw0 = items.reduce((a, it) => a + ctx.measureText(it[0]).width + fs * 1.2, 0) + fs * 2.2;
+    const kf = clamp(Rw.w / tw0, 0.72, 1), cf = fs * kf;
+    const bh = cf * 1.7;
+    TB.font(cf, 700);
+    const ws = items.map((it) => ctx.measureText(it[0]).width + cf * 1.2);
+    const plusW = cf * 1.1;
     let x = Rw.x;
     const rows2 = n;
     let risk = null;
@@ -960,8 +976,8 @@ Anima.register("metabolic-syndrome", {
       ctx.save(); ctx.globalAlpha *= a;
       const yy = sy + (1 - ease(a)) * -fs;
       ctx.beginPath(); ctx.roundRect(x, yy, ws[k], bh, 6); ctx.fillStyle = glossy(x + ws[k] * 0.3, yy, ws[k], it[1][0], shade(it[1][1], "#ffffff", 0.35)); ctx.fill(); ctx.strokeStyle = it[1][2]; ctx.lineWidth = 1; ctx.stroke();
-      txt(it[0], x + ws[k] / 2, yy + bh / 2 + 0.5, fs, "#2f3a55", "center", 700);
-      if (k < 2) txt("+", x + ws[k] + plusW / 2, yy + bh / 2, fs * 1.2, K.soft, "center", 700);
+      txt(it[0], x + ws[k] / 2, yy + bh / 2 + 0.5, cf, "#2f3a55", "center", 700);
+      if (k < 2) txt("+", x + ws[k] + plusW / 2, yy + bh / 2, cf * 1.2, K.soft, "center", 700);
       ctx.restore();
       x += ws[k] + plusW;
     });
@@ -982,7 +998,7 @@ Anima.register("metabolic-syndrome", {
   const GAUGES = [
     { k: "waist", name: "腰围", min: 70, max: 110, thr: 90, hi: true, fmt: (v) => v.toFixed(0) + " cm", tl: "90" },
     { k: "glu", name: "空腹血糖", min: 4, max: 8, thr: 6.1, hi: true, fmt: (v) => v.toFixed(1), tl: "6.1" },
-    { k: "sbp", name: "血压", min: 100, max: 160, thr: 130, hi: true, fmt: (v) => Math.round(v) + "/" + Math.round(S.dbp), tl: "130" },
+    { k: "sbp", name: "血压", min: 100, max: 160, thr: 130, hi: true, fmt: (v, d) => Math.round(v) + "/" + Math.round(d), tl: "130" },
     { k: "tg", name: "甘油三酯", min: 0.5, max: 3, thr: 1.7, hi: true, fmt: (v) => v.toFixed(1), tl: "1.70" },
     { k: "hdl", name: "HDL-C", min: 0.6, max: 1.6, thr: 1.04, hi: false, fmt: (v) => v.toFixed(2), tl: "1.04" },
   ];
@@ -1003,9 +1019,9 @@ Anima.register("metabolic-syndrome", {
       ctx.beginPath(); ctx.arc(s * 0.32, -s * 0.2, s * 0.5, 0, TAU); ctx.fillStyle = "#ffffff"; ctx.fill();
       txt("z", s * 0.5, -s * 0.5, s * 0.5, K.soft, "center", 700);
     } else if (k === 4) { // 香烟 + 禁止
-      ctx.beginPath(); ctx.roundRect(-s * 0.7, -s * 0.13, s * 1.2, s * 0.26, s * 0.06); ctx.fillStyle = "#ffffff"; ctx.fill(); ctx.strokeStyle = "#8a93a8"; ctx.lineWidth = lw; ctx.stroke();
-      ctx.beginPath(); ctx.roundRect(-s * 0.7, -s * 0.13, s * 0.35, s * 0.26, s * 0.06); ctx.fillStyle = "#f0b46e"; ctx.fill(); ctx.stroke();
-      noSign(0, 0, s * 0.62, 0.9);
+      ctx.beginPath(); ctx.roundRect(-s * 0.8, -s * 0.33, s * 1.3, s * 0.3, s * 0.06); ctx.fillStyle = "#ffffff"; ctx.fill(); ctx.strokeStyle = "#8a93a8"; ctx.lineWidth = lw; ctx.stroke();
+      ctx.beginPath(); ctx.roundRect(-s * 0.8, -s * 0.33, s * 0.4, s * 0.3, s * 0.06); ctx.fillStyle = "#f0b46e"; ctx.fill(); ctx.stroke();
+      noSign(s * 0.45, s * 0.35, s * 0.4, 1);
     } else { // 药片（中性灰，不指定药物）
       ctx.save(); ctx.rotate(-0.5);
       ctx.beginPath(); ctx.roundRect(-s * 0.6, -s * 0.28, s * 1.2, s * 0.56, s * 0.28); ctx.fillStyle = glossy(0, 0, s * 0.6, "#ffffff", "#d7dce8"); ctx.fill(); ctx.strokeStyle = "#6c7893"; ctx.lineWidth = lw; ctx.stroke();
@@ -1018,20 +1034,22 @@ Anima.register("metabolic-syndrome", {
     const n = nar(), on = onOf(5, live), fs = SF();
     const ir = Math.min(IR() * 0.8, A.h * 0.05);
     const topH = A.h * (n ? 0.62 : 0.64);
+    const pg = live ? ease(clamp((T - 0.8) / 5, 0, 1)) : 1;
+    const val = (k) => lerp(CH[4][k], CH[5][k], pg);
     // 左：变小的脂肪细胞（窄屏省略）
     let cellPt = null;
     const gx0 = n ? A.x : A.x + A.w * 0.3;
     if (!n) {
-      const cx = A.x + A.w * 0.13, cy = A.y + topH * 0.48, r0 = Math.min(A.w * 0.1, topH * 0.3), r = r0 * (0.62 + 0.38 * S.fat);
+      const cx = A.x + A.w * 0.13, cy = A.y + topH * 0.48, r0 = Math.min(A.w * 0.1, topH * 0.3), r = r0 * (0.62 + 0.38 * val("fat"));
       ctx.beginPath(); ctx.arc(cx, cy, r0, 0, TAU); ctx.setLineDash([4, 4]); ctx.strokeStyle = rgba(K.leader, 0.6); ctx.lineWidth = 1; ctx.stroke(); ctx.setLineDash([]);
       adipocyte(cx, cy, r, 0);
       for (let i = 0; i < 4; i++) {
         const a = i / 4 * TAU + time * 0.25, d = r0 * 1.25;
-        mol("adipo", cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.85, ir * 0.85, clamp((1 - S.fat) * 1.6 - i * 0.2, 0, 1), a);
+        mol("adipo", cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.85, ir * 0.85, clamp((1 - val("fat")) * 1.6 - i * 0.2, 0, 1), a);
       }
-      mol("ffa", cx + r0 * 1.05, cy - r0 * 0.9, ir * 0.8, clamp(S.fat, 0, 1), 0.3);
+      mol("ffa", cx + r0 * 1.05, cy - r0 * 0.9, ir * 0.8, clamp(val("fat"), 0, 1), 0.3);
       cap("脂肪细胞变小", cx, cy + r0 * 1.45 + fs * 0.4, C2.fat[2]);
-      txt("脂联素 ↑", cx, A.y + fs * 0.6, fs, C2.adipo[2], "center", 700);
+      txt("脂联素 ↑", cx - r0 * 0.95, cy + r0 * 1.15, fs, C2.adipo[2], "center", 700);
       cellPt = [cx + r * 0.5, cy - r * 0.5];
     }
     // 右：五项指标
@@ -1041,7 +1059,7 @@ Anima.register("metabolic-syndrome", {
     const bx = G.x + nameW + fs * 0.4, bw = G.w - nameW - valW - fs * 1.2, bh = Math.max(6, Math.min(rh * 0.28, fs * 0.8));
     let firstBar = null, wBar = null;
     GAUGES.forEach((g, k) => {
-      const y = G.y + rh * (k + 0.5), v = S[g.k];
+      const y = G.y + rh * (k + 0.5), v = val(g.k);
       const u = (x) => clamp((x - g.min) / (g.max - g.min), 0, 1);
       txt(g.name, G.x + fs * 0.7, y, fs, K.ink, "left", 700);
       ctx.fillStyle = "#fbe6d6"; ctx.beginPath(); ctx.roundRect(bx, y - bh / 2, bw, bh, bh / 2); ctx.fill();
@@ -1053,7 +1071,7 @@ Anima.register("metabolic-syndrome", {
       const good = g.hi ? v < g.thr : v >= g.thr, col = good ? C2.ok : C2.warn;
       const mx = bx + bw * u(v), mr = Math.max(4.5, bh * 0.75);
       ctx.beginPath(); ctx.arc(mx, y, mr, 0, TAU); ctx.fillStyle = col; ctx.fill(); ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1.5; ctx.stroke();
-      txt(g.fmt(v), G.x + G.w - fs * 0.6, y, fs, col, "right", 700);
+      txt(g.fmt(v, val("dbp")), G.x + G.w - fs * 0.6, y, fs, col, "right", 700);
       if (k === 0) wBar = [mx, y];
       if (k === 2) firstBar = [mx, y];
     });
@@ -1068,7 +1086,7 @@ Anima.register("metabolic-syndrome", {
       const a = clamp((T - 1 - k * 0.5) / 0.5, 0, 1);
       if (a < 0.02) return;
       ctx.save(); ctx.globalAlpha *= a;
-      const x = A.x + cw * (c + 0.5), yI = Ly + chh * r + chh * (n ? 0.32 : 0.36), s = Math.min(chh * (n ? 0.26 : 0.3), cw * 0.22);
+      const x = A.x + cw * (c + 0.5), yI = Ly + chh * r + chh * (n ? 0.32 : 0.36), s = Math.min(chh * (n ? 0.34 : 0.3), cw * (n ? 0.14 : 0.22));
       if (n) {
         lifeIcon(k, A.x + cw * c + s * 1.3, Ly + chh * (r + 0.5), s);
         txt(l, A.x + cw * c + s * 2.6, Ly + chh * (r + 0.5), fs * 0.92, K.ink, "left", 500);
@@ -1082,7 +1100,7 @@ Anima.register("metabolic-syndrome", {
     });
     const ta = n ? T < 6.5 : true, tb = n ? T >= 6.5 : true;
     const lp0 = cellPt || wBar;
-    put(A, Lg, "loss", on("loss") && ta, lp0[0], lp0[1], n ? A.x + A.w * 0.5 : A.x + A.w * 0.2, n ? A.y + topH + LF() * 0.2 : A.y + topH + LF() * 0.1, "减重 5%～10%，内脏脂肪先变少", C2.ok);
+    put(A, Lg, "loss", on("loss") && ta, lp0[0], lp0[1], n ? A.x + A.w * 0.5 : A.x + A.w * 0.16, n ? A.y + topH + LF() * 0.2 : A.y + LF() * 0.9, "减重 5%～10%，内脏脂肪先变少", C2.ok);
     put(A, Lg, "together", on("together") && tb, firstBar[0], firstBar[1], n ? A.x + A.w * 0.5 : G.x + G.w * 0.6, n ? A.y + topH + LF() * 0.2 : A.y + topH + LF() * 0.1, "几项指标一起好转", C2.ok);
   }
 
@@ -1093,7 +1111,7 @@ Anima.register("metabolic-syndrome", {
   }
 
   function hud() {
-    const v = S.waist;
+    const v = waistNow();
     pill(14, 12, "腰围", waistStr(), v >= 90 ? C2.warn : C2.ok, false);
     const p = pillOf(cur);
     pill(W - 14, 12, p[0], p[1], p[2] === "ok" ? C2.ok : p[2] === "warn" ? C2.warn : K.red, true);

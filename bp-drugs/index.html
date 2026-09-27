@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>降压药是怎么起作用的</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body data-episode="bp-drugs">
+<div class="wrap">
+  <header id="epHeader"></header>
+
+  <div class="stage">
+    <canvas id="cv" aria-label="科普动画"></canvas>
+    <div class="bar"><i id="prog"></i></div>
+  </div>
+
+  <div class="below">
+    <ol class="chapters" id="chapters"></ol>
+    <section class="narr" aria-live="polite">
+      <h2 id="nTitle"></h2>
+      <p id="nText"></p>
+      <div class="fact" id="nFact"></div>
+      <div class="controls">
+        <button id="prev" type="button">上一幕</button>
+        <button id="play" type="button" class="primary">暂停</button>
+        <button id="next" type="button">下一幕</button>
+      </div>
+    </section>
+  </div>
+
+  <footer id="epFooter"></footer>
+</div>
+
+<script id="video-meta" type="application/json">
+{
+  "intro": "降压药有好几类，它们到底是怎么把血压降下来的？跟着这几粒小胶囊，一起去心脏、血管和肾脏里看看吧。",
+  "spoken": {
+    "130/80 毫米汞柱": "一百三十、八十毫米汞柱",
+    "<130/80 mmHg": "低于一百三十、八十毫米汞柱",
+    "<130/80": "低于一百三十、八十",
+    "β受体阻滞剂": "贝塔受体阻滞剂",
+    "血管紧张素Ⅰ": "血管紧张素一",
+    "血管紧张素Ⅱ": "血管紧张素二",
+    "ACE 酶": "血管紧张素转换酶",
+    "AT1 受体": "AT一受体",
+    "mmHg": "毫米汞柱",
+    "RAAS": "肾素、血管紧张素、醛固酮系统",
+    "ACEI": "血管紧张素转换酶抑制剂",
+    "ARB": "血管紧张素受体拮抗剂",
+    "CCB": "钙通道阻滞剂",
+    "AT1": "AT一",
+    "β1": "贝塔一",
+    "5 大类": "五大类"
+  },
+  "sad": [6]
+}
+</script>
+<script src="../shared/engine.js"></script>
+<script src="../shared/textbook.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>
