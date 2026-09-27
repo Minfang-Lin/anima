@@ -26,7 +26,7 @@
 //   his    组胺      三角形         橙  #ee7a36
 // 受体（嵌在细胞膜里、顶上有和分子同形的槽口）：
 //   aden 腺苷受体（浅紫）、gaba GABA 受体（浅蓝）、orx 食欲素受体（浅绿）、mel 褪黑素受体（浅金）、his 组胺受体（浅橙）
-// 各集在自己的 scene.js 里登记的图标（同一种分子在别的集出现时，照这里的形状和颜色画，最好直接复制那段 register）：
+// 下面这些已在本文件末尾统一登记，任何一集都可以直接 mol("glu", …)：
 //   glu    葡萄糖        空心六元环 glucoseRing   青    #1ea5b8   （insulin）
 //   ins    胰岛素        大小两球相连 insulinDimer 洋红  #cc4f9f   （insulin；受体 insr 用 Y 形，浅洋红）
 //   glut4  GLUT4 转运体  跨膜双柱孔道 glutPore     浅青绿 #7fcdc2  （insulin）
@@ -640,5 +640,84 @@
   textbook.registerShape = registerShape;
   textbook.rgba = rgba;
   textbook.shade = shade;
+  // ---------- 全系列共用的图标（原先在 insulin / lipids / sleep-cycle 里登记，搬到这里后任何一集都能直接用） ----------
+  (function () {
+    const HALF = Math.PI / 2, circNotch = SHAPES.circle.notch;
+    // 葡萄糖：空心六元环（吡喃糖环），和实心六边形的腺苷区分开
+    registerShape("glucoseRing", {
+      path(c, r) {
+        for (let k = 0; k <= 6; k++) { const a = Math.PI / 6 + k * TAU / 6; if (k) c.lineTo(Math.cos(a) * r, Math.sin(a) * r); else c.moveTo(Math.cos(a) * r, Math.sin(a) * r); }
+        c.closePath();
+        for (let k = 0; k <= 6; k++) { const a = Math.PI / 6 - k * TAU / 6, q = r * 0.46; if (k) c.lineTo(Math.cos(a) * q, Math.sin(a) * q); else c.moveTo(Math.cos(a) * q, Math.sin(a) * q); }
+        c.closePath();
+      },
+      notch: circNotch,
+    });
+    // 胰岛素：一大一小两个相连的球（B 链 + A 链）
+    registerShape("insulinDimer", {
+      path(c, r) {
+        c.moveTo(-r * 0.3 + r * 0.62, r * 0.06); c.arc(-r * 0.3, r * 0.06, r * 0.62, 0, TAU);
+        c.moveTo(r * 0.45 + r * 0.48, -r * 0.1); c.arc(r * 0.45, -r * 0.1, r * 0.48, 0, TAU);
+      },
+      notch: circNotch,
+    });
+    // GLUT4 等转运体：两根并排的跨膜柱，中间是孔道
+    registerShape("glutPore", {
+      path(c, r) { c.roundRect(-r * 0.92, -r, r * 0.74, r * 2, r * 0.3); c.roundRect(r * 0.18, -r, r * 0.74, r * 2, r * 0.3); },
+      notch: circNotch,
+    });
+    // 通道：沙漏形孔道（两头宽、中间窄）
+    registerShape("channel", {
+      path(c, r) { c.moveTo(-r * 0.95, -r); c.lineTo(r * 0.95, -r); c.lineTo(r * 0.32, 0); c.lineTo(r * 0.95, r); c.lineTo(-r * 0.95, r); c.lineTo(-r * 0.32, 0); c.closePath(); },
+      notch(c, r) { c.lineTo(-r, 0); c.lineTo(-r * 0.35, r); c.lineTo(r * 0.35, r); c.lineTo(r, 0); },
+    });
+    // 胆固醇：三个并排的六元环 + 侧链
+    const sterolPath = (c, r) => {
+      const s = 0.4 * r, w = Math.sqrt(3) * s, dx = -0.18 * r, xs = [dx - w, dx, dx + w];
+      c.moveTo(xs[0] - w / 2, -s / 2);
+      xs.forEach((x) => { c.lineTo(x, -s); c.lineTo(x + w / 2, -s / 2); });
+      c.lineTo(xs[2] + w / 2 + 0.42 * r, -s * 0.1);
+      c.lineTo(xs[2] + w / 2, s / 2);
+      for (let i = 2; i >= 0; i--) { c.lineTo(xs[i], s); c.lineTo(xs[i] - w / 2, s / 2); }
+      c.closePath();
+      c.moveTo(xs[0] + w / 2, -s / 2); c.lineTo(xs[0] + w / 2, s / 2);
+      c.moveTo(xs[1] + w / 2, -s / 2); c.lineTo(xs[1] + w / 2, s / 2);
+    };
+    const flatNotch = (c, r) => { const s = r * 1.1; c.lineTo(-s, 0); c.lineTo(-s, s * 0.5); c.lineTo(s, s * 0.5); c.lineTo(s, 0); };
+    const TG_PTS = [[-0.95, -0.95], [0.95, -0.95], [0.95, -0.56], [-0.5, -0.56], [-0.5, -0.2], [0.95, -0.2], [0.95, 0.2], [-0.5, 0.2], [-0.5, 0.56], [0.95, 0.56], [0.95, 0.95], [-0.95, 0.95]];
+    const CRES_A = 0.15 * Math.PI, CRES_B = 0.85 * Math.PI;
+    registerShape("lp_sterol", { path: sterolPath, notch: flatNotch });
+    registerShape("lp_tg", { path: poly(TG_PTS), notch: flatNotch });
+    registerShape("lp_crescent", {
+      path(c, r) { const cy = -0.72 * r; c.arc(0, cy, r, CRES_A, CRES_B, false); c.arc(0, cy, 0.62 * r, CRES_B, CRES_A, true); c.closePath(); },
+      notch(c, r) { const s = r * 1.12; c.arc(0, -0.45 * s, s, CRES_B, CRES_A, true); },
+    });
+    registerShape("lp_helix", {
+      path(c, r) {
+        c.moveTo(-r + 0.34 * r, -0.34 * r); c.lineTo(r - 0.34 * r, -0.34 * r); c.arc(r - 0.34 * r, 0, 0.34 * r, -HALF, HALF);
+        c.lineTo(-r + 0.34 * r, 0.34 * r); c.arc(-r + 0.34 * r, 0, 0.34 * r, HALF, HALF * 3); c.closePath();
+        for (let k = -2; k <= 2; k++) { c.moveTo(k * 0.34 * r - 0.12 * r, -0.34 * r); c.lineTo(k * 0.34 * r + 0.12 * r, 0.34 * r); }
+      },
+      notch: flatNotch,
+    });
+    registerShape("lp_kringle", {
+      path(c, r) { [-HALF, HALF / 3, HALF / 3 * 7].forEach((a) => { const x = Math.cos(a) * 0.44 * r, y = Math.sin(a) * 0.44 * r; c.moveTo(x + 0.54 * r, y); c.arc(x, y, 0.54 * r, 0, TAU); }); },
+      notch(c, r) { const s = r * 0.98; c.lineTo(-s, 0); c.arc(0, 0, s, Math.PI, 0, true); },
+    });
+    register("glu", { shape: "glucoseRing", color: ["#c6eef3", "#1ea5b8", "#0e6674"], label: "葡萄糖" });
+    register("ins", { shape: "insulinDimer", color: ["#f7c9e6", "#cc4f9f", "#86285f"], label: "胰岛素" });
+    register("insr", { shape: "Y", color: ["#fce8f4", "#e4a6ce", "#a24a82"], label: "胰岛素受体" });
+    register("glut4", { shape: "glutPore", color: ["#e2f6f2", "#7fcdc2", "#2c8a7f"], label: "GLUT4" });
+    register("abeta", { shape: "pentagon", color: "#8f9a2c", label: "β-淀粉样蛋白" });
+    register("gh", { shape: "star", color: "#ef6f8e", label: "生长激素" });
+    register("aqp4", { shape: "channel", color: "#23aebf", label: "水通道 AQP4" });
+    register("chol", { shape: "lp_sterol", color: ["#fff1b0", "#eec233", "#9c7a0e"], label: "胆固醇" });
+    register("tg", { shape: "lp_tg", color: ["#e3efb8", "#99b541", "#5d7420"], label: "甘油三酯" });
+    register("apob", { shape: "lp_crescent", color: ["#f7cbe2", "#c24d8c", "#7f2a58"], label: "ApoB-100", receptor: { color: ["#fbe8f2", "#e8a9cb", "#a5507c"], label: "LDL受体" } });
+    register("apoa1", { shape: "lp_helix", color: ["#c4ecf7", "#2fb2d6", "#16708a"], label: "ApoA-I" });
+    register("apoa", { shape: "lp_kringle", color: ["#bdeade", "#139c86", "#0b5f52"], label: "apo(a)" });
+    register("statin", { shape: "capsule", color: ["#d3daf5", "#5d6fc0", "#34438a"], label: "降脂药（他汀类）" });
+  })();
+
   window.Anima.textbook = textbook;
 })();
