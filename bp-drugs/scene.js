@@ -131,6 +131,9 @@ Anima.register("bp-drugs", {
   reg("bp_acei", { shape: "capsule", color: "#e38b17", label: "普利类（ACEI）" });
   reg("bp_arb", { shape: "capsule", color: "#c43f8e", label: "沙坦类（ARB）" });
   reg("bp_bb", { shape: "capsule", color: "#6f4cc9", label: "洛尔类（β受体阻滞剂）" });
+  // 单片复方（示意）：中性的灰蓝 + 浅灰两色胶囊，不对应任何具体药物类别
+  reg("bp_combo", { shape: "capsule", color: ["#dfe6f0", "#7f93ad", "#4a5a72"], label: "单片复方（示意）" });
+  reg("bp_combo2", { shape: "capsule", color: ["#f4f6f9", "#c9cfd8", "#7c8594"], label: "单片复方（示意）" });
   // 阻断时的“药物分子”：和被阻断的天然分子同形 + 堵头，颜色用该类药的颜色
   reg("bp_ccbM", { shape: "bp_plus", color: "#17a07a", label: "地平类", plug: true, blocks: "bp_ca" });
   reg("bp_arbM", { shape: "bp_beads3", color: "#c43f8e", label: "沙坦类", plug: true, blocks: "bp_ang2" });
@@ -412,7 +415,7 @@ Anima.register("bp-drugs", {
       [["mol", "bp_ang2", "血管紧张素Ⅱ"], ["rec", "bp_ang2", "AT1受体"], ["mol", "bp_arbM", "沙坦类"], ["no", "", "被占住"]],
       [["mol", "bp_ne", "去甲肾上腺素"], ["rec", "bp_ne", "β1受体"], ["mol", "bp_bbM", "洛尔类"], ["no", "", "被占住"]],
       [["line", "#2f3a55", "收缩压"], ["band", rgba(K.ok, 0.22), "目标范围"], ["dash", K.bad, "自己停药"]],
-      [["mol", "bp_arb", "沙坦类"], ["mol", "bp_ccb", "地平类"], ["no", "", "不擅自停药"]],
+      [["mol", "bp_combo", "单片复方（两种药合一片，示意）"], ["no", "", "不擅自停药"]],
     ][i];
   }
   function areaFor(i) {
@@ -977,7 +980,7 @@ Anima.register("bp-drugs", {
       const sx = X(STOP);
       ctx.save(); ctx.setLineDash([5, 4]); ctx.strokeStyle = K.bad; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(sx, py); ctx.lineTo(sx, py + ph); ctx.stroke(); ctx.restore();
       const ir = Math.max(8, fs * 0.8);
-      comboCap(sx, py + ph - ir * 1.4, ir * 0.9, -0.3, "bp_arb", "bp_ccb");
+      comboCap(sx, py + ph - ir * 1.4, ir * 0.9, -0.3, "bp_combo", "bp_combo2");
       noSign(sx + ir * 1.2, py + ph - ir * 2.1, ir * 0.55, 1);
       label(n ? "吃药" : "按时吃药", (px + sx) / 2, py + ph * 0.3, fs, "#23705a", "center", 700);
       // 找最高点给标注
@@ -1053,7 +1056,7 @@ Anima.register("bp-drugs", {
       ctx.fillStyle = k === today ? "#eaf7f1" : "#ffffff"; ctx.fill(); ctx.strokeStyle = k === today ? K.ok : "#b9c3d6"; ctx.lineWidth = k === today ? 1.8 : 1.2; ctx.stroke();
       const taken = k < today;
       const cr = Math.min(w * 0.3, h * 0.28);
-      if (!taken) comboCap(x + w / 2, y + h / 2, cr, -0.5, "bp_arb", "bp_ccb");
+      if (!taken) comboCap(x + w / 2, y + h / 2, cr, -0.5, "bp_combo", "bp_combo2");
       else checkIcon(x + w / 2, y + h / 2, cr * 1.4, 1);
       if (k === 3) out.cap = [x + w / 2, y + h / 2];
     });
@@ -1074,14 +1077,14 @@ Anima.register("bp-drugs", {
     const r = n ? { x: A.x + Lw + 4, y: A.y + 2, w: A.w - Lw - 4, h: A.h - 4 } : { x: A.x + A.w * 0.46, y: A.y + 2, w: A.w * 0.54, h: A.h - Lg.bh - 24 };
     const ico = (fn) => (x, y, rr, show) => { fn(x, y, rr); checkIcon(x + rr * 0.75, y + rr * 0.6, rr * 0.7, show); };
     listCard(r, n ? "这样吃药" : "用药原则", [
-      { icon: ico((x, y, rr) => comboCap(x - rr * 0.1, y - rr * 0.1, rr * 0.55, -0.5, "bp_arb", "bp_ccb")), t: n ? "长期规律吃" : "多数人需要长期规律服药" },
-      { icon: ico((x, y, rr) => { mol("bp_arb", x - rr * 0.35, y - rr * 0.3, rr * 0.4, 1, -0.4); mol("bp_ccb", x + rr * 0.2, y + rr * 0.1, rr * 0.4, 1, -0.4); }), t: n ? "联合 / 单片复方" : "小剂量联合，或单片复方" },
+      { icon: ico((x, y, rr) => comboCap(x - rr * 0.1, y - rr * 0.1, rr * 0.55, -0.5, "bp_combo", "bp_combo2")), t: n ? "长期规律吃" : "多数人需要长期规律服药" },
+      { icon: ico((x, y, rr) => { mol("bp_combo", x - rr * 0.35, y - rr * 0.3, rr * 0.4, 1, -0.4); mol("bp_combo2", x + rr * 0.2, y + rr * 0.1, rr * 0.4, 1, -0.4); }), t: n ? "联合 / 单片复方" : "小剂量联合，或单片复方" },
       { icon: ico((x, y, rr) => { ctx.beginPath(); ctx.arc(x - rr * 0.1, y - rr * 0.1, rr * 0.6, 0, TAU); ctx.fillStyle = "#ffffff"; ctx.fill(); ctx.strokeStyle = K.soft; ctx.lineWidth = Math.max(1, rr * 0.1); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - rr * 0.1, y - rr * 0.1); ctx.lineTo(x - rr * 0.1, y - rr * 0.5); ctx.moveTo(x - rr * 0.1, y - rr * 0.1); ctx.lineTo(x + rr * 0.2, y + rr * 0.05); ctx.stroke(); }), t: n ? "每天固定时间" : "每天固定时间吃" },
       { icon: ico((x, y, rr) => { ctx.beginPath(); ctx.roundRect(x - rr * 0.65, y - rr * 0.55, rr * 1.1, rr * 0.8, rr * 0.15); ctx.fillStyle = "#ffffff"; ctx.fill(); ctx.strokeStyle = K.soft; ctx.lineWidth = Math.max(1, rr * 0.08); ctx.stroke(); ctx.fillStyle = "#e9fbf4"; ctx.fillRect(x - rr * 0.5, y - rr * 0.42, rr * 0.8, rr * 0.36); }), t: n ? "在家量血压" : "在家定期量血压、记下来" },
-      { icon: (x, y, rr) => { comboCap(x, y, rr * 0.55, -0.5, "bp_arb", "bp_ccb"); noSign(x + rr * 0.45, y + rr * 0.35, rr * 0.38, 1); }, t: n ? "不自己停药换药" : "不自己停药、换药" },
+      { icon: (x, y, rr) => { comboCap(x, y, rr * 0.55, -0.5, "bp_combo", "bp_combo2"); noSign(x + rr * 0.45, y + rr * 0.35, rr * 0.38, 1); }, t: n ? "不自己停药换药" : "不自己停药、换药" },
     ], T);
     tag("home", on("home") && T > 1, mo.screen[0], mo.screen[1], A.x + Lw * 0.5, n ? A.y + A.h * 0.52 : A.y + A.h * 0.5, n && W < 520 ? "目标听医生的" : "多数人目标 <130/80", K.ok);
-    tag("combo", on("combo") && !n && T > 2, pb.cap[0], pb.cap[1], A.x + Lw * 0.5, A.y + A.h * 0.99, "单片复方：一片含两种药", DC("bp_arb")[1]);
+    tag("combo", on("combo") && !n && T > 2, pb.cap[0], pb.cap[1], A.x + Lw * 0.5, A.y + A.h * 0.99, "单片复方：一片含两种药", DC("bp_combo")[1]);
   }
 
   function drawScene(i, live, T) {

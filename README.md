@@ -21,6 +21,11 @@
 | `sleep-cycle/` | 一夜的旅行：浅睡、深睡、快速眼动 |
 | `premature-beats/` | 心里咯噔一下：早搏 |
 | `heart-valves/` | 心脏里的四扇门：心脏瓣膜病 |
+| `hypoglycemia/` | 糖太少也危险：低血糖 |
+| `hba1c/` | 糖化血红蛋白：血糖的三个月账本（教科书画风） |
+| `metabolic-syndrome/` | 三高为什么爱结伴：代谢综合征（教科书画风） |
+| `glucose-drugs/` | 降糖药是怎么起作用的（教科书画风） |
+| `bp-drugs/` | 降压药是怎么起作用的（教科书画风） |
 
 所有集用到的医学数字和标准汇总在 `docs/医学数据核对清单.md`，发布前请逐条核对。
 
@@ -82,7 +87,7 @@ python3 build_xhs.py --only-listed    # 有新集还在制作时，只打包已�
 ### 两种画风
 
 - **卡通风**（默认）：粉色背景、圆润角色、小脸表情。讲器官和疾病过程的集用这个。
-- **教科书示意图风**（机制类）：白底、带光泽的分子和受体图标、细描边、图例，没有卡通脸。讲神经递质、受体、分子、电生理、药物机制的集用这个。现在用的有：`sleep-drive`、`sleep-cycle`、`insulin`、`premature-beats`、`lipids`。
+- **教科书示意图风**（机制类）：白底、带光泽的分子和受体图标、细描边、图例，没有卡通脸。讲神经递质、受体、分子、电生理、药物机制的集用这个。现在用的有：`sleep-drive`、`sleep-cycle`、`insulin`、`premature-beats`、`lipids`、`hba1c`、`metabolic-syndrome`、`glucose-drugs`、`bp-drugs`。
   做法：`meta` 里加 `"look": "textbook"`，单集 `index.html` 在 `engine.js` 之后加载 `../shared/textbook.js`，画面用 `shared/textbook.js` 里的工具（用法和全系列统一的分子图标词典写在这个文件开头），照 `sleep-drive/scene.js` 的结构写。
 
 ## 糖与血管：分镜

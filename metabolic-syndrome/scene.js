@@ -87,7 +87,16 @@ Anima.register("metabolic-syndrome", {
   REG.register("ffa", { shape: "ms_ffa", color: ["#fde3b8", "#e39b35", "#94601a"], label: "游离脂肪酸" });
   REG.register("cyto", { shape: "ms_burst", color: ["#fbd0c2", "#d95f3b", "#8e3520"], label: "炎症因子" });
   REG.register("adipo", { shape: "ms_clover", color: ["#d3f0d6", "#4fae62", "#2a7038"], label: "脂联素" });
-  REG.register("na", { shape: "ms_cross", color: ["#e3e4f6", "#8a8fc4", "#4f5488"], label: "钠离子" });
+  // 钠离子：和 bp-drugs 同一个图标（中间镂空“+”的灰蓝圆球）
+  if (!REG.SHAPES.bp_naBall) REG.registerShape("bp_naBall", {
+    path(c, r) {
+      c.moveTo(r * 0.85, 0); c.arc(0, 0, r * 0.85, 0, Math.PI * 2); c.closePath();
+      const a = 0.13, b = 0.46, P = [[-a, -b], [a, -b], [a, -a], [b, -a], [b, a], [a, a], [a, b], [-a, b], [-a, a], [-b, a], [-b, -a], [-a, -a]].reverse();
+      P.forEach((p, k) => { if (k) c.lineTo(p[0] * r, p[1] * r); else c.moveTo(p[0] * r, p[1] * r); }); c.closePath();
+    },
+    notch: REG.SHAPES.circle.notch,
+  });
+  REG.register("na", { shape: "bp_naBall", color: "#7d8fb5", label: "钠离子" });
 
   // ---------- 本集结构用色 ----------
   const C2 = {
@@ -122,7 +131,7 @@ Anima.register("metabolic-syndrome", {
   }
   const cyc = (P, off) => (((time / P + (off || 0)) % 1) + 1) % 1;
   const lerp = (a, b, t) => a + (b - a) * t;
-  const tallA = (A) => nar() && A.h > A.w * 0.7;
+  const tallA = (A) => nar() && A.h > A.w * 0.64;
   const onOf = (i, live) => (k) => live && CH[i].labels.indexOf(k) >= 0;
 
   // =================== 通用结构 ===================
@@ -778,8 +787,8 @@ Anima.register("metabolic-syndrome", {
       if (p[0] === "vldl" && k === 0) vPick = [x, y];
     });
     // 左下：内脏脂肪细胞
-    const ar = n ? Math.min(A.w * 0.1, A.h * 0.15) : Math.min(A.w * 0.1, A.h * 0.19);
-    const ax = A.x + ar * 1.25, ay = A.y + A.h - ar * (n ? 1.3 : 1.6) - fs * 1.2;
+    const ar = n ? Math.min(A.w * 0.1, A.h * 0.15) : Math.min(A.w * 0.085, A.h * 0.15);
+    const ax = A.x + ar * 1.25, ay = A.y + A.h - ar * 1.15 - fs * 1.4;
     adipocyte(ax, ay, ar, 0.7 * S.fat);
     cap("内脏脂肪", ax, ay + ar + fs * 0.95, C2.fat[2]);
     // 中间：肝细胞
@@ -787,7 +796,7 @@ Anima.register("metabolic-syndrome", {
     const lcx = A.x + A.w * (n ? 0.42 : 0.42), lcy = A.y + A.h * (n ? 0.36 : 0.38);
     // 门静脉：从脂肪细胞弯到肝细胞
     const vw = Math.max(8, ir * 1.1);
-    const vp = [[ax + ar * 0.5, ay - ar * 0.85], [ax + ar * 0.8, lcy + lry * 0.2], [lcx - lrx * 0.95, lcy + lry * 0.35]];
+    const vp = [[ax + ar * 0.5, ay - ar * 0.85], [ax + ar * 0.9, Math.min(ay - ar * 1.6, lcy + lry * 0.3)], [lcx - lrx * 0.95, lcy + lry * 0.35]];
     const vs = sample(vp, 40);
     ctx.lineCap = "round"; ctx.lineJoin = "round";
     for (const q of [[C2.vein[2], vw + 2], [C2.vein[1], vw], [C2.vein[0], vw * 0.45]]) {
