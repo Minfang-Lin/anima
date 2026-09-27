@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>降糖药是怎么起作用的</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body data-episode="glucose-drugs">
+<div class="wrap">
+  <header id="epHeader"></header>
+
+  <div class="stage">
+    <canvas id="cv" aria-label="科普动画"></canvas>
+    <div class="bar"><i id="prog"></i></div>
+  </div>
+
+  <div class="below">
+    <ol class="chapters" id="chapters"></ol>
+    <section class="narr" aria-live="polite">
+      <h2 id="nTitle"></h2>
+      <p id="nText"></p>
+      <div class="fact" id="nFact"></div>
+      <div class="controls">
+        <button id="prev" type="button">上一幕</button>
+        <button id="play" type="button" class="primary">暂停</button>
+        <button id="next" type="button">下一幕</button>
+      </div>
+    </section>
+  </div>
+
+  <footer id="epFooter"></footer>
+</div>
+
+<script id="video-meta" type="application/json">
+{
+  "intro": "降糖药有好几类，它们到底是怎么把血糖降下来的？跟着这些小胶囊，一起去肝脏、肾脏和胰岛看看吧。",
+  "spoken": {
+    "GLP-1 受体激动剂": "胰高糖素样肽一受体激动剂",
+    "SGLT2 转运体": "钠葡萄糖协同转运蛋白二",
+    "4.4～7.0 mmol/L": "四点四到七点零毫摩尔每升",
+    "< 3.9 mmol/L": "低于三点九毫摩尔每升",
+    "DPP-4 抑制剂": "二肽基肽酶四抑制剂",
+    "SGLT2 抑制剂": "钠葡萄糖协同转运蛋白二抑制剂",
+    "DPP-4 酶": "二肽基肽酶四",
+    "3～6 个月": "三到六个月",
+    "180 克": "一百八十克",
+    "SGLT2": "钠葡萄糖协同转运蛋白二",
+    "GLP-1": "胰高糖素样肽一",
+    "DPP-4": "二肽基肽酶四",
+    "7%": "百分之七",
+    "2 型": "二型"
+  },
+  "sad": [5]
+}
+</script>
+<script src="../shared/engine.js"></script>
+<script src="../shared/textbook.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>

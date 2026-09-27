@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>糖化血红蛋白：血糖的三个月账本</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body data-episode="hba1c">
+<div class="wrap">
+  <header id="epHeader"></header>
+
+  <div class="stage">
+    <canvas id="cv" aria-label="科普动画"></canvas>
+    <div class="bar"><i id="prog"></i></div>
+  </div>
+
+  <div class="below">
+    <ol class="chapters" id="chapters"></ol>
+    <section class="narr" aria-live="polite">
+      <h2 id="nTitle"></h2>
+      <p id="nText"></p>
+      <div class="fact" id="nFact"></div>
+      <div class="controls">
+        <button id="prev" type="button">上一幕</button>
+        <button id="play" type="button" class="primary">暂停</button>
+        <button id="next" type="button">下一幕</button>
+      </div>
+    </section>
+  </div>
+
+  <footer id="epFooter"></footer>
+</div>
+
+<script id="video-meta" type="application/json">
+{
+  "intro": "测了指尖血糖，为什么医生还要查糖化血红蛋白？跟着红细胞里的血红蛋白，一起去翻翻血糖的三个月账本吧。",
+  "spoken": {
+    "HbA1c": "糖化血红蛋白",
+    "TIR": "T I R",
+    "6.5%": "百分之六点五",
+    "120天": "一百二十天",
+    "7%": "百分之七",
+    "6%": "百分之六"
+  },
+  "sad": [4]
+}
+</script>
+<script src="../shared/engine.js"></script>
+<script src="../shared/textbook.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>
